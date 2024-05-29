@@ -11,6 +11,8 @@ class Griddle
   String spritename;
   PShape sprite;
   
+  String type = "Griddle";
+  
   Griddle(PVector pos, PVector dim) { this.pos = pos.copy(); this.dim = dim.copy(); quarter_turns = 0; ngs = new ArrayList<NonGriddle>(); }
   Griddle() { this(new PVector(), new PVector()); }
   
@@ -45,7 +47,7 @@ class Griddle
   JSONObject serialize()
   {
     JSONObject o = new JSONObject();
-    o.setString("type", "Griddle");
+    o.setString("type", type);
     o.setString("sprite", spritename);
     o.setBoolean("traversable", traversable);
     o.setInt("quarter_turns", quarter_turns);
@@ -95,19 +97,17 @@ class Griddle
 
 class NullGriddle extends Griddle
 {
-  NullGriddle() { super(new PVector(), new PVector()); }
+  NullGriddle() { type = "NullGriddle"; }
   
   boolean can_accept_ng(NonGriddle n) { return false; }
   
   void draw() {  }
   void update() {  }
-  
-  JSONObject serialize() { JSONObject o = super.serialize(); o.setString("type", "NullGriddle"); return o; }
 }
 
 class EmptyGriddle extends Griddle
 {
-  EmptyGriddle() { super(new PVector(), new PVector()); traversable = true; }
+  EmptyGriddle() { super(new PVector(), new PVector()); traversable = true; type = "EmptyGriddle"; }
   
   boolean can_accept_ng(NonGriddle n) { return ngs.isEmpty(); }
   
@@ -121,8 +121,11 @@ class EmptyGriddle extends Griddle
   }
   
   void update() { if (ng() != null) ng().pos = center_center(); }
-  
-  JSONObject serialize() { JSONObject o = super.serialize(); o.setString("type", "EmptyGriddle"); return o; }
+}
+
+class PlayerGriddle extends Griddle
+{
+  PlayerGriddle() { type = "PlayerGriddle"; }
 }
 
 
@@ -177,22 +180,22 @@ class GriddleFactory
     String type = template.getString("type","NullGriddle");
     switch (type)
     {
-      case "Player":                     g = new Player();                     break;
-      case "ConveyorBelt":               g = new ConveyorBelt();               break;
-      case "ResourcePool":               g = new ResourcePool();               break;
-      case "NullGriddle":                g = new NullGriddle();                break;
-      case "EmptyGriddle":               g = new EmptyGriddle();               break;
-      case "Griddle":                    g = new Griddle();                    break;
-      case "Transformer":                g = new Transformer();                break;
-      case "GrabberBelt":                g = new GrabberBelt();                break;
-      case "SmartGrabberBelt":           g = new SmartGrabberBelt();           break;
-      case "SwitchGrabberBelt":          g = new SwitchGrabberBelt();          break;
-      case "MetaActionCounter":          g = new MetaActionCounter();          break;
-      case "LevelEditorGriddle":         g = new LevelEditorGriddle();         break;
-      case "CountingOutputResourcePool": g = new CountingOutputResourcePool(); break;
-      case "RandomResourcePool":         g = new RandomResourcePool();         break;
-      case "TrashCompactor":             g = new TrashCompactor();             break;
-      default:                           g = new NullGriddle();                break;
+      case "Player": case "PlayerGriddle": g = new PlayerGriddle();              break;
+      case "ConveyorBelt":                 g = new ConveyorBelt();               break;
+      case "ResourcePool":                 g = new ResourcePool();               break;
+      case "NullGriddle":                  g = new NullGriddle();                break;
+      case "EmptyGriddle":                 g = new EmptyGriddle();               break;
+      case "Griddle":                      g = new Griddle();                    break;
+      case "Transformer":                  g = new Transformer();                break;
+      case "GrabberBelt":                  g = new GrabberBelt();                break;
+      case "SmartGrabberBelt":             g = new SmartGrabberBelt();           break;
+      case "SwitchGrabberBelt":            g = new SwitchGrabberBelt();          break;
+      case "MetaActionCounter":            g = new MetaActionCounter();          break;
+      case "LevelEditorGriddle":           g = new LevelEditorGriddle();         break;
+      case "CountingOutputResourcePool":   g = new CountingOutputResourcePool(); break;
+      case "RandomResourcePool":           g = new RandomResourcePool();         break;
+      case "TrashCompactor":               g = new TrashCompactor();             break;
+      default:                             g = new NullGriddle();                break;
     }
     
     g.deserialize(template);

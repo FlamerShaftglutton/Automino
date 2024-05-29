@@ -90,18 +90,16 @@ class Grid
   
   Griddle get(PVector point)
   {
-    int x, y;
+    IntVec c = grid_pos_from_absolute_pos(point);
     
-    PVector cut = point.copy().sub(pos).div(edge_width);
-    
-    x = (int)cut.x;
-    y = (int)cut.y;
-    
-    if (x >= w || x < 0 || y >= h || y < 0)
+    if (c.x >= w || c.x < 0 || c.y >= h || c.y < 0)
       return new NullGriddle();
     
-    return get(x,y);
+    return get(c.x,c.y);
   }
+  
+  IntVec grid_pos_from_absolute_pos(PVector p) { return new IntVec(p.copy().sub(pos).div(edge_width)); }
+  PVector absolute_pos_from_grid_pos(IntVec i) { return new PVector(i.x, i.y).mult(edge_width).add(edge_width * 0.5f, edge_width * 0.5f).add(pos); }
   
   Griddle get(IntVec xy) { return get(xy.x, xy.y); }
   
@@ -139,12 +137,14 @@ class Grid
       else
       {
         ga.newval.pos = (new PVector(ga.xy.x,ga.xy.y)).mult(edge_width).add(pos); 
-        ga.newval.dim = new PVector(edge_width, edge_width); 
+        ga.newval.dim = get_square_dim(); 
         griddles.set(ga.xy.x + ga.xy.y * w, ga.newval);
       }
     }
     alterations.clear();
   }
+  
+  PVector get_square_dim() { return new PVector(edge_width, edge_width); }
   
   
   IntVec get_grid_pos_from_object(Griddle g) { int i = griddles.indexOf(g); if (i < 0) { println("That object doesn't exist!"); return null; } return new IntVec(i % w, i / w); }

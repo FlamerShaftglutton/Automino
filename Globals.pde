@@ -2,6 +2,8 @@
 class Globals
 {
   Grid active_grid;
+  Player player;
+  
   ArrayList<NonGriddle> nongriddles = new ArrayList<NonGriddle>();
   ArrayList<NonGriddle> nongriddles_to_delete = new ArrayList<NonGriddle>();
   NonGriddleFactory ngFactory = new NonGriddleFactory();

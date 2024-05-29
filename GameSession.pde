@@ -6,10 +6,13 @@ class GameSession
   ArrayList<RewardGriddle> rewards = new ArrayList<RewardGriddle>();
   GameState state = GameState.STARTING_PLAYLEVEL;
   String save_path;
+  Player player;
   //curses/boons
   
   void update()
   {
+    player.update(grid);
+    
     switch (state)
     {
       case STARTING_PLAYLEVEL: start_level(); break;
@@ -21,11 +24,17 @@ class GameSession
     }
   }
   
+  void draw()
+  {
+    grid.draw();
+    player.draw();
+  }
+  
   void level_editor()
   {
     globals.active_grid = grid;
     grid.update(); 
-  
+    
     if (globals.keyReleased  && key == 'y') 
     { 
       save(); 
@@ -52,10 +61,19 @@ class GameSession
     }
   }
   
+  
   void save()
   {
     JSONObject root = new JSONObject();
     root.setInt("rounds_completed", rounds_completed);
+    
+    PlayerGriddle griddy = new PlayerGriddle();
+    griddy.spritename = player.spritename;
+    IntVec pgp = grid.grid_pos_from_absolute_pos(player.pos);
+    grid.set(pgp.x, pgp.y, griddy);
+    
+    grid.apply_alterations();
+    
     root.setJSONObject("grid", grid.serialize());
     
     //TODO: serialize curses & boons
@@ -73,15 +91,15 @@ class GameSession
     
     //TODO: deserialize curses & boons
     
-    Grid g = new Grid(new PVector(100,100), new PVector(width - 200, height - 200));
+    Grid gg = new Grid(new PVector(100,100), new PVector(width - 200, height - 200));
     
-    g.deserialize(root.getJSONObject("grid"));
+    gg.deserialize(root.getJSONObject("grid"));
     
     win_conditions.clear();
     
-    for (int x = 1; x < g.w; ++x)
+    for (int x = 1; x < gg.w; ++x)
     {
-      Griddle gr = g.get(x, g.h - 1);
+      Griddle gr = gg.get(x, gg.h - 1);
       
       if (gr instanceof CountingOutputResourcePool)
       {
@@ -95,7 +113,29 @@ class GameSession
       }
     }
     
-    grid = g;
+    grid = gg;
+    
+    player = null;
+    for (int x = 0; x < gg.w && player == null; ++x)
+    {
+      for (int y = 0; y < gg.h && player == null; ++y)
+      {
+        Griddle gr = gg.get(x,y);
+        
+        if (gr instanceof PlayerGriddle)
+        {
+          player = new Player();
+          player.spritename = gr.spritename;
+          player.sprite = gr.sprite;
+          player.pos = gg.absolute_pos_from_grid_pos(new IntVec(x,y));
+          player.dim = gg.get_square_dim();
+          
+          grid.set(x,y,new EmptyGriddle());
+        }
+      }
+    }
+    
+    grid.apply_alterations();
     
     state = GameState.STARTING_PLAYLEVEL;
   }
@@ -162,7 +202,20 @@ class GameSession
         
         if (!used)
         {
-          g.set(xx,yy, globals.gFactory.create_griddle(tps, ov));
+          if (tps.equals("Player"))
+          {
+            player = new Player();
+            
+            Griddle ggg = globals.gFactory.create_griddle("Player");
+            player.spritename = ggg.spritename;
+            player.sprite = ggg.sprite;
+            player.pos = g.absolute_pos_from_grid_pos(new IntVec(xx,yy));
+            player.dim = g.get_square_dim();
+            
+          }
+          else
+            g.set(xx,yy, globals.gFactory.create_griddle(tps, ov));
+          
           used_spots.add(new IntVec(xx,yy));
           placed = true;
         }
@@ -286,20 +339,13 @@ class GameSession
         
         if (tgg instanceof NullGriddle)
           le_grid.set(x,y,new NullGriddle());
-        if (tgg instanceof Player)
-        {
-          Player pg = new Player();
-          pg.deserialize(tgg.serialize());
-          
-          le_grid.set(x,y, pg);
-        }
         else
         {
           boolean lock = (x == 0 || y == 0 || y == tg.h - 1 || x == tg.w - 1);
           
           LevelEditorGriddle leg = new LevelEditorGriddle();
           
-          if (!(tgg instanceof EmptyGriddle))
+          if (!(tgg instanceof EmptyGriddle || tgg instanceof RewardGriddle))
           {
             JSONObject tggo = tgg.serialize();
             LevelEditorNonGriddle leng = globals.ngFactory.create_le_ng(tggo.getString("type"));
@@ -335,6 +381,8 @@ class GameSession
           
           LevelEditorNonGriddle leng = globals.ngFactory.create_le_ng(tggo.getString("type"));
           leng.as_json = tggo;
+          leng.shape = globals.sprites.get_sprite(tggo.getString("sprite"));
+          leng.visible = false;
           globals.register_ng(leng);
           leg.receive_ng(leng);
           

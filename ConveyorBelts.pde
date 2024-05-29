@@ -54,17 +54,13 @@ class GrabberBelt extends ConveyorBelt
       IntVec xy = globals.active_grid.get_grid_pos_from_object(this).add(iv_offset);
       
       Griddle gg = globals.active_grid.get(xy.x, xy.y);
-      //NonGriddle gg_ng = gg.ng();
-      
-      if (!(gg instanceof Player))
+
+      for (NonGriddle gg_ng : gg.ngs)
       {
-        for (NonGriddle gg_ng : gg.ngs)
+        if (can_grab(gg_ng) && receive_ng(gg_ng))
         {
-          if (can_grab(gg_ng) && receive_ng(gg_ng))
-          {
-            gg.remove_ng(gg_ng);
-            break;
-          }
+          gg.remove_ng(gg_ng);
+          break;
         }
       }
     }

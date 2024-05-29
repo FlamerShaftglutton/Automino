@@ -4,6 +4,7 @@ class IntVec
   int y;
   
   IntVec(int x, int y) { this.x = x; this.y = y; }
+  IntVec(PVector rhs) { x = (int)rhs.x; y = (int)rhs.y; }
   
   IntVec clone() { return new IntVec(x,y); }
   IntVec copy() { return clone(); }

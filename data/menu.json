@@ -1,0 +1,34 @@
+{
+	"width": 5,
+	"height": 5,
+	"grid": [
+		{
+			"x": 0,
+			"y": 0,
+			"type": "MetaActionCounter",
+			"display": "Level 1",
+			"action": "load",
+			"parameters": [ "save1.json" ],
+		},
+		{
+			"x": 1,
+			"y": 0,
+			"type": "MetaActionCounter",
+			"display": "Level Editor",
+			"action": "load",
+			"parameters": [ "leveleditor.json" ],
+		},
+		{
+			"x": 1,
+			"y": 0,
+			"type": "MetaActionCounter",
+			"display": "New Game",
+			"action": "newgame",
+		},
+		{
+			"x": 2,
+			"y": 2,
+			"type": "Player",
+		},
+	],
+}

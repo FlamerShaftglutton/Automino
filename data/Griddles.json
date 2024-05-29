@@ -1,0 +1,104 @@
+[
+	{
+		"type": "ConveyorBelt",
+		"sprite": "two arrow conveyor blue",
+	},
+	{
+		"type": "GrabberBelt",
+		"sprite": "two arrow conveyor yellow",
+	},
+	{
+		"type": "ResourcePool",
+		"sprite": "freezer",
+		"ng_type": "Cobalt Ore",
+	},
+	{
+		"_template": "CobaltOrePool",
+		"type": "ResourcePool",
+		"sprite": "freezer",
+		"ng_type": "Cobalt Ore",
+	},
+	{
+		"_template": "IronOrePool",
+		"type": "ResourcePool",
+		"sprite": "freezer",
+		"ng_type": "Iron Ore",
+	},
+	{
+		"type": "EmptyGriddle",
+		"sprite": "null",
+	},
+	{
+		"type": "SmartGrabberBelt",
+		"keyed_ng_type": "",
+		"sprite": "three arrow conveyor yellow",
+	},
+	{
+		"type": "Transformer",
+		"operations": [ ],
+		"sprite": "crusher",
+	},
+	{
+		"_template": "Smelter",
+		"type": "Transformer",
+		"operations": ["smelt"],
+		"sprite": "furnace",
+	},
+	{
+		"_template": "Counter",
+		"type": "Transformer",
+		"sprite": "counter",
+		"operations" : ["crush","smelt"],
+		"automatic": false,
+	},
+	{
+		"_template": "Crusher",
+		"type": "Transformer",
+		"operations": ["crush"],
+		"sprite": "crusher",
+	},
+	{
+		"type": "Player",
+		"sprite": "player green",
+	},
+	{
+		"type": "SwitchGrabberBelt",
+		"sprite": "two arrow conveyor yellow",
+		"enabled": false,
+		"disabled_sprite": "two arrow conveyor red",
+	},
+	{
+		"type": "MetaActionCounter",
+		"sprite": "counter",
+		"display": "Nothing here",
+		"action": "null",
+		"parameters": [ ],
+	},
+	{
+		"_template": "Refiner",
+		"type": "Transformer",
+		"operations": ["extract"],
+		"sprite": "centrifuge",
+	},
+	{
+		"_template": "Output",
+		"type": "CountingOutputResourcePool",
+		"ng_type": "Gold Ingot",
+		"sprite": "freezer",
+	},
+	{
+		"_template": "GoldIngotOutput",
+		"type": "CountingOutputResourcePool",
+		"ng_type": "Gold Ingot",
+		"sprite": "freezer",
+	},
+	{
+		"type": "RandomResourcePool",
+		"sprite": "freezer",
+		"resources": [ "Iron Ore", "Cobalt Ore" ],
+	},
+	{
+		"type": "TrashCompactor",
+		"sprite": "trashcan",
+	},
+]

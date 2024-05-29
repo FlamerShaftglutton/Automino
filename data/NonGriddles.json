@@ -1,0 +1,54 @@
+[
+	{
+		"name" : "Cobalt Ore",
+		"sprite" : "rock blue",
+	},
+	{
+		"name" : "Cobalt Powder",
+		"sprite" : "triangle blue",
+	},
+	{
+		"name" : "Refined Cobalt",
+		"sprite" : "rounded triangle blue",
+	},
+	{
+		"name" : "Cobalt Ingot",
+		"sprite" : "ingot blue",
+	},
+	{
+		"name" : "Iron Ore",
+		"sprite" : "rock red",
+	},
+	{
+		"name" : "Iron Powder",
+		"sprite" : "triangle red",
+	},
+	{
+		"name" : "Refined Iron",
+		"sprite" : "rounded triangle red",
+	},
+	{
+		"name" : "Iron Ingot",
+		"sprite" : "ingot red",
+	},
+	{
+		"name" : "Permendur Ingot",
+		"sprite" : "ingot green",
+	},
+	{
+		"name" : "Tailings",
+		"sprite" : "rounded triangle gray",
+	},
+	{
+		"name" : "Gold Speck",
+		"sprite" : "circle small gold",
+	},
+	{
+		"name" : "Gold Powder",
+		"sprite" : "rounded triangle gold",
+	},
+	{
+		"name" : "Gold Ingot",
+		"sprite" : "ingot gold",
+	},
+]

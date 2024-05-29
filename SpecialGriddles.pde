@@ -7,6 +7,8 @@ class ResourcePool extends Griddle
   boolean can_accept_ng(NonGriddle n) { return ng_type.equals(n.name); }
   boolean receive_ng(NonGriddle ng) { if (!can_accept_ng(ng)) return false; globals.destroy_ng(ng); return true; }
   
+  ResourcePool() { type = "ResourcePool"; }
+  
   void update()
   {
     if (ngs.isEmpty())
@@ -15,7 +17,7 @@ class ResourcePool extends Griddle
     super.update();
   }
   
-  JSONObject serialize() { JSONObject o = super.serialize(); o.setString("type", "ResourcePool"); o.setString("ng_type", ng_type); return o;  }
+  JSONObject serialize() { JSONObject o = super.serialize(); o.setString("ng_type", ng_type); return o;  }
   void deserialize(JSONObject o) { super.deserialize(o); ng_type = o.getString("ng_type", ""); }
 }
 
@@ -23,6 +25,8 @@ class RandomResourcePool extends ResourcePool
 {
   StringList resources = new StringList();
   StringList remaining_resources = new StringList();
+  
+  RandomResourcePool() { type = "RandomResourcePool"; }
   
   void update()
   {
@@ -38,7 +42,7 @@ class RandomResourcePool extends ResourcePool
     super.update();
   }
   
-  JSONObject serialize() { JSONObject o = super.serialize(); o.setString("type", "RandomResourcePool"); JSONArray a = new JSONArray(); for (String s : resources) a.append(s); o.setJSONArray("resources",a); return o;  }
+  JSONObject serialize() { JSONObject o = super.serialize(); JSONArray a = new JSONArray(); for (String s : resources) a.append(s); o.setJSONArray("resources",a); return o;  }
   void deserialize(JSONObject o)
   {
     super.deserialize(o);
@@ -74,6 +78,8 @@ class CountingOutputResourcePool extends ResourcePool
   int required = -1;
   PShape ng_sprite;
   
+  CountingOutputResourcePool() { type = "CountingOutputResourcePool"; }
+  
   boolean receive_ng(NonGriddle ng) { if (!can_accept_ng(ng)) return false; globals.destroy_ng(ng); ++count; return true; }
   
   void update() {  }
@@ -105,7 +111,7 @@ class CountingOutputResourcePool extends ResourcePool
     popMatrix();
   }
   
-  JSONObject serialize() { JSONObject o = super.serialize(); o.setString("type", "CountingOutputResourcePool"); o.setString("ng_type", ng_type); o.setInt("required", required); o.setInt("count", count); return o;  }
+  JSONObject serialize() { JSONObject o = super.serialize(); o.setString("ng_type", ng_type); o.setInt("required", required); o.setInt("count", count); return o;  }
   
   void deserialize(JSONObject o)
   {
@@ -123,6 +129,8 @@ class MetaActionCounter extends Griddle
   String display_string = "";
   String action = "";
   StringList parameters = new StringList();
+  
+  MetaActionCounter() { type = "MetaActionCounter"; }
   
   boolean can_accept_ng() { return false; }
   
@@ -181,8 +189,7 @@ class MetaActionCounter extends Griddle
   
   JSONObject serialize() 
   {
-    JSONObject o = super.serialize(); 
-    o.setString("type", "MetaActionCounter");
+    JSONObject o = super.serialize();
     o.setString("display", display_string);
     o.setString("action", action);
     
@@ -199,6 +206,9 @@ class MetaActionCounter extends Griddle
 class LevelEditorGriddle extends EmptyGriddle
 {
   boolean locked = false;
+  
+  
+  LevelEditorGriddle() { type = "LevelEditorGriddle"; }
   
   void player_interact_end(Player player)
   {
@@ -227,6 +237,11 @@ class LevelEditorGriddle extends EmptyGriddle
   
   void draw() 
   {
+    noFill();
+    stroke(0,0,0);
+    strokeWeight(1);
+    rect(pos.x, pos.y, dim.x, dim.y);
+    
     if (ngs.isEmpty())
     {
       sprite = null;
@@ -255,6 +270,8 @@ class RewardGriddle extends Griddle
   float time_needed = 10f;
   boolean finished = false;
   boolean running = false;
+  
+  RewardGriddle() { type = "RewardGriddle"; }
   
   void update()
   {

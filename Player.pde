@@ -1,87 +1,108 @@
 
-class Player extends Griddle
+class Player
 {
-  Direction face;
+  float rot = 0f;
+  PVector pos;
+  PVector dim;
+  PShape sprite;
+  String spritename;
   
-  Player() { super(new PVector(), new PVector()); face = Direction.EAST; }
+  NonGriddle ng;
   
-  void update()
+  Player(PVector pos, PVector dim) { this.pos = pos.copy(); this.dim = dim.copy(); rot = 0f; ng = null; sprite = null; spritename = ""; }
+  
+  Player() { this(new PVector(), new PVector()); }
+  
+  void draw()
+  {
+    pushMatrix();
+          
+    translate(pos);
+    
+    rotate(rot);
+    
+    translate(dim.copy().mult(-0.5f));
+    
+    shape(sprite,0,0,dim.x, dim.y);
+    
+    popMatrix();
+  }
+  
+  void update(Grid grid)
   {
     if (globals.keyReleased)
     {
+      
       if (key == CODED && (keyCode == RIGHT || keyCode == DOWN || keyCode == LEFT || keyCode == UP))
       {
         IntVec offset = new IntVec(0,0);
         
         switch (keyCode)
         {
-          case RIGHT: face = Direction.EAST;  ++offset.x; break;
-          case DOWN:  face = Direction.SOUTH; ++offset.y; break;
-          case LEFT:  face = Direction.WEST;  --offset.x; break;
-          case UP:    face = Direction.NORTH; --offset.y; break;
+          case RIGHT: rot = 0f;            ++offset.x; break;
+          case DOWN:  rot = HALF_PI;       ++offset.y; break;
+          case LEFT:  rot = PI;            --offset.x; break;
+          case UP:    rot = PI + HALF_PI;  --offset.y; break;
           default: break;
         }
         
-        IntVec p = globals.active_grid.get_grid_pos_from_object(this);
-        IntVec np = p.copy().add(offset);
+        //IntVec p = globals.active_grid.get_grid_pos_from_object(this);
+        //IntVec np = p.copy().add(offset);
         
-        Griddle g = globals.active_grid.get(np);
+        Griddle fg = get_faced_griddle(grid);
         
-        if (g.traversable)
+        if (fg.traversable)// || PVector.dist(pos, fg.center_center()) > dim.x)
         {
-          globals.active_grid.set(p, g);
-          globals.active_grid.set(np, this);
+          //TODO: make this not gridlocked. 
+          pos.add(PVector.fromAngle(rot).mult(dim.x));
         }
       }
       else if (key == 'x')
       {
-        IntVec offset = offset_from_direction(face);
-        IntVec gpos = globals.active_grid.get_grid_pos_from_object(this);
-        
-        Griddle g = globals.active_grid.get(gpos.copy().add(offset));
-        
-        g.player_interact_end(this);
+        //IntVec offset = offset_from_direction(face);
+        //IntVec gpos = globals.active_grid.get_grid_pos_from_object(this);
+        get_faced_griddle(grid).player_interact_end(this);
       }
       else if (key == ' ')
       {
-        IntVec offset = offset_from_direction(face);
-        IntVec gpos = globals.active_grid.get_grid_pos_from_object(this);
+        //IntVec offset = offset_from_direction(face);
+        //IntVec gpos = globals.active_grid.get_grid_pos_from_object(this);
         
-        Griddle g = globals.active_grid.get(gpos.copy().add(offset));
+        //Griddle g = globals.active_grid.get(gpos.copy().add(offset));
+        Griddle fg = get_faced_griddle(grid);
         
         //try to pick up
-        if (ngs.isEmpty() && g.can_give_ng())
+        if (ng == null && fg.can_give_ng())
         {
-          NonGriddle gng = g.ng();
+          NonGriddle gng = fg.ng();
           
-          if (gng != null && receive_ng(gng))
-            g.remove_ng(gng);
-          
-          if (gng instanceof LevelEditorNonGriddle)
-            ((LevelEditorNonGriddle)gng).visible = true;
+          if (gng != null)
+          {
+            if (gng instanceof LevelEditorNonGriddle)
+              ((LevelEditorNonGriddle)gng).visible = true;
+            
+            fg.remove_ng(gng);
+            ng = gng;
+          }
         }
         
         //try to put down
         else
         {
-          if (ng() instanceof LevelEditorNonGriddle)
-            ((LevelEditorNonGriddle)ng()).visible = false;
+          if (ng instanceof LevelEditorNonGriddle)
+            ((LevelEditorNonGriddle)ng).visible = false;
           
-          if (g.receive_ng(ng()))
-            remove_ng();
+          if (fg.receive_ng(ng))
+            ng = null;
         }
       }
     }
     else if (keyPressed && key == 'x')
     {
-      IntVec offset = offset_from_direction(face);
-      IntVec gpos = globals.active_grid.get_grid_pos_from_object(this);
-      
-      Griddle g = globals.active_grid.get(gpos.copy().add(offset));
-      
-      g.player_interact(this);
+      get_faced_griddle(grid).player_interact(this);
     }
     //DEBUG
+    /*
     else if (keyPressed && key == 'p')
     {
       IntVec gpos = globals.active_grid.get_grid_pos_from_object(this);
@@ -92,17 +113,31 @@ class Player extends Griddle
     {
       
     }
+    */
     
-    if (ng() != null)
+    if (ng != null)
     {
-      PVector offset = offset_from_direction(face).toPVec().mult(dim.x * 0.4);
+      ng.pos = PVector.fromAngle(rot).mult(dim.x * 0.4f).add(pos);
+     // PVector offset = offset_from_direction(face).toPVec().mult(dim.x * 0.4);
       
-      ng().pos = center_center().add(offset);
+      //ng().pos = center_center().add(offset);
     }
-    
-    quarter_turns = quarter_turns_from_direction(face);
   }
   
-  JSONObject serialize() { JSONObject o = super.serialize(); o.setString("type", "Player"); return o;  }
-  void deserialize(JSONObject o) { super.deserialize(o); face = direction_from_quarter_turns(quarter_turns); }
+  IntVec get_face_square(Grid grid)
+  {
+    //first we need to make a point that is one edge_width in the direction the player is facing
+    PVector p = PVector.fromAngle(rot).mult(dim.x).add(pos);
+    
+    //now get the grid coordinates from the grid
+    return grid.grid_pos_from_absolute_pos(p); //<>//
+  }
+  
+  Griddle get_faced_griddle(Grid grid)
+  {
+    return grid.get(PVector.fromAngle(rot).mult(dim.x).add(pos));
+  }
+  
+  //JSONObject serialize() { JSONObject o = new JSONObject(); IntVec gp = globals.session.grid.grid_pos_from_absolute_pos(pos); o.setInt("x", gp.x); o.setInt("y", gp.y); o.setString("type", "Player"); return o;  }
+  //void deserialize(JSONObject o) { pos = globals.session.grid.absolute_pos_from_grid_pos(new IntVec(o.getInt("x"), o.getInt("y"))); }
 }

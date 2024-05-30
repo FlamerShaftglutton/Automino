@@ -44,16 +44,16 @@ class SmartGrabberBelt extends GrabberBelt
 
 class GrabberBelt extends ConveyorBelt
 {
-  void update()
+  void update(GridGameFlowBase game)
   {
-    super.update();
+    super.update(game);
     
     if (ng() == null)
     {
       IntVec iv_offset = offset_from_quarter_turns(quarter_turns+2);
-      IntVec xy = globals.active_grid.get_grid_pos_from_object(this).add(iv_offset);
+      IntVec xy = game.grid.get_grid_pos_from_object(this).add(iv_offset);
       
-      Griddle gg = globals.active_grid.get(xy.x, xy.y);
+      Griddle gg = game.grid.get(xy.x, xy.y);
 
       for (NonGriddle gg_ng : gg.ngs)
       {
@@ -77,7 +77,7 @@ class SwitchGrabberBelt extends GrabberBelt
   String disabled_spritename;
   PShape disabled_sprite;
   
-  void update() { if (enabled) super.update(); }
+  void update(GridGameFlowBase game) { if (enabled) super.update(game); }
   void draw()
   {
     if (enabled)
@@ -102,7 +102,7 @@ class ConveyorBelt extends Griddle
 {
   float movement_progress = 0f;
   
-  void update()
+  void update(GridGameFlowBase game)
   {
     NonGriddle ng = ng();
     
@@ -110,14 +110,14 @@ class ConveyorBelt extends Griddle
     {
       movement_progress += 0.04;//0.015f;
       IntVec iv_offset = offset_from_quarter_turns(quarter_turns);
-      IntVec xy = globals.active_grid.get_grid_pos_from_object(this).add(iv_offset);
+      IntVec xy = game.grid.get_grid_pos_from_object(this).add(iv_offset);
       
       if (movement_progress < 1f)
       {
         if (movement_progress > 0.5f)
         {
           //stop half-way if the next thing can't take this yet (unless it's another conveyor belt)
-          Griddle gg = globals.active_grid.get(xy.x, xy.y);
+          Griddle gg = game.grid.get(xy.x, xy.y);
           
           if (!gg.can_accept_ng(ng))//(!(gg instanceof ConveyorBelt) && !gg.can_accept_ng(ng))
             movement_progress = 0.5f;
@@ -145,7 +145,7 @@ class ConveyorBelt extends Griddle
       else
       {
         //find the neighboring griddle and try to pass this off
-        if (globals.active_grid.get(xy.x,xy.y).receive_ng(ng))
+        if (game.grid.get(xy.x,xy.y).receive_ng(ng))
           remove_ng(ng);
         else
           movement_progress = 1f;

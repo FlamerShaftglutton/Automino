@@ -7,7 +7,9 @@ class Transformer extends Griddle
   boolean automatic = false;
   float speed = 0.01f;
   
-  void update()
+  Transformer() { type = "Transformer"; }
+  
+  void update(GridGameFlowBase game)
   {
     if (running && ngs.isEmpty())
     {
@@ -22,26 +24,26 @@ class Transformer extends Griddle
         time_used += speed;
       
       if (time_used >= current_interaction.time)
-        finish_transformation();
+        finish_transformation(game);
     }
     
-    super.update();
+    super.update(game);
   }
   
-  void finish_transformation()
+  void finish_transformation(GridGameFlowBase game)
   {
     running = false;
     
     //destroy all inputs
     for (NonGriddle ng : ngs)
-      globals.destroy_ng(ng);
+      game.destroy_ng(ng);
     
     ngs.clear();
     
     //create the outputs
     for (String output_ng_name : current_interaction.output_ngs)
     {
-      NonGriddle ng2 = globals.create_and_register_ng(output_ng_name);
+      NonGriddle ng2 = game.create_and_register_ng(output_ng_name);
       
       if (!receive_ng(ng2))
         println("Something went wrong in Transformer. New ng created but could not be stored. Old ng is already dead.");
@@ -176,7 +178,6 @@ class Transformer extends Griddle
   JSONObject serialize() 
   {
     JSONObject o = super.serialize(); 
-    o.setString("type", "Transformer");
     o.setFloat("speed", speed);
     o.setBoolean("automatic", automatic);
     
@@ -192,6 +193,7 @@ class Transformer extends Griddle
 
 class TrashCompactor extends Transformer
 {  
+  TrashCompactor() { type = "TrashCompactor"; }
   Interaction first_matching_interaction(StringList ng_names)
   {
     if (ng_names.size() >= 2)
@@ -199,6 +201,4 @@ class TrashCompactor extends Transformer
       
     return null;
   }
-  
-  JSONObject serialize() { JSONObject o = super.serialize(); o.setString("type", "TrashCompactor"); return o; }
 }

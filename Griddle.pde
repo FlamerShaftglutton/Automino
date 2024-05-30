@@ -39,7 +39,7 @@ class Griddle
     }
   }
   
-  void update()
+  void update(GridGameFlowBase game)
   {
     center_ngs();
   }
@@ -102,7 +102,7 @@ class NullGriddle extends Griddle
   boolean can_accept_ng(NonGriddle n) { return false; }
   
   void draw() {  }
-  void update() {  }
+  void update(GridGameFlowBase game) {  }
 }
 
 class EmptyGriddle extends Griddle
@@ -120,7 +120,7 @@ class EmptyGriddle extends Griddle
     rect(pos.x, pos.y, dim.x, dim.y); 
   }
   
-  void update() { if (ng() != null) ng().pos = center_center(); }
+  void update(GridGameFlowBase game) { if (ng() != null) ng().pos = center_center(); }
 }
 
 class PlayerGriddle extends Griddle

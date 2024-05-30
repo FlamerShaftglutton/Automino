@@ -130,7 +130,7 @@ class Player
     PVector p = PVector.fromAngle(rot).mult(dim.x).add(pos);
     
     //now get the grid coordinates from the grid
-    return grid.grid_pos_from_absolute_pos(p); //<>//
+    return grid.grid_pos_from_absolute_pos(p); //<>// //<>// //<>//
   }
   
   Griddle get_faced_griddle(Grid grid)

@@ -1,105 +1,68 @@
-class GameSession
+class GameSession extends GridGameFlowBase
 {
-  Grid grid;
   int rounds_completed = 0;
   ArrayList<WinCondition> win_conditions = new ArrayList<WinCondition>();
   ArrayList<RewardGriddle> rewards = new ArrayList<RewardGriddle>();
   GameState state = GameState.STARTING_PLAYLEVEL;
-  String save_path;
-  Player player;
   //curses/boons
   
   void update()
   {
-    player.update(grid);
+    super.update();
     
     switch (state)
     {
       case STARTING_PLAYLEVEL: start_level(); break;
-      case PLAYLEVEL: grid.update(); check_for_level_end(); break;
+      case PLAYLEVEL: check_for_level_end(); break;
       case LEVELEDITOR: level_editor(); break;
-      case WON_PLAYLEVEL: globals.nongriddles.clear(); globals.nongriddles_to_delete.clear(); globals.active_grid = grid = get_LevelEditor_from_level(grid); state = GameState.LEVELEDITOR; break;  //TODO: add in curse / boon stuff
-      case LOST_PLAYLEVEL: println("You lost!"); break;
+      case WON_PLAYLEVEL: nongriddles.clear(); nongriddles_to_delete.clear(); grid = get_LevelEditor_from_level(grid); state = GameState.LEVELEDITOR; break;  //TODO: add in curse / boon stuff
+      case LOST_PLAYLEVEL: println("You lost!"); this.exit(); break;
       case MENU: println("Here's the menu I guess."); break;
     }
   }
   
-  void draw()
-  {
-    grid.draw();
-    player.draw();
-  }
-  
   void level_editor()
   {
-    globals.active_grid = grid;
-    grid.update(); 
-    
     if (globals.keyReleased  && key == 'y') 
     { 
       save(); 
-      globals.nongriddles.clear(); globals.nongriddles_to_delete.clear();
-      load(save_path); 
+      nongriddles.clear(); 
+      nongriddles_to_delete.clear();
+      load(); 
       state = GameState.STARTING_PLAYLEVEL; 
     }
-    //DEBUG
-    else if (globals.keyReleased && key == 'd')
-    {
-      for (int y = 0; y < grid.h; ++y)
-      {
-        print("y: " + y + ": ");
-        
-        for (int x = 0; x < grid.w; ++x)
-        {
-          Griddle g = globals.active_grid.get(x,y);
-          
-          print("" + x + ": spritename=" + g.spritename + "; ");
-        }
-        
-        println();
-      }
-    }
   }
   
-  
-  void save()
+  String exit()
   {
-    JSONObject root = new JSONObject();
+    return save_path;
+  }
+  
+  void onFocus(String message)
+  {
+    //TODO: capture messages from menus based on the current GameState, such as exiting the level or upgrading a griddle based on a modal choice
+  }
+  
+  JSONObject serialize()
+  {
+    JSONObject root = super.serialize();
+    
     root.setInt("rounds_completed", rounds_completed);
     
-    PlayerGriddle griddy = new PlayerGriddle();
-    griddy.spritename = player.spritename;
-    IntVec pgp = grid.grid_pos_from_absolute_pos(player.pos);
-    grid.set(pgp.x, pgp.y, griddy);
-    
-    grid.apply_alterations();
-    
-    root.setJSONObject("grid", grid.serialize());
-    
-    //TODO: serialize curses & boons
-    
-    saveJSONObject(root, save_path);
+    return root;
   }
   
-  void load(String path)
-  {
-    save_path = path;
-    
-    JSONObject root = loadJSONObject(path);
+  void deserialize(JSONObject root)
+  {    
+    super.deserialize(root);
     
     rounds_completed = root.getInt("rounds_completed");
     
-    //TODO: deserialize curses & boons
-    
-    Grid gg = new Grid(new PVector(100,100), new PVector(width - 200, height - 200));
-    
-    gg.deserialize(root.getJSONObject("grid"));
-    
     win_conditions.clear();
     
-    for (int x = 1; x < gg.w; ++x)
+    for (int x = 1; x < grid.w; ++x)
     {
-      Griddle gr = gg.get(x, gg.h - 1);
+      Griddle gr = grid.get(x, grid.h - 1);
       
       if (gr instanceof CountingOutputResourcePool)
       {
@@ -113,37 +76,13 @@ class GameSession
       }
     }
     
-    grid = gg;
-    
-    player = null;
-    for (int x = 0; x < gg.w && player == null; ++x)
-    {
-      for (int y = 0; y < gg.h && player == null; ++y)
-      {
-        Griddle gr = gg.get(x,y);
-        
-        if (gr instanceof PlayerGriddle)
-        {
-          player = new Player();
-          player.spritename = gr.spritename;
-          player.sprite = gr.sprite;
-          player.pos = gg.absolute_pos_from_grid_pos(new IntVec(x,y));
-          player.dim = gg.get_square_dim();
-          
-          grid.set(x,y,new EmptyGriddle());
-        }
-      }
-    }
-    
-    grid.apply_alterations();
-    
     state = GameState.STARTING_PLAYLEVEL;
   }
   
   void create_new()
   {
-    int w = 7;//(int)random(7, 10);
-    int h = 9;//(int)random(7, 10);
+    int w = (int)random(7, 10);
+    int h = (int)random(7, 10);
     
     String req_type   = random(10) > 4 ? "Iron Ingot" : "Cobalt Ingot";
     int    req_amount = 1;
@@ -223,8 +162,8 @@ class GameSession
     }
     
     //DEBUG
-    g.get(1,1).ngs.add(globals.create_and_register_ng("Iron Ingot"));
-    g.get(1,2).ngs.add(globals.create_and_register_ng("Cobalt Ingot"));
+    g.get(1,1).receive_ng(create_and_register_ng("Iron Ingot"));
+    g.get(1,2).receive_ng(create_and_register_ng("Cobalt Ingot"));
     
     grid = g;
   }
@@ -258,9 +197,6 @@ class GameSession
   
   void start_level()
   {
-    //globals.nongriddles.clear();
-    //globals.nongriddles_to_delete.clear();
-    
     refresh_rewards();
     
     rewards.get(0).running = true;
@@ -272,8 +208,6 @@ class GameSession
     }
     
     state = GameState.PLAYLEVEL;
-    
-    globals.active_grid = grid;
     
     grid.apply_alterations();
   }
@@ -352,7 +286,7 @@ class GameSession
             leng.as_json = tggo;
             leng.shape = globals.sprites.get_sprite(tggo.getString("sprite"));
             leng.visible = false;
-            globals.register_ng(leng);
+            register_ng(leng);
             leg.receive_ng(leng);
           }
           
@@ -383,7 +317,7 @@ class GameSession
           leng.as_json = tggo;
           leng.shape = globals.sprites.get_sprite(tggo.getString("sprite"));
           leng.visible = false;
-          globals.register_ng(leng);
+          register_ng(leng);
           leg.receive_ng(leng);
           
           leg.locked = false;

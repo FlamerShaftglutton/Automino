@@ -1,40 +1,33 @@
 
 class Globals
 {
-  Grid active_grid;
-  Player player;
-  
-  ArrayList<NonGriddle> nongriddles = new ArrayList<NonGriddle>();
-  ArrayList<NonGriddle> nongriddles_to_delete = new ArrayList<NonGriddle>();
   NonGriddleFactory ngFactory = new NonGriddleFactory();
   GriddleFactory gFactory = new GriddleFactory();
   SpriteFactory sprites = new SpriteFactory();
   InteractionFactory interactions = new InteractionFactory();
-  GameSession session = null;
-  
-  
-  boolean newgame = false;
-  boolean loading = false;
-  boolean saving  = false;
-  String load_file_path;
-  String save_file_path;
+  GameFlowManager game = new GameFlowManager();
+  MessageQueue messages = new MessageQueue();
   
   boolean mouseReleased = false;
   boolean keyReleased = false;
+}
+
+class Message
+{
+  String target;
+  String value;
   
-  NonGriddle create_and_register_ng(String name)
-  {
-    NonGriddle retval = ngFactory.create_ng(name);
-    
-    register_ng(retval);
-    
-    return retval;
-  }
+  Message(String target, String value) { this.target = target; this.value = value; }
+}
+
+class MessageQueue
+{
+  ArrayList<Message> queue = new ArrayList<Message>();
   
-  void register_ng(NonGriddle ng) { nongriddles.add(ng); }
+  void post_message(Message message) { queue.add(message); }
+  void post_message(String target, String value) { post_message(new Message(target, value)); }
   
-  void destroy_ng(NonGriddle ng)
-  {
-    nongriddles_to_delete.add(ng);
-  }
+  Message consume_message() { return isEmpty() ? null : queue.remove(0); }
+  
+  boolean isEmpty() { return queue.isEmpty(); }
 }

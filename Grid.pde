@@ -63,7 +63,7 @@ class Grid
       set(x,y,g);
     }
     
-    update();
+    apply_alterations();
   }
   
   JSONObject serialize()
@@ -120,10 +120,10 @@ class Grid
       g.draw();
   }
   
-  void update()
+  void update(GridGameFlowBase game)
   {
     for (int i = 0; i < griddles.size(); ++i)
-      griddles.get(i).update();
+      griddles.get(i).update(game);
     
     apply_alterations();
   }

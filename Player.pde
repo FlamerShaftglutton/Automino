@@ -71,8 +71,17 @@ class Player
         //Griddle g = globals.active_grid.get(gpos.copy().add(offset));
         Griddle fg = get_faced_griddle(grid);
         
+        //try put down
+        if (ng != null)
+        {
+          if (ng instanceof LevelEditorNonGriddle)
+            ((LevelEditorNonGriddle)ng).visible = false;
+          
+          if (fg.receive_ng(ng))
+            ng = null;
+        }
         //try to pick up
-        if (ng == null && fg.can_give_ng())
+        else if (fg.can_give_ng())
         {
           NonGriddle gng = fg.ng();
           
@@ -84,16 +93,6 @@ class Player
             fg.remove_ng(gng);
             ng = gng;
           }
-        }
-        
-        //try to put down
-        else
-        {
-          if (ng instanceof LevelEditorNonGriddle)
-            ((LevelEditorNonGriddle)ng).visible = false;
-          
-          if (fg.receive_ng(ng))
-            ng = null;
         }
       }
     }

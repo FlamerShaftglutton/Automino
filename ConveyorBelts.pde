@@ -3,6 +3,8 @@ class SmartGrabberBelt extends GrabberBelt
   String keyed_ng_type = "";
   PShape keyed_ng_sprite;
   
+  SmartGrabberBelt() { type = "SmartGrabberBelt"; }
+  
   void draw()
   {
     super.draw();
@@ -32,7 +34,7 @@ class SmartGrabberBelt extends GrabberBelt
     return true;
   }
   
-  JSONObject serialize() { JSONObject o = super.serialize(); o.setString("keyed_ng_type",keyed_ng_type); o.setString("type", "SmartGrabberBelt"); return o;  }  
+  JSONObject serialize() { JSONObject o = super.serialize(); o.setString("keyed_ng_type",keyed_ng_type); return o;  }  
   void deserialize(JSONObject o) 
   { 
     super.deserialize(o); 
@@ -44,6 +46,8 @@ class SmartGrabberBelt extends GrabberBelt
 
 class GrabberBelt extends ConveyorBelt
 {
+  GrabberBelt() { type = "GrabberBelt"; }
+  
   void update(GridGameFlowBase game)
   {
     super.update(game);
@@ -67,8 +71,6 @@ class GrabberBelt extends ConveyorBelt
   }
   
   boolean can_grab(NonGriddle ng_to_grab) { return true; }
-  
-  JSONObject serialize() { JSONObject o = super.serialize(); o.setString("type", "GrabberBelt"); return o;  }
 }
 
 class SwitchGrabberBelt extends GrabberBelt
@@ -76,6 +78,8 @@ class SwitchGrabberBelt extends GrabberBelt
   boolean enabled = false;
   String disabled_spritename;
   PShape disabled_sprite;
+  
+  SwitchGrabberBelt() { type = "SwitchGrabberBelt"; }
   
   void update(GridGameFlowBase game) { if (enabled) super.update(game); }
   void draw()
@@ -88,7 +92,7 @@ class SwitchGrabberBelt extends GrabberBelt
   
   void player_interact_end(Player player) { enabled = !enabled; }
   
-  JSONObject serialize() { JSONObject o = super.serialize(); o.setString("type", "SwitchGrabberBelt"); o.setBoolean("enabled",enabled); o.setString("disabled_sprite", disabled_spritename); return o;  }
+  JSONObject serialize() { JSONObject o = super.serialize(); o.setBoolean("enabled",enabled); o.setString("disabled_sprite", disabled_spritename); return o;  }
   void deserialize(JSONObject o) 
   { 
     super.deserialize(o); 
@@ -101,6 +105,8 @@ class SwitchGrabberBelt extends GrabberBelt
 class ConveyorBelt extends Griddle
 {
   float movement_progress = 0f;
+  
+  ConveyorBelt() { type = "ConveyorBelt"; }
   
   void update(GridGameFlowBase game)
   {
@@ -164,6 +170,4 @@ class ConveyorBelt extends Griddle
     
     return true;
   }
-  
-  JSONObject serialize() { JSONObject o = super.serialize(); o.setString("type", "ConveyorBelt"); return o;  }
 }

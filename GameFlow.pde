@@ -171,3 +171,30 @@ class MainMenuGameFlow extends GridGameFlowBase
     }
   }
 }
+
+class MessageScreenGameFlow implements GameFlow
+{
+  String message = "";
+  
+  void update() { if (globals.keyReleased) globals.game.pop(); }
+  void draw()
+  {
+    fill(color(255,255,255,100));
+    stroke(color(0,0,0,100));
+    
+    rect(width * 0.2, height * 0.2, width * 0.6, height * 0.6, 10f);
+
+    fill(0);
+    
+    textSize((int)height / 8);
+    textAlign(CENTER,CENTER);
+    text(message, width * 0.5f, height * 0.4f);
+    
+    textSize((int)height / 32);
+    text("Press any button to continue", width * 0.5f, height * 0.6f);
+  }
+  void save() { }
+  void load() { }
+  String exit() { return message; }
+  void onFocus(String message) { this.message = message; }
+}

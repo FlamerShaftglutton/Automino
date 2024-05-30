@@ -97,7 +97,7 @@ class Griddle
 
 class NullGriddle extends Griddle
 {
-  NullGriddle() { type = "NullGriddle"; }
+  NullGriddle() { type = "NullGriddle"; traversable = false; }
   
   boolean can_accept_ng(NonGriddle n) { return false; }
   

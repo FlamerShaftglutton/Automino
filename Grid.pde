@@ -92,7 +92,7 @@ class Grid
   {
     IntVec c = grid_pos_from_absolute_pos(point);
     
-    if (c.x >= w || c.x < 0 || c.y >= h || c.y < 0)
+    if (point.x < pos.x || point.y < pos.y || c.x >= w || c.x < 0 || c.y >= h || c.y < 0)
       return new NullGriddle();
     
     return get(c.x,c.y);

@@ -210,6 +210,8 @@ class LevelEditorGriddle extends EmptyGriddle
   
   LevelEditorGriddle() { type = "LevelEditorGriddle"; }
   
+  void update(GridGameFlowBase game) { traversable = ngs.isEmpty(); }
+  
   void player_interact_end(Player player)
   {
     if (!locked)

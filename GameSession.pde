@@ -13,10 +13,10 @@ class GameSession extends GridGameFlowBase
     switch (state)
     {
       case STARTING_PLAYLEVEL: start_level(); break;
-      case PLAYLEVEL: check_for_level_end(); break;
+      case PLAYLEVEL: check_for_level_end(); if (globals.keyReleased && key == 'q') globals.game.pop(); break;
       case LEVELEDITOR: level_editor(); break;
-      case WON_PLAYLEVEL: nongriddles.clear(); nongriddles_to_delete.clear(); grid = get_LevelEditor_from_level(grid); state = GameState.LEVELEDITOR; break;  //TODO: add in curse / boon stuff
-      case LOST_PLAYLEVEL: println("You lost!"); this.exit(); break;
+      case WON_PLAYLEVEL: globals.game.push(new MessageScreenGameFlow(), "You won!"); nongriddles.clear(); nongriddles_to_delete.clear(); grid = get_LevelEditor_from_level(grid); state = GameState.LEVELEDITOR; break;  //TODO: add in curse / boon stuff
+      case LOST_PLAYLEVEL: globals.game.push(new MessageScreenGameFlow(), "You lose..."); break;
       case MENU: println("Here's the menu I guess."); break;
     }
   }
@@ -40,6 +40,8 @@ class GameSession extends GridGameFlowBase
   
   void onFocus(String message)
   {
+    if (message.contains("lose") || message.contains("lost"))
+      globals.game.pop();
     //TODO: capture messages from menus based on the current GameState, such as exiting the level or upgrading a griddle based on a modal choice
   }
   
@@ -188,7 +190,7 @@ class GameSession extends GridGameFlowBase
       
       rg.reward_griddle_name = types[p];
       rg.time_used = 0f;
-      rg.time_needed = 48;
+      rg.time_needed = 10;
       
       rg.finished = false;
       rg.running = false;
@@ -339,7 +341,7 @@ enum GameState
   MENU,
   STARTING_PLAYLEVEL,
   WON_PLAYLEVEL,
-  LOST_PLAYLEVEL,
+  LOST_PLAYLEVEL
 }
 
 class WinCondition

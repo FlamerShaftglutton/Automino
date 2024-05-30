@@ -28,8 +28,6 @@ void initglobals()
   
   MainMenuGameFlow mm = new MainMenuGameFlow();
   mm.save_path = dataPath("menu.json");
-  mm.load();
-  
   globals.game.push(mm);
 }
 
@@ -46,8 +44,4 @@ void keyReleased()
 
 void translate(PVector p) { translate(p.x,p.y); }
 
-void fileSelected(File selection)
-{
-  if (selection != null)
-    globals.messages.post_message("save", selection.getAbsolutePath());
-}
+String right(String in, int characters) { if (in.length() < characters) return in; return in.substring(in.length() - characters); } 

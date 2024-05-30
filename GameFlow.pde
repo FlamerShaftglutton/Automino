@@ -158,17 +158,82 @@ class MainMenuGameFlow extends GridGameFlowBase
     {
       case "newgame":
         GameSession newgame = new GameSession();
+        newgame.save_path = dataPath(save_filename());
         newgame.create_new();
-        newgame.save_path = dataPath("Game1.json");
         globals.game.push(newgame);
         break;
       case "load":
-        println("Loading... psych! I ain't doing nothin'.");
+        GameSession loadgame = new GameSession();
+        loadgame.save_path = message.value;
+        loadgame.load();
+        globals.game.push(loadgame);
         break;
       case "save":
         println("Saving... psych! I ain't doing nothing'.");
         break;
     }
+  }
+  
+  String save_filename()
+  {
+    String retval = "save_";
+    
+    retval += right("0000" + year(),4);
+    retval += right("00" + month(),2);
+    retval += right("00" + day(),2);
+    retval += right("00" + hour(),2);
+    retval += right("00" + minute(),2);
+    retval += right("00" + second(),2);
+    
+    retval += ".json";
+    
+    return retval;
+  }
+  
+  void load()
+  {
+    super.load();
+    
+    File dir = new File(dataPath(""));
+    
+    File[] files = dir.listFiles();
+    
+    int used = 0;
+    for (int i = 0; i < files.length && used < grid.h; ++i)
+    {
+      File f = files[i];
+      
+      if (f.isDirectory() || !f.getName().startsWith("save") || !f.getName().endsWith("json"))
+        continue;
+      
+      MetaActionCounter mac = (MetaActionCounter)globals.gFactory.create_griddle("MetaActionCounter");
+      mac.display_string = "Load " + f.getName();
+      mac.action = "load";
+      mac.parameters.append(f.getAbsolutePath());
+
+      grid.set(grid.w - 1, used, mac);
+      
+      ++used;
+    }
+    
+    if (used >= grid.h)
+    {
+      for (int y = 0; y < grid.h; ++y)
+      {
+        for (int x = 0; x < grid.w - 1; ++x)
+        {
+          Griddle griddy = grid.get(x,y);
+          
+          if (griddy instanceof MetaActionCounter && ((MetaActionCounter)griddy).action.equals("newgame"))
+            grid.set(x,y, new EmptyGriddle());
+        }
+      }
+    }
+  }
+  
+  void onFocus(String message)
+  {
+    load();
   }
 }
 

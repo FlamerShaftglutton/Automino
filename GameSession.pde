@@ -166,6 +166,7 @@ class GameSession extends GridGameFlowBase
     //DEBUG
     g.get(1,1).receive_ng(create_and_register_ng("Iron Ingot"));
     g.get(1,2).receive_ng(create_and_register_ng("Cobalt Ingot"));
+    g.get(1,3).receive_ng(create_and_register_ng("Gold Ingot"));
     
     grid = g;
   }
@@ -190,7 +191,7 @@ class GameSession extends GridGameFlowBase
       
       rg.reward_griddle_name = types[p];
       rg.time_used = 0f;
-      rg.time_needed = 10;
+      rg.time_needed = 48;
       
       rg.finished = false;
       rg.running = false;
@@ -220,7 +221,7 @@ class GameSession extends GridGameFlowBase
     boolean won = true;
     for (WinCondition wc : win_conditions)
     {
-      if (wc.to_check.count < wc.amount)
+      if (wc.to_check.get_count() < wc.amount)
       {
         won = false;
         break;
@@ -275,6 +276,16 @@ class GameSession extends GridGameFlowBase
         
         if (tgg instanceof NullGriddle)
           le_grid.set(x,y,new NullGriddle());
+        else if (tgg instanceof CountingOutputResourcePool)
+        {
+          CountingOutputResourcePool output = new CountingOutputResourcePool();
+          output.deserialize(tgg.serialize());
+          
+          if (!output.ng_type.equals("Gold Ingot"))
+            output.count = 0;
+          
+          le_grid.set(x,y, output);
+        }
         else
         {
           boolean lock = (x == 0 || y == 0 || y == tg.h - 1 || x == tg.w - 1);

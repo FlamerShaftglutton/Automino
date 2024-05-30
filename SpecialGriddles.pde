@@ -15,10 +15,13 @@ class ResourcePool extends Griddle
     this.game = game;
     
     if (ngs.isEmpty())
-       ngs.add(game.create_and_register_ng(ng_type));
+      produce_resource(game);
+       //ngs.add(game.create_and_register_ng(ng_type));
     
     super.update(game);
   }
+  
+  void produce_resource(GridGameFlowBase game) { ngs.add(game.create_and_register_ng(ng_type)); }
   
   JSONObject serialize() { JSONObject o = super.serialize(); o.setString("ng_type", ng_type); return o;  }
   void deserialize(JSONObject o) { super.deserialize(o); ng_type = o.getString("ng_type", ""); }
@@ -80,13 +83,16 @@ class CountingOutputResourcePool extends ResourcePool
   int count = 0;
   int required = -1;
   PShape ng_sprite;
-  GridGameFlowBase game;
   
   CountingOutputResourcePool() { type = "CountingOutputResourcePool"; }
   
   boolean receive_ng(NonGriddle ng) { if (!can_accept_ng(ng)) return false; game.destroy_ng(ng); ++count; return true; }
   
-  void update(GridGameFlowBase game) { this.game = game;  }
+  void produce_resource(GridGameFlowBase game) { if (count > 0) { super.produce_resource(game); --count; } }
+  
+  int get_count() { return count + ngs.size(); }
+  
+  //void update(GridGameFlowBase game) { this.game = game;  }
   void draw()
   {
     super.draw();
@@ -100,7 +106,7 @@ class CountingOutputResourcePool extends ResourcePool
     PVector sprite_spot = new PVector(dim.x * 0.5f, dim.y * 0.6f).sub(sprite_dim.copy().mult(0.5f));
     
     textAlign(CENTER,CENTER);
-    String s = "" + count;
+    String s = "" + get_count();
     
     if (required > 0)
       s += " / " + required;
@@ -109,13 +115,13 @@ class CountingOutputResourcePool extends ResourcePool
     fill(#000000);
     text(s, text_spot.x, text_spot.y);
     
-    if (ng_sprite != null)
+    if (ng_sprite != null && get_count() == 0)
       shape(ng_sprite, sprite_spot.x, sprite_spot.y, sprite_dim.x, sprite_dim.y);
     
     popMatrix();
   }
   
-  JSONObject serialize() { JSONObject o = super.serialize(); o.setString("ng_type", ng_type); o.setInt("required", required); o.setInt("count", count); return o;  }
+  JSONObject serialize() { JSONObject o = super.serialize(); o.setString("ng_type", ng_type); o.setInt("required", required); o.setInt("count", get_count()); return o;  }
   
   void deserialize(JSONObject o)
   {
@@ -234,7 +240,7 @@ class LevelEditorGriddle extends EmptyGriddle
     return true;
   }
   
-  boolean can_accept_ng(NonGriddle n) { return !locked && super.can_accept_ng(n); }
+  boolean can_accept_ng(NonGriddle n) { return !locked && n instanceof LevelEditorNonGriddle && super.can_accept_ng(n); }
   boolean can_give_ng() { return !locked; }
   
   void draw() 

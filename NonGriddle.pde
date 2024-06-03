@@ -139,7 +139,7 @@ class NonGriddleFactory
   
   LevelEditorNonGriddle create_le_ng(String name)
   {
-    return create_le_ng(globals.gFactory.create_griddle(name).serialize());
+    return create_le_ng(globals.gFactory.create_griddle(name, null).serialize());
   }
   
   LevelEditorNonGriddle create_le_ng(JSONObject o)
@@ -147,7 +147,7 @@ class NonGriddleFactory
     LevelEditorNonGriddle retval = new LevelEditorNonGriddle(); 
     retval.dim = new PVector(40,40); 
     retval.as_json = o; 
-    retval.name = o.getString("type"); 
+    retval.name = o.getString("_template", o.getString("type")); 
     retval.shape = globals.sprites.get_sprite(o.getString("sprite"));
     return retval; 
   }

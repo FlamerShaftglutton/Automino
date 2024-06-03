@@ -40,8 +40,3 @@ void keyReleased()
 {
   globals.keyReleased = true;
 }
-
-
-void translate(PVector p) { translate(p.x,p.y); }
-
-String right(String in, int characters) { if (in.length() < characters) return in; return in.substring(in.length() - characters); } 

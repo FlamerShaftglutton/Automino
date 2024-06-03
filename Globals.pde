@@ -16,8 +16,11 @@ class Message
 {
   String target;
   String value;
+  Object sender;
   
-  Message(String target, String value) { this.target = target; this.value = value; }
+  Message() { this("", "", null); }
+  Message(String target, String value) { this(target,value,null); }
+  Message(String target, String value, Object sender) { this.target = target; this.value = value; this.sender = sender; }
 }
 
 class MessageQueue

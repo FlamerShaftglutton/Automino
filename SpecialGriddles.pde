@@ -3,22 +3,19 @@
 class ResourcePool extends Griddle
 {
   String ng_type;
-  GridGameFlowBase game;
   
   boolean can_accept_ng(NonGriddle n) { return ng_type.equals(n.name); }
   boolean receive_ng(NonGriddle ng) { if (!can_accept_ng(ng)) return false; game.destroy_ng(ng); return true; }
   
-  ResourcePool() { type = "ResourcePool"; }
+  ResourcePool(GridGameFlowBase game) { super(game); type = "ResourcePool"; }
   
-  void update(GridGameFlowBase game)
+  void update()
   {
-    this.game = game;
-    
     if (ngs.isEmpty())
       produce_resource(game);
        //ngs.add(game.create_and_register_ng(ng_type));
     
-    super.update(game);
+    super.update();
   }
   
   void produce_resource(GridGameFlowBase game) { ngs.add(game.create_and_register_ng(ng_type)); }
@@ -32,9 +29,9 @@ class RandomResourcePool extends ResourcePool
   StringList resources = new StringList();
   StringList remaining_resources = new StringList();
   
-  RandomResourcePool() { type = "RandomResourcePool"; }
+  RandomResourcePool(GridGameFlowBase game) { super(game); type = "RandomResourcePool"; }
   
-  void update(GridGameFlowBase game)
+  void update()
   {
     if (remaining_resources.size() == 0)
     {
@@ -45,7 +42,7 @@ class RandomResourcePool extends ResourcePool
     if (ngs.isEmpty())
       ng_type = remaining_resources.pop();
     
-    super.update(game);
+    super.update();
   }
   
   JSONObject serialize() { JSONObject o = super.serialize(); JSONArray a = new JSONArray(); for (String s : resources) a.append(s); o.setJSONArray("resources",a); return o;  }
@@ -84,7 +81,7 @@ class CountingOutputResourcePool extends ResourcePool
   int required = -1;
   PShape ng_sprite;
   
-  CountingOutputResourcePool() { type = "CountingOutputResourcePool"; }
+  CountingOutputResourcePool(GridGameFlowBase game) { super(game); type = "CountingOutputResourcePool"; }
   
   boolean receive_ng(NonGriddle ng) { if (!can_accept_ng(ng)) return false; game.destroy_ng(ng); ++count; return true; }
   
@@ -92,7 +89,7 @@ class CountingOutputResourcePool extends ResourcePool
   
   int get_count() { return count + ngs.size(); }
   
-  //void update(GridGameFlowBase game) { this.game = game;  }
+  //void update() { this.game = game;  }
   void draw()
   {
     super.draw();
@@ -140,7 +137,7 @@ class MetaActionCounter extends Griddle
   String action = "";
   StringList parameters = new StringList();
   
-  MetaActionCounter() { type = "MetaActionCounter"; }
+  MetaActionCounter(GridGameFlowBase game) { super(game); type = "MetaActionCounter"; }
   
   boolean can_accept_ng() { return false; }
   
@@ -162,20 +159,6 @@ class MetaActionCounter extends Griddle
   {
     String message = parameters.size() == 0 ? "" : parameters.get(0);
     globals.messages.post_message(action, message);
-    /*
-    switch (action)
-    {
-      case "load": globals.messages.post_message("load", parameters.get(0)); break;
-      case "save": globals.messages.post_message("save", parameters.get(0)); break;
-      case "newgame": globals.messages.post_message("new", ""); break;
-      
-      //case "load": globals.load_file_path = parameters.get(0); globals.loading = true; break;
-      //case "save": selectOutput("Select a file to write to:", "fileSelected"); break;
-      //case "newgame": globals.newgame = true; break;
-      
-      default: println("MetaAction '" + action + "' not recognized."); break;  
-    }
-    */
   }
   
   void deserialize(JSONObject o) 
@@ -214,9 +197,9 @@ class LevelEditorGriddle extends EmptyGriddle
   boolean locked = false;
   
   
-  LevelEditorGriddle() { type = "LevelEditorGriddle"; }
+  LevelEditorGriddle(GridGameFlowBase game) { super(game); type = "LevelEditorGriddle"; }
   
-  void update(GridGameFlowBase game) { traversable = ngs.isEmpty(); }
+  void update() { traversable = ngs.isEmpty(); }
   
   void player_interact_end(Player player)
   {
@@ -226,8 +209,15 @@ class LevelEditorGriddle extends EmptyGriddle
   
   boolean receive_ng(NonGriddle ng)
   {
+    if (ng.name.equals("Gold Ingot") && !ngs.isEmpty())
+    {
+      globals.messages.post_message(new Message("upgrade", ng().name, this));
+      return false;
+    }
+    
     if (!super.receive_ng(ng) || !(ng instanceof LevelEditorNonGriddle))
       return false;
+      
     
     LevelEditorNonGriddle leng = (LevelEditorNonGriddle)ng;
     
@@ -240,7 +230,7 @@ class LevelEditorGriddle extends EmptyGriddle
     return true;
   }
   
-  boolean can_accept_ng(NonGriddle n) { return !locked && n instanceof LevelEditorNonGriddle && super.can_accept_ng(n); }
+  boolean can_accept_ng(NonGriddle n) { return n.name.equals("Gold Ingot") || (!locked && n instanceof LevelEditorNonGriddle && super.can_accept_ng(n)); }
   boolean can_give_ng() { return !locked; }
   
   void draw() 
@@ -262,7 +252,7 @@ class LevelEditorGriddle extends EmptyGriddle
   JSONObject serialize()
   { 
     if (ngs.isEmpty())
-      return (new EmptyGriddle()).serialize();
+      return (new EmptyGriddle(game)).serialize();
     
     JSONObject o = ((LevelEditorNonGriddle)ngs.get(0)).as_json;
     o.setInt("quarter_turns", quarter_turns);
@@ -279,13 +269,13 @@ class RewardGriddle extends Griddle
   boolean finished = false;
   boolean running = false;
   
-  RewardGriddle() { type = "RewardGriddle"; }
+  RewardGriddle(GridGameFlowBase game) { super(game); type = "RewardGriddle"; }
   
-  void update(GridGameFlowBase game)
+  void update()
   {
     if (sprite == null && !reward_griddle_name.isEmpty()) 
     {
-      Griddle g = globals.gFactory.create_griddle(reward_griddle_name);
+      Griddle g = globals.gFactory.create_griddle(reward_griddle_name, game);
       
       if (g != null)
         sprite = g.sprite;

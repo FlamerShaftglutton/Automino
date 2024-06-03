@@ -6,12 +6,13 @@ class Player
   PVector dim;
   PShape sprite;
   String spritename;
+  GridGameFlowBase parent;
   
   NonGriddle ng;
   
-  Player(PVector pos, PVector dim) { this.pos = pos.copy(); this.dim = dim.copy(); rot = 0f; ng = null; sprite = null; spritename = ""; }
+  Player(PVector pos, PVector dim, GridGameFlowBase parent) { this.pos = pos.copy(); this.dim = dim.copy(); rot = 0f; ng = null; sprite = null; spritename = ""; this.parent = parent; }
   
-  Player() { this(new PVector(), new PVector()); }
+  Player(GridGameFlowBase parent) { this(new PVector(), new PVector(), parent); }
   
   void draw()
   {
@@ -28,7 +29,7 @@ class Player
     popMatrix();
   }
   
-  void update(Grid grid)
+  void update()
   {
     if (globals.keyReleased)
     {
@@ -36,6 +37,8 @@ class Player
       if (key == CODED && (keyCode == RIGHT || keyCode == DOWN || keyCode == LEFT || keyCode == UP))
       {
         IntVec offset = new IntVec(0,0);
+        
+        //float old_rot = rot;
         
         switch (keyCode)
         {
@@ -46,22 +49,22 @@ class Player
           default: break;
         }
         
-        //IntVec p = globals.active_grid.get_grid_pos_from_object(this);
-        //IntVec np = p.copy().add(offset);
-        
-        Griddle fg = get_faced_griddle(grid);
-        
-        if (fg.traversable)// || PVector.dist(pos, fg.center_center()) > dim.x)
-        {
-          //TODO: make this not gridlocked. 
-          pos.add(PVector.fromAngle(rot).mult(dim.x));
-        }
+        //if (abs(rot - old_rot) < 0.1f)
+        //{
+          Griddle fg = get_faced_griddle(parent.grid);
+          
+          if (fg.traversable)// || PVector.dist(pos, fg.center_center()) > dim.x)
+          {
+            //TODO: make this not gridlocked. 
+            pos.add(PVector.fromAngle(rot).mult(dim.x));
+          }
+        //}
       }
       else if (key == 'x')
       {
         //IntVec offset = offset_from_direction(face);
         //IntVec gpos = globals.active_grid.get_grid_pos_from_object(this);
-        get_faced_griddle(grid).player_interact_end(this);
+        get_faced_griddle(parent.grid).player_interact_end(this);
       }
       else if (key == ' ')
       {
@@ -69,7 +72,7 @@ class Player
         //IntVec gpos = globals.active_grid.get_grid_pos_from_object(this);
         
         //Griddle g = globals.active_grid.get(gpos.copy().add(offset));
-        Griddle fg = get_faced_griddle(grid);
+        Griddle fg = get_faced_griddle(parent.grid);
         
         //try put down
         if (ng != null)
@@ -81,46 +84,23 @@ class Player
             ng = null;
         }
         //try to pick up
-        else if (fg.can_give_ng())
+        else if (fg.can_give_ng() && !fg.ngs.isEmpty())
         {
-          NonGriddle gng = fg.ng();
+          NonGriddle gng = fg.ngs.get(0);
           
-          if (gng != null)
-          {
-            if (gng instanceof LevelEditorNonGriddle)
-              ((LevelEditorNonGriddle)gng).visible = true;
-            
-            fg.remove_ng(gng);
-            ng = gng;
-          }
+          if (gng instanceof LevelEditorNonGriddle)
+            ((LevelEditorNonGriddle)gng).visible = true;
+          
+          fg.remove_ng(gng);
+          ng = gng;
         }
       }
     }
     else if (keyPressed && key == 'x')
-    {
-      get_faced_griddle(grid).player_interact(this);
-    }
-    //DEBUG
-    /*
-    else if (keyPressed && key == 'p')
-    {
-      IntVec gpos = globals.active_grid.get_grid_pos_from_object(this);
-      
-      println("Player object at grid pos { x: " + gpos.x + ", y: " + gpos.y + " }, pos { x: " + pos.x + ", y: " + pos.y + " }, ng: " + (ng() != null ? ng().name : "null") + ", json: " + this.serialize().toString());
-    }
-    else if (keyPressed && key == 'd')
-    {
-      
-    }
-    */
+      get_faced_griddle(parent.grid).player_interact(this);
     
     if (ng != null)
-    {
       ng.pos = PVector.fromAngle(rot).mult(dim.x * 0.4f).add(pos);
-     // PVector offset = offset_from_direction(face).toPVec().mult(dim.x * 0.4);
-      
-      //ng().pos = center_center().add(offset);
-    }
   }
   
   IntVec get_face_square(Grid grid)
@@ -129,14 +109,11 @@ class Player
     PVector p = PVector.fromAngle(rot).mult(dim.x).add(pos);
     
     //now get the grid coordinates from the grid
-    return grid.grid_pos_from_absolute_pos(p); //<>// //<>// //<>//
+    return grid.grid_pos_from_absolute_pos(p); //<>//
   }
   
   Griddle get_faced_griddle(Grid grid)
   {
     return grid.get(PVector.fromAngle(rot).mult(dim.x).add(pos));
   }
-  
-  //JSONObject serialize() { JSONObject o = new JSONObject(); IntVec gp = globals.session.grid.grid_pos_from_absolute_pos(pos); o.setInt("x", gp.x); o.setInt("y", gp.y); o.setString("type", "Player"); return o;  }
-  //void deserialize(JSONObject o) { pos = globals.session.grid.absolute_pos_from_grid_pos(new IntVec(o.getInt("x"), o.getInt("y"))); }
 }

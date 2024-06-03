@@ -20,7 +20,7 @@ class GameFlowManager
   GameFlow active() { return flows.get(flows.size() - 1); }
   
   void pop() 
-  { 
+  {
     GameFlow gf = flows.remove(flows.size()-1); 
     
     String message = gf.exit();
@@ -43,7 +43,7 @@ class GridGameFlowBase implements GameFlow
   
   void update()
   {
-    player.update(grid);
+    player.update();
     grid.update(this);
     
     for (NonGriddle dng : nongriddles_to_delete)
@@ -52,7 +52,10 @@ class GridGameFlowBase implements GameFlow
     nongriddles_to_delete.clear();
     
     for (Message m = globals.messages.consume_message(); m != null; m = globals.messages.consume_message())
+    {
+      //println("Message '" + m.target + "' = '" + m.value + "', caller: " + (m.sender == null ? "null" : "not null"));
       handle_message(m);
+    }
   }
   
   void draw()
@@ -90,7 +93,7 @@ class GridGameFlowBase implements GameFlow
   {
     JSONObject root = new JSONObject();
     
-    PlayerGriddle griddy = new PlayerGriddle();
+    PlayerGriddle griddy = new PlayerGriddle(this);
     griddy.spritename = player.spritename;
     IntVec pgp = grid.grid_pos_from_absolute_pos(player.pos);
     grid.set(pgp.x, pgp.y, griddy);
@@ -104,9 +107,9 @@ class GridGameFlowBase implements GameFlow
   
   void deserialize(JSONObject root)
   {    
-    Grid gg = new Grid(new PVector(100,100), new PVector(width - 200, height - 200));
+    Grid gg = new Grid(new PVector(100,100), new PVector(width - 200, height - 200), this);
     
-    gg.deserialize(root.getJSONObject("grid"));
+    gg.deserialize(root.getJSONObject("grid"), this);
     
     grid = gg;
     
@@ -119,13 +122,13 @@ class GridGameFlowBase implements GameFlow
         
         if (gr instanceof PlayerGriddle)
         {
-          player = new Player();
+          player = new Player(this);
           player.spritename = gr.spritename;
           player.sprite = gr.sprite;
           player.pos = gg.absolute_pos_from_grid_pos(new IntVec(x,y));
           player.dim = gg.get_square_dim();
           
-          grid.set(x,y,new EmptyGriddle());
+          grid.set(x,y,new EmptyGriddle(this));
         }
       }
     }
@@ -150,8 +153,82 @@ class GridGameFlowBase implements GameFlow
   }
 }
 
+class UpgradeMenuGameFlow extends GridGameFlowBase
+{
+  StringList options = new StringList();
+  String outgoing_message = "cancel";
+  
+  void handle_message(Message message)
+  {
+    if (message.target.equals("select"))
+      outgoing_message = message.value;
+    
+    if (message.target.equals("select") || message.target.equals("cancel"))
+      globals.game.pop();
+  }
+  
+  String exit() { return outgoing_message; }
+  
+  void load()
+  {
+    int w,h;
+    
+    if (options.size() == 0)
+      w = h = 5;
+    else
+    {
+      w = (options.size() + 1) * 2 + 1;
+      h = 5;
+    }
+    
+    grid = new Grid(new PVector(100,100), new PVector(width - 200, height - 200), w, h, this);
+    
+    int x = 1;
+    for (int i = 0; i < options.size(); ++i, x+= 2)
+    {
+      String option = options.get(i);
+      
+      MetaActionCounter mac = new MetaActionCounter(this);
+      mac.traversable = false;
+      mac.display_string = option;
+      mac.action = "select";
+      mac.parameters.append(option);
+      mac.spritename = globals.gFactory.get_spritename(option);
+      mac.sprite = globals.sprites.get_sprite(mac.spritename);
+      
+      grid.set(x, 2, mac);
+    }
+    
+    MetaActionCounter cmac = new MetaActionCounter(this);
+    cmac.traversable = false;
+    cmac.template = "Cancel";
+    cmac.action = "cancel";
+    cmac.spritename = "null";
+    cmac.sprite = globals.sprites.get_sprite("null");
+    
+    grid.set(x, 2, cmac);
+    
+    player = new Player(this);
+    player.spritename = globals.gFactory.get_spritename("Player");
+    player.sprite = globals.sprites.get_sprite(player.spritename);
+    player.rot = HALF_PI;
+    player.pos = grid.absolute_pos_from_grid_pos(new IntVec(1 + w / 2, 4));
+    player.dim = grid.get_square_dim();
+    
+    grid.apply_alterations();
+  }
+}
+
 class MainMenuGameFlow extends GridGameFlowBase
 {
+  void update()
+  {
+    super.update();
+    
+    if (globals.keyReleased && key == 'q') 
+      globals.game.pop();
+  }
+  
   void handle_message(Message message)
   {
     switch (message.target)
@@ -206,7 +283,7 @@ class MainMenuGameFlow extends GridGameFlowBase
       if (f.isDirectory() || !f.getName().startsWith("save") || !f.getName().endsWith("json"))
         continue;
       
-      MetaActionCounter mac = (MetaActionCounter)globals.gFactory.create_griddle("MetaActionCounter");
+      MetaActionCounter mac = (MetaActionCounter)globals.gFactory.create_griddle("MetaActionCounter", this);
       mac.display_string = "Load " + f.getName();
       mac.action = "load";
       mac.parameters.append(f.getAbsolutePath());
@@ -225,7 +302,7 @@ class MainMenuGameFlow extends GridGameFlowBase
           Griddle griddy = grid.get(x,y);
           
           if (griddy instanceof MetaActionCounter && ((MetaActionCounter)griddy).action.equals("newgame"))
-            grid.set(x,y, new EmptyGriddle());
+            grid.set(x,y, new EmptyGriddle(this));
         }
       }
     }
@@ -241,7 +318,7 @@ class MessageScreenGameFlow implements GameFlow
 {
   String message = "";
   
-  void update() { if (globals.keyReleased) globals.game.pop(); }
+  void update() { if (globals.keyReleased && key == 'y') globals.game.pop(); }
   void draw()
   {
     fill(color(255,255,255,100));
@@ -256,7 +333,7 @@ class MessageScreenGameFlow implements GameFlow
     text(message, width * 0.5f, height * 0.4f);
     
     textSize((int)height / 32);
-    text("Press any button to continue", width * 0.5f, height * 0.6f);
+    text("Press Y to continue", width * 0.5f, height * 0.6f);
   }
   void save() { }
   void load() { }

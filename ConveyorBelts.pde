@@ -3,7 +3,7 @@ class SmartGrabberBelt extends GrabberBelt
   String keyed_ng_type = "";
   PShape keyed_ng_sprite;
   
-  SmartGrabberBelt() { type = "SmartGrabberBelt"; }
+  SmartGrabberBelt(GridGameFlowBase game) { super(game); type = "SmartGrabberBelt"; }
   
   void draw()
   {
@@ -46,11 +46,11 @@ class SmartGrabberBelt extends GrabberBelt
 
 class GrabberBelt extends ConveyorBelt
 {
-  GrabberBelt() { type = "GrabberBelt"; }
+  GrabberBelt(GridGameFlowBase game) { super(game); type = "GrabberBelt"; }
   
-  void update(GridGameFlowBase game)
+  void update()
   {
-    super.update(game);
+    super.update();
     
     if (ng() == null)
     {
@@ -79,9 +79,9 @@ class SwitchGrabberBelt extends GrabberBelt
   String disabled_spritename;
   PShape disabled_sprite;
   
-  SwitchGrabberBelt() { type = "SwitchGrabberBelt"; }
+  SwitchGrabberBelt(GridGameFlowBase game) { super(game); type = "SwitchGrabberBelt"; }
   
-  void update(GridGameFlowBase game) { if (enabled) super.update(game); }
+  void update() { if (enabled) super.update(); }
   void draw()
   {
     if (enabled)
@@ -106,9 +106,9 @@ class ConveyorBelt extends Griddle
 {
   float movement_progress = 0f;
   
-  ConveyorBelt() { type = "ConveyorBelt"; }
+  ConveyorBelt(GridGameFlowBase game) { super(game); type = "ConveyorBelt"; }
   
-  void update(GridGameFlowBase game)
+  void update()
   {
     NonGriddle ng = ng();
     

@@ -11,18 +11,18 @@ class Grid
   ArrayList<Griddle> griddles;
   ArrayList<GridAlteration> alterations;
   
-  Grid(PVector pos, PVector dim) { this(pos, dim, 0, 0); }
+  Grid(PVector pos, PVector dim, GridGameFlowBase parent) { this(pos, dim, 0, 0, parent); }
   
-  Grid(PVector pos, PVector dim, int w, int h)
+  Grid(PVector pos, PVector dim, int w, int h, GridGameFlowBase parent)
   {
     this.pos = pos.copy();
     original_pos = pos.copy();
     this.dim = dim.copy();
     
-    init(w, h);
+    init(w, h, parent);
   }
   
-  void init(int w, int h)
+  void init(int w, int h, GridGameFlowBase parent)
   {
     this.w = w;
     this.h = h;
@@ -35,19 +35,19 @@ class Grid
     
     for (int i = 0; i < w * h; ++i)
     {
-      EmptyGriddle eg = new EmptyGriddle();
+      EmptyGriddle eg = new EmptyGriddle(parent);
       eg.pos = (new PVector(i % w, i / w)).mult(edge_width).add(pos); 
       eg.dim = new PVector(edge_width, edge_width); 
       griddles.add(eg);
     }
   }
   
-  void deserialize(JSONObject loaded_json)
+  void deserialize(JSONObject loaded_json, GridGameFlowBase parent)
   {
     w = loaded_json.getInt("width");
     h = loaded_json.getInt("height");
     
-    init(w,h);
+    init(w,h, parent);
     
     JSONArray root = loaded_json.getJSONArray("grid");
     
@@ -58,7 +58,7 @@ class Grid
       int y = o.getInt("y",-1);
       String type = o.getString("type","NullGriddle");
       
-      Griddle g = globals.gFactory.create_griddle(type, o);
+      Griddle g = globals.gFactory.create_griddle(type, o, parent);
       
       set(x,y,g);
     }
@@ -123,7 +123,7 @@ class Grid
   void update(GridGameFlowBase game)
   {
     for (int i = 0; i < griddles.size(); ++i)
-      griddles.get(i).update(game);
+      griddles.get(i).update();
     
     apply_alterations();
   }

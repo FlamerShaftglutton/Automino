@@ -11,11 +11,13 @@ class Griddle
   String spritename;
   PShape sprite;
   
+  String template = "";
   String type = "Griddle";
   
-  Griddle(PVector pos, PVector dim) { this.pos = pos.copy(); this.dim = dim.copy(); quarter_turns = 0; ngs = new ArrayList<NonGriddle>(); }
-  Griddle() { this(new PVector(), new PVector()); }
+  GridGameFlowBase game;
   
+  Griddle(GridGameFlowBase game) { this.game = game; pos = new PVector(); dim = new PVector(); quarter_turns = 0; traversable = false; ngs = new ArrayList<NonGriddle>(); spritename = ""; sprite = null; template = ""; type = "Griddle"; }
+
   void draw()
   {
     draw(sprite);
@@ -39,7 +41,7 @@ class Griddle
     }
   }
   
-  void update(GridGameFlowBase game)
+  void update()
   {
     center_ngs();
   }
@@ -51,11 +53,12 @@ class Griddle
     o.setString("sprite", spritename);
     o.setBoolean("traversable", traversable);
     o.setInt("quarter_turns", quarter_turns);
+    o.setString("_template", template);
     
     return o;
   }
   
-  void deserialize(JSONObject o) { spritename = o.getString("sprite","null"); sprite = globals.sprites.get_sprite(spritename); quarter_turns = o.getInt("quarter_turns", 0); }
+  void deserialize(JSONObject o) { spritename = o.getString("sprite","null"); if (spritename.length() > 0)  sprite = globals.sprites.get_sprite(spritename); quarter_turns = o.getInt("quarter_turns", 0); template = o.getString("_template",o.getString("type",type)); }
   
   NonGriddle ng() { if (ngs.isEmpty()) return null; return ngs.get(ngs.size()-1); }
   boolean can_accept_ng(NonGriddle n) { return ngs.size() <= 1; }
@@ -97,17 +100,18 @@ class Griddle
 
 class NullGriddle extends Griddle
 {
-  NullGriddle() { type = "NullGriddle"; traversable = false; }
+  NullGriddle(GridGameFlowBase game) { super(game); type = "NullGriddle"; }
+  NullGriddle() { super(null); type = "NullGriddle"; }
   
   boolean can_accept_ng(NonGriddle n) { return false; }
   
   void draw() {  }
-  void update(GridGameFlowBase game) {  }
+  void update() {  }
 }
 
 class EmptyGriddle extends Griddle
 {
-  EmptyGriddle() { super(new PVector(), new PVector()); traversable = true; type = "EmptyGriddle"; }
+  EmptyGriddle(GridGameFlowBase game) { super(game); traversable = true; type = "EmptyGriddle"; }
   
   boolean can_accept_ng(NonGriddle n) { return ngs.isEmpty(); }
   
@@ -120,101 +124,10 @@ class EmptyGriddle extends Griddle
     rect(pos.x, pos.y, dim.x, dim.y); 
   }
   
-  void update(GridGameFlowBase game) { if (ng() != null) ng().pos = center_center(); }
+  void update() { if (ng() != null) ng().pos = center_center(); }
 }
 
 class PlayerGriddle extends Griddle
 {
-  PlayerGriddle() { type = "PlayerGriddle"; }
-}
-
-
-
-class GriddleFactory
-{
-  HashMap<String, JSONObject> templates;
-  
-  void load(String json_file)
-  {
-    templates = new HashMap<String, JSONObject>();
-    
-    JSONArray root = loadJSONArray(json_file);
-    
-    for (int i = 0; i < root.size(); ++i)
-    {
-      JSONObject o = root.getJSONObject(i);
-      
-      String template_name = "";
-      
-      if (o.hasKey("_template"))
-        template_name = o.getString("_template");
-      else if (o.hasKey("type"))
-        template_name = o.getString("type");
-      
-      if (template_name.equals(""))
-      {
-        println("Griddle template found with no _template or type specified. Loading of this griddle has been skipped.");
-        continue;
-      }
-      
-      templates.put(template_name, o);
-    }
-  }
-  Griddle create_griddle(String name) { return create_griddle(name, new JSONObject()); }
-  Griddle create_griddle(String name, JSONObject overwrite) 
-  { 
-    if (templates.containsKey(name)) 
-      return create_griddle(templates.get(name),overwrite); 
-    
-    return create_griddle(overwrite);
-  }
-  
-  Griddle create_griddle(JSONObject base, JSONObject over)
-  {
-    return create_griddle(merge_JSONObjects(base, over));
-  }
-  
-  Griddle create_griddle(JSONObject template)
-  { 
-    Griddle g;
-    String type = template.getString("type","NullGriddle");
-    switch (type)
-    {
-      case "Player": case "PlayerGriddle": g = new PlayerGriddle();              break;
-      case "ConveyorBelt":                 g = new ConveyorBelt();               break;
-      case "ResourcePool":                 g = new ResourcePool();               break;
-      case "NullGriddle":                  g = new NullGriddle();                break;
-      case "EmptyGriddle":                 g = new EmptyGriddle();               break;
-      case "Griddle":                      g = new Griddle();                    break;
-      case "Transformer":                  g = new Transformer();                break;
-      case "GrabberBelt":                  g = new GrabberBelt();                break;
-      case "SmartGrabberBelt":             g = new SmartGrabberBelt();           break;
-      case "SwitchGrabberBelt":            g = new SwitchGrabberBelt();          break;
-      case "MetaActionCounter":            g = new MetaActionCounter();          break;
-      case "LevelEditorGriddle":           g = new LevelEditorGriddle();         break;
-      case "CountingOutputResourcePool":   g = new CountingOutputResourcePool(); break;
-      case "RandomResourcePool":           g = new RandomResourcePool();         break;
-      case "TrashCompactor":               g = new TrashCompactor();             break;
-      default:                             g = new NullGriddle();                break;
-    }
-    
-    g.deserialize(template);
-    
-    return g;
-  }
-}
-
-JSONObject merge_JSONObjects(JSONObject base, JSONObject over)
-{
-  //clone our base
-  JSONObject template = JSONObject.parse(base.toString());
-  
-  //for each field in the overwriter replace the field in the template
-  for (Object field : over.keys())
-    template.put(field.toString(), over.get(field.toString()));
-    
-  //replace the type to make sure it's the fully derived type, not the template name
-  template.setString("type", base.getString("type"));
-  
-  return template;
+  PlayerGriddle(GridGameFlowBase game) { super(game); type = "PlayerGriddle"; }
 }

@@ -72,8 +72,31 @@ class GriddleFactory
   }
   
   String get_spritename(String name) { return templates.get(name).getString("sprite"); }
+  String get_description(String name) { return templates.get(name).getString("description"); }
   
-  boolean get_reward(String name) { return templates.get(name).getBoolean("reward",false); }
+  StringList get_tags(String name)
+  {
+    StringList retval = new StringList();
+    
+    JSONObject jo = templates.get(name);
+    
+    if (!jo.hasKey("tags"))
+        return retval;
+      
+    Object jou = jo.get("tags");
+    
+    if (jou instanceof String)
+      retval.append(jou.toString());
+    else if (jou instanceof JSONArray)
+    {
+      JSONArray ja = (JSONArray)jou;
+      
+      for (int i = 0; i < ja.size(); ++i)
+        retval.append(ja.getString(i));
+    }
+    
+    return retval;    
+  }
   
   StringList get_upgrades(String name)
   {
@@ -103,7 +126,7 @@ class GriddleFactory
   
   HashMap<String, StringList> all_upgrades() { HashMap<String, StringList> retval = new HashMap<String, StringList>(); for (String k : templates.keySet()) retval.put(k, get_upgrades(k)); return retval; }
 
-  StringList all_reward_names() { StringList retval = new StringList(); for (String k : templates.keySet()) { if (get_reward(k)) retval.append(k); } return retval; }
+  StringList all_reward_names() { StringList retval = new StringList(); for (String k : templates.keySet()) { if (get_tags(k).hasValue("reward")) retval.append(k); } return retval; }
 }
 
 JSONObject merge_JSONObjects(JSONObject base, JSONObject over)

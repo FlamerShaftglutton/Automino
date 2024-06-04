@@ -41,6 +41,8 @@ class GridGameFlowBase implements GameFlow
   ArrayList<NonGriddle> nongriddles = new ArrayList<NonGriddle>();
   ArrayList<NonGriddle> nongriddles_to_delete = new ArrayList<NonGriddle>();
   
+  ArrayList<Toast> toasts = new ArrayList<Toast>();
+  
   void update()
   {
     player.update();
@@ -53,8 +55,23 @@ class GridGameFlowBase implements GameFlow
     
     for (Message m = globals.messages.consume_message(); m != null; m = globals.messages.consume_message())
     {
-      //println("Message '" + m.target + "' = '" + m.value + "', caller: " + (m.sender == null ? "null" : "not null"));
+      //DEBUG
+      println("Message '" + m.target + "' = '" + m.value + "', caller: " + (m.sender == null ? "null" : "not null"));
+      
       handle_message(m);
+    }
+    
+    for (int i = 0; i < toasts.size(); ++i)
+    {
+      Toast t = toasts.get(i);
+      
+      t.time_used += 0.01f;
+      
+      if (t.time_used >= t.time_to_display)
+      {
+        toasts.remove(i);
+        --i;
+      }
     }
   }
   
@@ -65,6 +82,16 @@ class GridGameFlowBase implements GameFlow
     
     for (NonGriddle ng : nongriddles)
       ng.draw();
+      
+    for (int i = 0; i < toasts.size(); ++i)
+    {
+      Toast t = toasts.get(i);
+      
+      textSize(14);
+      fill(color(0,0,0, 255 * ((t.time_to_display - t.time_used) / t.time_to_display)));
+      textAlign(CENTER,CENTER);
+      text(t.text_to_display, width * 0.5f, height - 16f * (i + 1));
+    }
   }
   
   void handle_message(Message message) { }
@@ -165,6 +192,9 @@ class UpgradeMenuGameFlow extends GridGameFlowBase
     
     if (message.target.equals("select") || message.target.equals("cancel"))
       globals.game.pop();
+      
+    if (message.target.equals("info"))
+      toasts.add(new Toast(message.value, 5f));
   }
   
   String exit() { return outgoing_message; }
@@ -190,7 +220,7 @@ class UpgradeMenuGameFlow extends GridGameFlowBase
       
       MetaActionCounter mac = new MetaActionCounter(this);
       mac.traversable = false;
-      mac.display_string = option;
+      mac.display_string = "";
       mac.action = "select";
       mac.parameters.append(option);
       mac.spritename = globals.gFactory.get_spritename(option);
@@ -345,4 +375,14 @@ class MessageScreenGameFlow implements GameFlow
   void load() { }
   String exit() { return message; }
   void onFocus(String message) { this.message = message; }
+}
+
+class Toast
+{
+  String text_to_display;
+  float time_to_display;
+  float time_used;
+  
+  Toast(String text_to_display, float time_to_display) { this.text_to_display = text_to_display; this.time_to_display = time_to_display; }
+  Toast() { this("", 0f); }
 }

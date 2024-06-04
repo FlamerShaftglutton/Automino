@@ -1,60 +1,70 @@
 [
 	{
 		"type": "ConveyorBelt",
+		"description": "Moves things from here to there.",
 		"sprite": "two arrow conveyor blue",
 		"upgrades": [ "GrabberBelt", "CrossConveyorBelt" ],
-		"reward": true,
+		"tags": [ "reward" ],
 	},
 	{
 		"type": "GrabberBelt",
+		"description": "Picks things up and moves them over here.",
 		"sprite": "two arrow conveyor yellow",
 		"upgrades": [ "SmartGrabberBelt", "SwitchGrabberBelt" ],
-		"reward": true,
+		"tags": [ "reward" ],
 	},
 	{
 		"type": "ResourcePool",
+		"description": "Your own secret stash of goods.",
 		"sprite": "freezer",
 		"ng_type": "Cobalt Ore",
 	},
 	{
 		"_template": "CobaltOrePool",
+		"description": "Your own secret stash of cobalt ore.",
 		"type": "ResourcePool",
 		"sprite": "freezer",
 		"ng_type": "Cobalt Ore",
-		"reward": false,
+		"tags": [ "reward" ],
 	},
 	{
 		"_template": "IronOrePool",
+		"description": "Your own secret stash of iron ore.",
 		"type": "ResourcePool",
 		"sprite": "freezer",
 		"ng_type": "Iron Ore",
-		"reward": true,
+		"tags": [ "reward" ],
 	},
 	{
 		"type": "EmptyGriddle",
+		"description": "Nothing to see here.",
 		"sprite": "null",
 	},
 	{
 		"type": "SmartGrabberBelt",
+		"description": "Picks up one specific thing and moves it over there.",
 		"keyed_ng_type": "",
 		"sprite": "three arrow conveyor yellow",
 	},
 	{
 		"type": "Transformer",
+		"description": "Turns this into that.",
 		"operations": [ ],
 		"sprite": "crusher",
 	},
 	
 	{
 		"_template": "Smelter",
+		"description": "Turns refined goods into ingots.",
 		"type": "Transformer",
 		"operations": ["smelt"],
 		"sprite": "furnace",
 		"upgrades": ["AutoSmelter", "FastSmelter", "ConveyorSmelter"],
-		"reward": true,
+		"tags": [ "reward", "basic" ],
 	},
 	{
 		"_template": "AutoSmelter",
+		"description": "Turns refined goods into ingots, but hands-free!",
 		"type": "Transformer",
 		"operations": ["smelt"],
 		"sprite": "furnace motor",
@@ -63,6 +73,7 @@
 	},
 	{
 		"_template": "FastSmelter",
+		"description": "Turns refined goods into ingots, but faster.",
 		"type": "Transformer",
 		"operations": ["smelt"],
 		"sprite": "furnace fast",
@@ -71,15 +82,17 @@
 	},
 	{
 		"_template": "AutoFastSmelter",
+		"description": "Turns refined goods into ingots, but hands-free and faster!",
 		"type": "Transformer",
 		"operations": ["smelt"],
-		"sprite": "furnace fast",
+		"sprite": "furnace motor fast",
 		"automatic": true,
 		"speed": 0.03,
 		"upgrades": ["AutoFastConveyorSmelter"]
 	},
 	{
 		"_template": "ConveyorSmelter",
+		"description": "Turns refined goods into ingots, then pushes the ingots out.",
 		"type": "ConveyorTransformer",
 		"operations": ["smelt"],
 		"sprite": "furnace conveyor",
@@ -87,6 +100,7 @@
 	},
 	{
 		"_template": "AutoConveyorSmelter",
+		"description": "Turns refined goods into ingots, but hands-free. Then it pushes the ingots out.",
 		"type": "ConveyorTransformer",
 		"operations": ["smelt"],
 		"sprite": "furnace motor conveyor",
@@ -95,6 +109,7 @@
 	},
 	{
 		"_template": "FastConveyorSmelter",
+		"description": "Turns refined goods into ingots, but faster. Then it pushes the ingots out.",
 		"type": "ConveyorTransformer",
 		"operations": ["smelt"],
 		"sprite": "furnace fast conveyor",
@@ -103,6 +118,7 @@
 	},
 	{
 		"_template": "AutoFastConveyorSmelter",
+		"description": "Turns refined goods into ingots, but hands-free and faster. Then it pushes the ingots out.",
 		"type": "ConveyorTransformer",
 		"operations": ["smelt"],
 		"sprite": "furnace motor fast conveyor",
@@ -112,14 +128,16 @@
 	
 	{
 		"_template": "Crusher",
+		"description": "Turns ore into powder.",
 		"type": "Transformer",
 		"operations": ["crush"],
 		"sprite": "crusher",
 		"upgrades": ["AutoCrusher", "FastCrusher", "ConveyorCrusher"],
-		"reward": true,
+		"tags": [ "reward", "basic" ],
 	},
 	{
 		"_template": "AutoCrusher",
+		"description": "Turns ore into powder, but hands-free!.",
 		"type": "Transformer",
 		"operations": ["crush"],
 		"sprite": "crusher motor",
@@ -128,6 +146,7 @@
 	},
 	{
 		"_template": "FastCrusher",
+		"description": "Turns ore into powder, but faster!",
 		"type": "Transformer",
 		"operations": ["crush"],
 		"sprite": "crusher fast",
@@ -136,15 +155,17 @@
 	},
 	{
 		"_template": "AutoFastCrusher",
+		"description": "Turns ore into powder, but hands-free and faster!",
 		"type": "Transformer",
 		"operations": ["crush"],
-		"sprite": "crusher fast",
+		"sprite": "crusher motor fast",
 		"automatic": true,
 		"speed": 0.03,
 		"upgrades": ["AutoFastConveyorCrusher"]
 	},
 	{
 		"_template": "ConveyorCrusher",
+		"description": "Turns ore into powder. Then it pushes out the results.",
 		"type": "ConveyorTransformer",
 		"operations": ["crush"],
 		"sprite": "crusher conveyor",
@@ -152,6 +173,7 @@
 	},
 	{
 		"_template": "AutoConveyorCrusher",
+		"description": "Turns ore into powder, but hands-free! Then it pushes out the results.",
 		"type": "ConveyorTransformer",
 		"operations": ["crush"],
 		"sprite": "crusher motor conveyor",
@@ -160,6 +182,7 @@
 	},
 	{
 		"_template": "FastConveyorCrusher",
+		"description": "Turns ore into powder, but faster! Then it pushes out the results.",
 		"type": "ConveyorTransformer",
 		"operations": ["crush"],
 		"sprite": "crusher fast conveyor",
@@ -168,6 +191,7 @@
 	},
 	{
 		"_template": "AutoFastConveyorCrusher",
+		"description": "Turns ore into powder, but hands-free and faster! Then it pushes out the results.",
 		"type": "ConveyorTransformer",
 		"operations": ["crush"],
 		"sprite": "crusher motor fast conveyor",
@@ -177,14 +201,16 @@
 	
 	{
 		"_template": "Refiner",
+		"description": "Turns powder into refined goods.",
 		"type": "Transformer",
 		"operations": ["extract"],
 		"sprite": "centrifuge",
 		"upgrades": ["AutoRefiner", "FastRefiner", "ConveyorRefiner"],
-		"reward": true,
+		"tags": [ "reward", "basic" ],
 	},
 	{
 		"_template": "AutoRefiner",
+		"description": "Turns powder into refined goods, but hands-free!",
 		"type": "Transformer",
 		"operations": ["extract"],
 		"sprite": "centrifuge motor",
@@ -193,6 +219,7 @@
 	},
 	{
 		"_template": "FastRefiner",
+		"description": "Turns powder into refined goods, but faster!",
 		"type": "Transformer",
 		"operations": ["extract"],
 		"sprite": "centrifuge fast",
@@ -201,15 +228,17 @@
 	},
 	{
 		"_template": "AutoFastRefiner",
+		"description": "Turns powder into refined goods, but hands-free and faster!",
 		"type": "Transformer",
 		"operations": ["extract"],
-		"sprite": "centrifuge fast",
+		"sprite": "centrifuge motor fast",
 		"automatic": true,
 		"speed": 0.03,
 		"upgrades": ["AutoFastConveyorRefiner"]
 	},
 	{
 		"_template": "ConveyorRefiner",
+		"description": "Turns powder into refined goods. Then it pushes out the results.",
 		"type": "ConveyorTransformer",
 		"operations": ["extract"],
 		"sprite": "centrifuge conveyor",
@@ -217,6 +246,7 @@
 	},
 	{
 		"_template": "AutoConveyorRefiner",
+		"description": "Turns powder into refined goods, but hands-free! Then it pushes out the results.",
 		"type": "ConveyorTransformer",
 		"operations": ["extract"],
 		"sprite": "centrifuge motor conveyor",
@@ -225,6 +255,7 @@
 	},
 	{
 		"_template": "FastConveyorRefiner",
+		"description": "Turns powder into refined goods, but faster! Then it pushes out the results.",
 		"type": "ConveyorTransformer",
 		"operations": ["extract"],
 		"sprite": "centrifuge fast conveyor",
@@ -233,6 +264,7 @@
 	},
 	{
 		"_template": "AutoFastConveyorRefiner",
+		"description": "Turns powder into refined goods, but hands-free and faster! Then it pushes out the results.",
 		"type": "ConveyorTransformer",
 		"operations": ["extract"],
 		"sprite": "centrifuge motor fast conveyor",
@@ -242,14 +274,16 @@
 	
 	{
 		"_template": "GoldSieve",
+		"description": "Turns two tailings into a gold speck.",
 		"type": "Transformer",
 		"operations": ["sieve"],
 		"sprite": "trashcan gold",
 		"upgrades": ["AutoGoldSieve", "FastGoldSieve", "ConveyorGoldSieve"],
-		"reward": true,
+		"tags": [ "reward" ],
 	},
 	{
 		"_template": "AutoGoldSieve",
+		"description": "Turns two tailings into a gold speck, but hands-free!",
 		"type": "Transformer",
 		"operations": ["sieve"],
 		"sprite": "trashcan gold motor",
@@ -258,6 +292,7 @@
 	},
 	{
 		"_template": "FastGoldSieve",
+		"description": "Turns two tailings into a gold speck, but faster!",
 		"type": "Transformer",
 		"operations": ["sieve"],
 		"sprite": "trashcan gold fast",
@@ -266,6 +301,7 @@
 	},
 	{
 		"_template": "AutoFastGoldSieve",
+		"description": "Turns two tailings into a gold speck, but hands-free and faster!",
 		"type": "Transformer",
 		"operations": ["sieve"],
 		"sprite": "trashcan gold fast",
@@ -275,6 +311,7 @@
 	},
 	{
 		"_template": "ConveyorGoldSieve",
+		"description": "Turns two tailings into a gold speck. Then it pushes out the results.",
 		"type": "ConveyorTransformer",
 		"operations": ["sieve"],
 		"sprite": "trashcan gold conveyor",
@@ -282,6 +319,7 @@
 	},
 	{
 		"_template": "AutoConveyorGoldSieve",
+		"description": "Turns two tailings into a gold speck, but hands-free! Then it pushes out the results.",
 		"type": "ConveyorTransformer",
 		"operations": ["sieve"],
 		"sprite": "trashcan gold motor conveyor",
@@ -290,6 +328,7 @@
 	},
 	{
 		"_template": "FastConveyorGoldSieve",
+		"description": "Turns two tailings into a gold speck, but faster! Then it pushes out the results.",
 		"type": "ConveyorTransformer",
 		"operations": ["sieve"],
 		"sprite": "trashcan gold fast conveyor",
@@ -298,6 +337,7 @@
 	},
 	{
 		"_template": "AutoFastConveyorGoldSieve",
+		"description": "Turns two tailings into a gold speck, but hands-free and faster! Then it pushes out the results.",
 		"type": "ConveyorTransformer",
 		"operations": ["sieve"],
 		"sprite": "trashcan gold motor fast conveyor",
@@ -308,27 +348,32 @@
 	
 	{
 		"_template": "Counter",
+		"description": "A plain ol' counter, but it sure can do a lot.",
 		"type": "Transformer",
 		"sprite": "counter",
-		"operations" : ["crush","smelt"],
+		"operations" : ["crush","refine","smelt"],
 		"automatic": false,
 	},
 	{
 		"type": "Player",
+		"description": "Placeholder for the player when saving the game. You should never be reading this.",
 		"sprite": "player green",
 	},
 	{
 		"type": "SwitchGrabberBelt",
+		"description": "Moves things from here to there, but you can turn it off and on.",
 		"sprite": "two arrow conveyor yellow",
 		"enabled": false,
 		"disabled_sprite": "two arrow conveyor red",
 	},
 	{
 		"type": "CrossConveyorBelt",
+		"description": "Moves things from over there to over here and from up there to down there without mixing them up!",
 		"sprite": "cross conveyor blue",
 	},
 	{
 		"type": "MetaActionCounter",
+		"description": "Use this for menus and such.",
 		"sprite": "counter",
 		"display": "Nothing here",
 		"action": "null",
@@ -336,29 +381,35 @@
 	},
 	{
 		"_template": "Output",
+		"description": "Put the goods in here and nobody has to lose...",
 		"type": "CountingOutputResourcePool",
 		"ng_type": "Gold Ingot",
 		"sprite": "freezer",
+		"tags": [ "output" ],
 	},
 	{
 		"_template": "GoldIngotOutput",
+		"description": "Store your gold here between rounds.",
 		"type": "CountingOutputResourcePool",
 		"ng_type": "Gold Ingot",
 		"sprite": "freezer",
 	},
 	{
 		"type": "RandomResourcePool",
+		"description": "Life's like a box of rocks. You never know what you're gonna get.",
 		"sprite": "freezer",
 		"resources": [ "Iron Ore", "Cobalt Ore" ],
 	},
 	{
 		"type": "TrashCompactor",
+		"description": "Turn two of anything into nothing!",
 		"sprite": "trashcan",
 		"upgrades": [ "AutoTrashCompactor", "FastTrashCompactor", "GoldSieve" ],
-		"reward": true,
+		"tags": [ "reward" ],
 	},
 	{
 		"_template": "AutoTrashCompactor",
+		"description": "Turn two of anything into nothing! Now hands-free!",
 		"type": "TrashCompactor",
 		"sprite": "trashcan motor",
 		"upgrades": "AutoFastTrashCompactor",
@@ -366,6 +417,7 @@
 	},
 	{
 		"_template": "FastTrashCompactor",
+		"description": "Turn two of anything into nothing! Now faster!",
 		"type": "TrashCompactor",
 		"sprite": "trashcan fast",
 		"upgrades": "AutoFastTrashCompactor",
@@ -374,6 +426,7 @@
 	},
 	{
 		"_template": "AutoFastTrashCompactor",
+		"description": "Turn two of anything into nothing! Now hands-free and faster!",
 		"type": "TrashCompactor",
 		"sprite": "trashcan motor fast",
 		"automatic": true,

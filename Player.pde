@@ -97,10 +97,28 @@ class Player
           ng = gng;
         }
       }
+      else if (key == '?' || key == '/')
+      {
+        Griddle fg = get_faced_griddle(parent.grid);
+        
+        if (fg instanceof LevelEditorGriddle)
+        {
+          LevelEditorGriddle leg = (LevelEditorGriddle)fg;
+          
+          if (!leg.ngs.isEmpty())
+          {
+            JSONObject lengo = ((LevelEditorNonGriddle)leg.ng()).as_json;
+            globals.messages.post_message("info", globals.gFactory.get_description(lengo.getString("_template",lengo.getString("type",""))));
+          }
+        }
+        else if (fg instanceof MetaActionCounter)
+          globals.messages.post_message("info", globals.gFactory.get_description(((MetaActionCounter)fg).parameters.get(0)));
+        else
+          globals.messages.post_message("info", globals.gFactory.get_description(fg.template));
+      }
     }
     else if (keyPressed && key == 'x')
       get_faced_griddle(parent.grid).player_interact(this);
-    
     if (ng != null)
       ng.pos = PVector.fromAngle(rot).mult(dim.x * 0.4f).add(pos);
   }

@@ -83,6 +83,8 @@ class GameSession extends GridGameFlowBase
         globals.game.push(upmenu);
       }
     }
+    if (message.target.equals("info"))
+      toasts.add(new Toast(message.value, 5f));
   }
   
   String exit()

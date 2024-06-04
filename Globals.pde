@@ -5,6 +5,7 @@ class Globals
   GriddleFactory gFactory = new GriddleFactory();
   SpriteFactory sprites = new SpriteFactory();
   InteractionFactory interactions = new InteractionFactory();
+  RuleFactory rules = new RuleFactory();
   GameFlowManager game = new GameFlowManager();
   MessageQueue messages = new MessageQueue();
   

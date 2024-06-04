@@ -2,6 +2,24 @@ void translate(PVector p) { translate(p.x,p.y); }
 
 String right(String in, int characters) { if (in.length() < characters) return in; return in.substring(in.length() - characters); } 
 
+int parse_int(String s, int default_value)
+{
+    try {
+        return Integer.parseInt(s);
+    } catch (NumberFormatException e) {
+        return default_value;
+    }
+}
+
+float parse_float(String s, float default_value)
+{
+    try {
+        return Float.parseFloat(s);
+    } catch (NumberFormatException e) {
+        return default_value;
+    }
+}
+
 class IntVec
 {
   int x;

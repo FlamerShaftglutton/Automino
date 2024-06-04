@@ -13,7 +13,6 @@ class ResourcePool extends Griddle
   {
     if (ngs.isEmpty())
       produce_resource(game);
-       //ngs.add(game.create_and_register_ng(ng_type));
     
     super.update();
   }

@@ -209,9 +209,11 @@ class LevelEditorGriddle extends EmptyGriddle
   
   boolean receive_ng(NonGriddle ng)
   {
-    if (ng.name.equals("Gold Ingot") && !ngs.isEmpty())
+    if (ng.name.equals("Gold Ingot"))
     {
-      globals.messages.post_message(new Message("upgrade", ng().name, this));
+      if (!ngs.isEmpty())
+        globals.messages.post_message(new Message("upgrade", ng().name, this));
+      
       return false;
     }
     

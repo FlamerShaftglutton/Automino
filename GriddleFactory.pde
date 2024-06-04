@@ -72,6 +72,7 @@ class GriddleFactory
   }
   
   String get_spritename(String name) { return templates.get(name).getString("sprite"); }
+  String get_description(String name) { return templates.get(name).getString("description"); }
   
   StringList get_tags(String name)
   {

@@ -337,13 +337,13 @@
         "type": "EmptyGriddle"
       },
       {
-        "traversable": true,
+        "traversable": false,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprite": "player green",
         "x": 6,
         "y": 3,
-        "type": "EmptyGriddle"
+        "type": "PlayerGriddle"
       },
       {
         "traversable": true,
@@ -678,13 +678,13 @@
         "type": "EmptyGriddle"
       },
       {
-        "traversable": false,
+        "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "player green",
+        "sprite": "",
         "x": 5,
         "y": 7,
-        "type": "PlayerGriddle"
+        "type": "EmptyGriddle"
       },
       {
         "traversable": false,

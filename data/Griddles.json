@@ -3,13 +3,13 @@
 		"type": "ConveyorBelt",
 		"sprite": "two arrow conveyor blue",
 		"upgrades": [ "GrabberBelt", "CrossConveyorBelt" ],
-		"reward": true,
+		"tags": [ "reward" ],
 	},
 	{
 		"type": "GrabberBelt",
 		"sprite": "two arrow conveyor yellow",
 		"upgrades": [ "SmartGrabberBelt", "SwitchGrabberBelt" ],
-		"reward": true,
+		"tags": [ "reward" ],
 	},
 	{
 		"type": "ResourcePool",
@@ -21,14 +21,14 @@
 		"type": "ResourcePool",
 		"sprite": "freezer",
 		"ng_type": "Cobalt Ore",
-		"reward": false,
+		"tags": [ "reward" ],
 	},
 	{
 		"_template": "IronOrePool",
 		"type": "ResourcePool",
 		"sprite": "freezer",
 		"ng_type": "Iron Ore",
-		"reward": true,
+		"tags": [ "reward" ],
 	},
 	{
 		"type": "EmptyGriddle",
@@ -51,7 +51,7 @@
 		"operations": ["smelt"],
 		"sprite": "furnace",
 		"upgrades": ["AutoSmelter", "FastSmelter", "ConveyorSmelter"],
-		"reward": true,
+		"tags": [ "reward", "basic" ],
 	},
 	{
 		"_template": "AutoSmelter",
@@ -73,7 +73,7 @@
 		"_template": "AutoFastSmelter",
 		"type": "Transformer",
 		"operations": ["smelt"],
-		"sprite": "furnace fast",
+		"sprite": "furnace motor fast",
 		"automatic": true,
 		"speed": 0.03,
 		"upgrades": ["AutoFastConveyorSmelter"]
@@ -116,7 +116,7 @@
 		"operations": ["crush"],
 		"sprite": "crusher",
 		"upgrades": ["AutoCrusher", "FastCrusher", "ConveyorCrusher"],
-		"reward": true,
+		"tags": [ "reward", "basic" ],
 	},
 	{
 		"_template": "AutoCrusher",
@@ -138,7 +138,7 @@
 		"_template": "AutoFastCrusher",
 		"type": "Transformer",
 		"operations": ["crush"],
-		"sprite": "crusher fast",
+		"sprite": "crusher motor fast",
 		"automatic": true,
 		"speed": 0.03,
 		"upgrades": ["AutoFastConveyorCrusher"]
@@ -181,7 +181,7 @@
 		"operations": ["extract"],
 		"sprite": "centrifuge",
 		"upgrades": ["AutoRefiner", "FastRefiner", "ConveyorRefiner"],
-		"reward": true,
+		"tags": [ "reward", "basic" ],
 	},
 	{
 		"_template": "AutoRefiner",
@@ -203,7 +203,7 @@
 		"_template": "AutoFastRefiner",
 		"type": "Transformer",
 		"operations": ["extract"],
-		"sprite": "centrifuge fast",
+		"sprite": "centrifuge motor fast",
 		"automatic": true,
 		"speed": 0.03,
 		"upgrades": ["AutoFastConveyorRefiner"]
@@ -246,7 +246,7 @@
 		"operations": ["sieve"],
 		"sprite": "trashcan gold",
 		"upgrades": ["AutoGoldSieve", "FastGoldSieve", "ConveyorGoldSieve"],
-		"reward": true,
+		"tags": [ "reward" ],
 	},
 	{
 		"_template": "AutoGoldSieve",
@@ -339,6 +339,7 @@
 		"type": "CountingOutputResourcePool",
 		"ng_type": "Gold Ingot",
 		"sprite": "freezer",
+		"tags": [ "output" ],
 	},
 	{
 		"_template": "GoldIngotOutput",
@@ -355,7 +356,7 @@
 		"type": "TrashCompactor",
 		"sprite": "trashcan",
 		"upgrades": [ "AutoTrashCompactor", "FastTrashCompactor", "GoldSieve" ],
-		"reward": true,
+		"tags": [ "reward" ],
 	},
 	{
 		"_template": "AutoTrashCompactor",

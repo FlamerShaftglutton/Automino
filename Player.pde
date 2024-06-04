@@ -77,11 +77,13 @@ class Player
         //try put down
         if (ng != null)
         {
-          if (ng instanceof LevelEditorNonGriddle)
-            ((LevelEditorNonGriddle)ng).visible = false;
-          
           if (fg.receive_ng(ng))
+          {
+            if (ng instanceof LevelEditorNonGriddle)
+              ((LevelEditorNonGriddle)ng).visible = false;
+              
             ng = null;
+          }
         }
         //try to pick up
         else if (fg.can_give_ng() && !fg.ngs.isEmpty())

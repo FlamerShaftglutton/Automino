@@ -232,7 +232,7 @@ class LevelEditorGriddle extends EmptyGriddle
     return true;
   }
   
-  boolean can_accept_ng(NonGriddle n) { return n.name.equals("Gold Ingot") || (!locked && n instanceof LevelEditorNonGriddle && super.can_accept_ng(n)); }
+  boolean can_accept_ng(NonGriddle n) { return n.name.equals("Gold Ingot") || (!locked && n instanceof LevelEditorNonGriddle && ngs.isEmpty() && super.can_accept_ng(n)); }
   boolean can_give_ng() { return !locked; }
   
   void draw() 

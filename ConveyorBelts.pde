@@ -54,17 +54,30 @@ class GrabberBelt extends ConveyorBelt
     
     if (ng() == null)
     {
-      IntVec iv_offset = offset_from_quarter_turns(quarter_turns+2);
-      IntVec xy = game.grid.get_grid_pos_from_object(this).add(iv_offset);
+      IntVec iv_offset = offset_from_quarter_turns(quarter_turns);
+      IntVec xy = game.grid.get_grid_pos_from_object(this);
+      //IntVec to_neighbor = xy.copy().add(iv_offset);
+      IntVec from_neighbor = xy.copy().sub(iv_offset);
       
-      Griddle gg = game.grid.get(xy.x, xy.y);
+      //Griddle gg_to = game.grid.get(to_neighbor);
+      Griddle gg_from = game.grid.get(from_neighbor);
 
-      for (NonGriddle gg_ng : gg.ngs)
+      if (!(gg_from instanceof ConveyorBelt) || gg_from.quarter_turns != quarter_turns)
       {
-        if (can_grab(gg_ng) && receive_ng(gg_ng))
+        for (NonGriddle gg_ng : gg_from.ngs)
         {
-          gg.remove_ng(gg_ng);
-          break;
+          if (can_grab(gg_ng) && receive_ng(gg_ng))
+          {
+            gg_from.remove_ng(gg_ng);
+            
+            //figure out how far back to set it
+            PVector start = center_center();
+            PVector end = start.copy().add(iv_offset.toPVec().mult(dim.x));
+            
+            movement_progress = (start.dist(end) - end.dist(gg_ng.pos)) / start.dist(end); //<>//
+            
+            break;
+          }
         }
       }
     }
@@ -102,6 +115,142 @@ class SwitchGrabberBelt extends GrabberBelt
   }
 }
 
+class CrossConveyorBelt extends ConveyorBelt
+{
+  NonGriddle ng_vertical = null;
+  NonGriddle ng_horizontal = null;
+  float movement_progress_vertical = 0f;
+  float movement_progress_horizontal = 0f;
+  
+  CrossConveyorBelt(GridGameFlowBase game) { super(game); type = "CrossConveyorBelt"; }
+  
+  void update()
+  {
+    if (ng_vertical != null)
+      movement_progress_vertical = move_conveyor(ng_vertical, movement_progress_vertical, (quarter_turns & 3) < 2 ? 1 : 3);
+    
+    if (ng_horizontal != null)
+      movement_progress_horizontal = move_conveyor(ng_horizontal, movement_progress_horizontal, (quarter_turns & 3) == 0 || (quarter_turns & 3) == 3 ? 0 : 2);
+  }
+  
+  float move_conveyor(NonGriddle ng, float amount, int qts)
+  {
+    float retval = amount + 0.03f;
+    
+    IntVec offset = offset_from_quarter_turns(qts);
+    PVector start = center_center();
+    PVector end   = offset.toPVec().mult(dim.x).add(start);
+    
+    if (retval < 0.4f)
+      ng.pos = PVector.lerp(start, end, retval);
+    else
+    {
+      Griddle reciever = game.grid.get(game.grid.get_grid_pos_from_object(this).add(offset));
+      
+      if (retval < 1f)
+      {
+        if (!reciever.can_accept_ng(ng))
+        {
+          retval = min(amount,0.4f);
+        }
+        
+        ng.pos = PVector.lerp(start, end, retval);
+      }
+      else
+      {
+        if (reciever.receive_ng(ng))
+        {
+          remove_ng(ng);
+          retval = 0f;
+        }
+        else
+        {
+          retval = 1f;
+        }
+      }
+    }
+    
+    return retval;
+  }
+  
+  boolean can_accept_ng(NonGriddle n) { return ng_vertical == null || ng_horizontal == null; }
+  
+  boolean receive_ng(NonGriddle ng)
+  {
+    
+    IntVec sender_offset = get_ng_owner_offset(ng);
+    
+    //this is coming from a player
+    if (sender_offset == null)
+    {
+      if (ng_vertical == null)
+      {
+        ng_vertical = ng;
+        //ng.pos = center_center();
+        movement_progress_vertical = 0f;
+        return true;
+      }
+      
+      if (ng_horizontal == null)
+      {
+        ng_horizontal = ng;
+        //ng_pos = center_center();
+        movement_progress_horizontal = 0f;
+        return true;
+      }
+      
+      return false;
+    }
+    
+    //this is coming from one of the sides
+    else if (sender_offset.x != 0 && ng_horizontal == null)
+    {
+      ng_horizontal = ng;
+      movement_progress_horizontal = 0f;
+      return true;
+    }
+    
+    //this is coming from the top or bottom
+    else if (sender_offset.y != 0 && ng_vertical == null)
+    {
+      ng_vertical = ng;
+      movement_progress_horizontal = 0f;
+      return true;
+    }
+    
+    return false;
+  }
+  
+  IntVec get_ng_owner_offset(NonGriddle ng)
+  {
+    IntVec mpos = game.grid.get_grid_pos_from_object(this);
+    
+    for (IntVec iv : orthogonal_offsets())
+    {
+      IntVec op = mpos.copy().add(iv);
+      
+      Griddle sender = game.grid.get(op);
+      
+      if (sender.ngs.contains(ng))
+        return iv;
+    }
+    
+    return null;
+  }
+  
+  void    remove_ng(NonGriddle ng) { if (ng_horizontal == ng) ng_horizontal = null; else if (ng_vertical == ng) ng_vertical = null; else println("Not sure what to remove from CrossConveyor"); }
+  void    remove_ng() 
+  {
+    //DEBUG
+    println("Probably shouldn't do this..."); 
+    
+    if ((ng_horizontal == null && ng_vertical != null) || movement_progress_vertical > movement_progress_horizontal)
+      ng_vertical = null; 
+    else //if ((ng_horizontal != null && ng_vertical == null) || movement_progress_vertical < movement_progress_horizontal)
+      ng_horizontal = null;
+  }
+}
+
 class ConveyorBelt extends Griddle
 {
   float movement_progress = 0f;
@@ -114,21 +263,23 @@ class ConveyorBelt extends Griddle
     
     if (ng != null)
     {
-      movement_progress += 0.04;//0.015f;
+      movement_progress += 0.03f;//0.015f;
       IntVec iv_offset = offset_from_quarter_turns(quarter_turns);
       IntVec xy = game.grid.get_grid_pos_from_object(this).add(iv_offset);
       
       if (movement_progress < 1f)
       {
-        if (movement_progress > 0.5f)
-        {
-          //stop half-way if the next thing can't take this yet (unless it's another conveyor belt)
-          Griddle gg = game.grid.get(xy.x, xy.y);
-          
-          if (!gg.can_accept_ng(ng))//(!(gg instanceof ConveyorBelt) && !gg.can_accept_ng(ng))
-            movement_progress = 0.5f;
-        }
+        //stop if the next thing can't take this yet
+        Griddle gg = game.grid.get(xy.x, xy.y);
         
+        if (!gg.can_accept_ng(ng))//(!(gg instanceof ConveyorBelt) && !gg.can_accept_ng(ng))
+          movement_progress = min(0.0f, movement_progress);
+
+        
+        PVector start = center_center();
+        PVector end = start.copy().add(iv_offset.toPVec().mult(dim.x));
+        
+        /*
         PVector start;
         PVector end;
         
@@ -140,6 +291,7 @@ class ConveyorBelt extends Griddle
           case 3: start = top_center(); end = bottom_center(); break;
           default: start = end = center_center(); break;
         }
+        */
         
         //PVector offset = iv_offset.toPVec();
         //offset.x *= dim.x;

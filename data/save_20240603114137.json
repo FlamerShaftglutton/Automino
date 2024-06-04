@@ -1,5 +1,5 @@
 {
-  "rounds_completed": 18,
+  "rounds_completed": 23,
   "grid": {
     "grid": [
       {
@@ -120,13 +120,14 @@
         "type": "SmartGrabberBelt"
       },
       {
-        "traversable": true,
-        "quarter_turns": 0,
-        "_template": "",
-        "sprite": "",
+        "traversable": false,
+        "quarter_turns": 3,
+        "_template": "SmartGrabberBelt",
+        "keyed_ng_type": "Cobalt Ore",
+        "sprite": "three arrow conveyor yellow",
         "x": 2,
         "y": 1,
-        "type": "EmptyGriddle"
+        "type": "SmartGrabberBelt"
       },
       {
         "traversable": true,
@@ -195,22 +196,27 @@
       },
       {
         "traversable": false,
-        "quarter_turns": 3,
-        "_template": "ConveyorBelt",
-        "sprite": "two arrow conveyor blue",
+        "operations": ["crush"],
+        "quarter_turns": 8,
+        "_template": "AutoFastConveyorCrusher",
+        "sprite": "crusher motor fast conveyor",
         "x": 1,
+        "automatic": true,
         "y": 2,
-        "type": "ConveyorBelt"
+        "type": "ConveyorTransformer",
+        "speed": 0.029999999329447746
       },
       {
         "traversable": false,
-        "quarter_turns": 3,
-        "_template": "SmartGrabberBelt",
-        "keyed_ng_type": "Cobalt Ore",
-        "sprite": "three arrow conveyor yellow",
+        "operations": ["crush"],
+        "quarter_turns": 8,
+        "_template": "AutoConveyorCrusher",
+        "sprite": "crusher motor conveyor",
         "x": 2,
+        "automatic": true,
         "y": 2,
-        "type": "SmartGrabberBelt"
+        "type": "ConveyorTransformer",
+        "speed": 0.009999999776482582
       },
       {
         "traversable": true,
@@ -222,16 +228,13 @@
         "type": "EmptyGriddle"
       },
       {
-        "traversable": false,
-        "operations": ["crush"],
+        "traversable": true,
         "quarter_turns": 0,
-        "_template": "AutoFastConveyorCrusher",
-        "sprite": "crusher motor fast conveyor",
+        "_template": "",
+        "sprite": "",
         "x": 4,
-        "automatic": true,
         "y": 2,
-        "type": "ConveyorTransformer",
-        "speed": 0.029999999329447746
+        "type": "EmptyGriddle"
       },
       {
         "traversable": true,
@@ -255,13 +258,13 @@
         "speed": 0.009999999776482582
       },
       {
-        "traversable": false,
+        "traversable": true,
         "quarter_turns": 0,
-        "_template": "ConveyorBelt",
-        "sprite": "two arrow conveyor blue",
+        "_template": "",
+        "sprite": "",
         "x": 7,
         "y": 2,
-        "type": "ConveyorBelt"
+        "type": "EmptyGriddle"
       },
       {
         "traversable": false,
@@ -291,31 +294,38 @@
         "type": "ConveyorBelt"
       },
       {
-        "traversable": true,
-        "quarter_turns": 0,
-        "_template": "",
-        "sprite": "",
+        "traversable": false,
+        "operations": ["extract"],
+        "quarter_turns": 4,
+        "_template": "AutoFastConveyorRefiner",
+        "sprite": "centrifuge motor fast conveyor",
         "x": 2,
+        "automatic": true,
         "y": 3,
-        "type": "EmptyGriddle"
+        "type": "ConveyorTransformer",
+        "speed": 0.029999999329447746
       },
       {
-        "traversable": true,
+        "traversable": false,
         "quarter_turns": 0,
-        "_template": "",
-        "sprite": "",
+        "_template": "SmartGrabberBelt",
+        "keyed_ng_type": "Tailings",
+        "sprite": "three arrow conveyor yellow",
         "x": 3,
         "y": 3,
-        "type": "EmptyGriddle"
+        "type": "SmartGrabberBelt"
       },
       {
-        "traversable": true,
+        "traversable": false,
+        "operations": ["sieve"],
         "quarter_turns": 0,
-        "_template": "",
-        "sprite": "",
+        "_template": "AutoFastConveyorGoldSieve",
+        "sprite": "trashcan gold motor fast conveyor",
         "x": 4,
+        "automatic": true,
         "y": 3,
-        "type": "EmptyGriddle"
+        "type": "ConveyorTransformer",
+        "speed": 0.029999999329447746
       },
       {
         "traversable": true,
@@ -336,16 +346,13 @@
         "type": "EmptyGriddle"
       },
       {
-        "traversable": false,
-        "operations": ["extract"],
+        "traversable": true,
         "quarter_turns": 0,
-        "_template": "AutoFastConveyorRefiner",
-        "sprite": "centrifuge motor fast conveyor",
+        "_template": "",
+        "sprite": "",
         "x": 7,
-        "automatic": true,
         "y": 3,
-        "type": "ConveyorTransformer",
-        "speed": 0.029999999329447746
+        "type": "EmptyGriddle"
       },
       {
         "traversable": true,
@@ -367,24 +374,21 @@
       },
       {
         "traversable": false,
-        "operations": ["crush"],
-        "quarter_turns": 8,
-        "_template": "AutoConveyorCrusher",
-        "sprite": "crusher motor conveyor",
+        "quarter_turns": 11,
+        "_template": "ConveyorBelt",
+        "sprite": "two arrow conveyor blue",
         "x": 1,
-        "automatic": true,
         "y": 4,
-        "type": "ConveyorTransformer",
-        "speed": 0.009999999776482582
+        "type": "ConveyorBelt"
       },
       {
-        "traversable": true,
-        "quarter_turns": 0,
-        "_template": "",
-        "sprite": "",
+        "traversable": false,
+        "quarter_turns": 2,
+        "_template": "ConveyorBelt",
+        "sprite": "two arrow conveyor blue",
         "x": 2,
         "y": 4,
-        "type": "EmptyGriddle"
+        "type": "ConveyorBelt"
       },
       {
         "traversable": true,
@@ -397,12 +401,12 @@
       },
       {
         "traversable": false,
-        "quarter_turns": 0,
-        "_template": "",
-        "sprite": "player green",
+        "quarter_turns": 3,
+        "_template": "ConveyorBelt",
+        "sprite": "two arrow conveyor blue",
         "x": 4,
         "y": 4,
-        "type": "PlayerGriddle"
+        "type": "ConveyorBelt"
       },
       {
         "traversable": true,
@@ -426,25 +430,23 @@
         "speed": 0.029999999329447746
       },
       {
-        "traversable": false,
+        "traversable": true,
         "quarter_turns": 0,
-        "_template": "ConveyorBelt",
-        "sprite": "two arrow conveyor blue",
+        "_template": "",
+        "sprite": "",
         "x": 7,
         "y": 4,
-        "type": "ConveyorBelt"
+        "type": "EmptyGriddle"
       },
       {
+        "ng_type": "Iron Ore",
         "traversable": false,
-        "operations": ["smelt"],
         "quarter_turns": 0,
-        "_template": "Smelter",
-        "sprite": "furnace",
+        "_template": "IronOrePool",
+        "sprite": "freezer",
         "x": 8,
-        "automatic": false,
         "y": 4,
-        "type": "Transformer",
-        "speed": 0.009999999776482582
+        "type": "ResourcePool"
       },
       {
         "traversable": false,
@@ -490,13 +492,13 @@
         "speed": 0.029999999329447746
       },
       {
-        "traversable": true,
-        "quarter_turns": 0,
-        "_template": "",
-        "sprite": "",
+        "traversable": false,
+        "quarter_turns": 3,
+        "_template": "ConveyorBelt",
+        "sprite": "two arrow conveyor blue",
         "x": 4,
         "y": 5,
-        "type": "EmptyGriddle"
+        "type": "ConveyorBelt"
       },
       {
         "traversable": true,
@@ -508,33 +510,33 @@
         "type": "EmptyGriddle"
       },
       {
+        "traversable": false,
+        "quarter_turns": 3,
+        "_template": "CrossConveyorBelt",
+        "sprite": "cross conveyor blue",
+        "x": 6,
+        "y": 5,
+        "type": "CrossConveyorBelt"
+      },
+      {
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
         "sprite": "",
-        "x": 6,
+        "x": 7,
         "y": 5,
         "type": "EmptyGriddle"
       },
       {
         "traversable": false,
+        "operations": [""],
         "quarter_turns": 0,
-        "_template": "ConveyorBelt",
-        "sprite": "two arrow conveyor blue",
-        "x": 7,
-        "y": 5,
-        "type": "ConveyorBelt"
-      },
-      {
-        "traversable": false,
-        "operations": ["smelt"],
-        "quarter_turns": 0,
-        "_template": "Smelter",
-        "sprite": "furnace",
+        "_template": "TrashCompactor",
+        "sprite": "trashcan",
         "x": 8,
         "automatic": false,
         "y": 5,
-        "type": "Transformer",
+        "type": "TrashCompactor",
         "speed": 0.009999999776482582
       },
       {
@@ -583,13 +585,13 @@
         "speed": 0.029999999329447746
       },
       {
-        "traversable": true,
-        "quarter_turns": 0,
-        "_template": "",
-        "sprite": "",
+        "traversable": false,
+        "quarter_turns": 2,
+        "_template": "ConveyorBelt",
+        "sprite": "two arrow conveyor blue",
         "x": 4,
         "y": 6,
-        "type": "EmptyGriddle"
+        "type": "ConveyorBelt"
       },
       {
         "traversable": true,
@@ -601,13 +603,13 @@
         "type": "EmptyGriddle"
       },
       {
-        "traversable": true,
+        "traversable": false,
         "quarter_turns": 0,
-        "_template": "",
-        "sprite": "",
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
         "x": 6,
         "y": 6,
-        "type": "EmptyGriddle"
+        "type": "GrabberBelt"
       },
       {
         "traversable": true,
@@ -620,10 +622,10 @@
       },
       {
         "traversable": false,
-        "operations": ["crush"],
+        "operations": ["smelt"],
         "quarter_turns": 0,
-        "_template": "Crusher",
-        "sprite": "crusher",
+        "_template": "Smelter",
+        "sprite": "furnace",
         "x": 8,
         "automatic": false,
         "y": 6,
@@ -676,20 +678,29 @@
         "type": "EmptyGriddle"
       },
       {
-        "traversable": true,
+        "traversable": false,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprite": "player green",
         "x": 5,
         "y": 7,
-        "type": "EmptyGriddle"
+        "type": "PlayerGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "ConveyorBelt",
+        "sprite": "two arrow conveyor blue",
+        "x": 6,
+        "y": 7,
+        "type": "ConveyorBelt"
       },
       {
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
         "sprite": "",
-        "x": 6,
+        "x": 7,
         "y": 7,
         "type": "EmptyGriddle"
       },
@@ -698,19 +709,9 @@
         "quarter_turns": 0,
         "_template": "ConveyorBelt",
         "sprite": "two arrow conveyor blue",
-        "x": 7,
-        "y": 7,
-        "type": "ConveyorBelt"
-      },
-      {
-        "ng_type": "Iron Ore",
-        "traversable": false,
-        "quarter_turns": 0,
-        "_template": "IronOrePool",
-        "sprite": "freezer",
         "x": 8,
         "y": 7,
-        "type": "ResourcePool"
+        "type": "ConveyorBelt"
       },
       {
         "traversable": false,
@@ -731,7 +732,7 @@
         "x": 1,
         "y": 8,
         "type": "CountingOutputResourcePool",
-        "required": 19
+        "required": 24
       },
       {
         "ng_type": "Gold Ingot",
@@ -739,7 +740,7 @@
         "quarter_turns": 0,
         "_template": "GoldIngotOutput",
         "sprite": "freezer",
-        "count": 0,
+        "count": 12,
         "x": 2,
         "y": 8,
         "type": "CountingOutputResourcePool",

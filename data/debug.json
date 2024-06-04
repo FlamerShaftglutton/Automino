@@ -1,0 +1,99 @@
+{
+	"grid": {
+		"width": 8,
+		"height": 8,
+		"grid": [
+			{
+				"ng_type": "Cobalt Ore",
+				"traversable": false,
+				"quarter_turns": 0,
+				"_template": "RandomResourcePool",
+				"sprite": "freezer",
+				"x": 1,
+				"resources": [
+				  "Cobalt Ore",
+				  "Cobalt Ore",
+				  "Cobalt Ore",
+				  "Cobalt Ore",
+				  "Cobalt Ore",
+				  "Iron Ore",
+				  "Iron Ore",
+				  "Iron Ore",
+				  "Iron Ore",
+				  "Iron Ore",
+				  "Gold Speck"
+				],
+				"y": 5,
+				"type": "RandomResourcePool"
+			},
+			{
+				"x": 3,
+				"y": 3,
+				"type": "CrossConveyorBelt",
+				"quarter_turns": 3,
+			},
+			{
+				"traversable": false,
+				"quarter_turns": 1,
+				"type": "GrabberBelt",
+				"x": 1,
+				"y": 4,
+			},
+			{
+				"traversable": false,
+				"quarter_turns": 0,
+				"type": "GrabberBelt",
+				"x": 2,
+				"y": 5,
+			},
+			{
+				"traversable": false,
+				"quarter_turns": 1,
+				"type": "GrabberBelt",
+				"x": 3,
+				"y": 5,
+			},
+			{
+				"traversable": false,
+				"quarter_turns": 0,
+				"type": "GrabberBelt",
+				"x": 1,
+				"y": 3,
+			},
+			{
+				"traversable": false,
+				"quarter_turns": 0,
+				"type": "GrabberBelt",
+				"x": 2,
+				"y": 3,
+			},
+			{
+				"traversable": false,
+				"quarter_turns": 1,
+				"type": "GrabberBelt",
+				"x": 4,
+				"y": 3,
+			},
+			{
+				"traversable": false,
+				"quarter_turns": 1,
+				"type": "GrabberBelt",
+				"x": 3,
+				"y": 4,
+			},
+			{
+				"traversable": false,
+				"quarter_turns": 2,
+				"type": "GrabberBelt",
+				"x": 3,
+				"y": 2,
+			},
+			{
+				"sprite": "player green",
+				"x": 7,
+				"y": 7,
+				"type": "PlayerGriddle"
+			},
+		],
+	},
+}

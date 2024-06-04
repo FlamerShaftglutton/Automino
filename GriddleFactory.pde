@@ -61,6 +61,7 @@ class GriddleFactory
       case "RandomResourcePool":           g = new RandomResourcePool(game);         break;
       case "TrashCompactor":               g = new TrashCompactor(game);             break;
       case "ConveyorTransformer":          g = new ConveyorTransformer(game);        break;
+      case "CrossConveyorBelt":            g = new CrossConveyorBelt(game);          break;
       default:                             g = new NullGriddle(game);                break;
     }
     

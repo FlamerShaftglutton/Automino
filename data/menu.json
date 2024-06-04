@@ -11,6 +11,13 @@
 				"action": "newgame",
 			},
 			{
+				"x": 0,
+				"y": 0,
+				"type": "MetaActionCounter",
+				"display": "debug",
+				"action": "debug",
+			},
+			{
 				"sprite": "player green",
 				"x": 2,
 				"y": 2,

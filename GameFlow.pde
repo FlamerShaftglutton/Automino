@@ -107,7 +107,7 @@ class GridGameFlowBase implements GameFlow
   
   void deserialize(JSONObject root)
   {    
-    Grid gg = new Grid(new PVector(100,100), new PVector(width - 200, height - 200), this);
+    Grid gg = new Grid(new PVector(20,20), new PVector(width - 40, height - 40), this);
     
     gg.deserialize(root.getJSONObject("grid"), this);
     
@@ -244,6 +244,12 @@ class MainMenuGameFlow extends GridGameFlowBase
         loadgame.save_path = message.value;
         loadgame.load();
         globals.game.push(loadgame);
+        break;
+      case "debug":
+        GridGameFlowBase debuggame = new GridGameFlowBase();
+        debuggame.save_path = dataPath("debug.json");
+        debuggame.load();
+        globals.game.push(debuggame);
         break;
       case "save":
         println("Saving... psych! I ain't doing nothing'.");

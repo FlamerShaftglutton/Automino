@@ -2,7 +2,7 @@
 	{
 		"type": "ConveyorBelt",
 		"sprite": "two arrow conveyor blue",
-		"upgrades": "GrabberBelt",
+		"upgrades": [ "GrabberBelt", "CrossConveyorBelt" ],
 		"reward": true,
 	},
 	{
@@ -322,6 +322,10 @@
 		"sprite": "two arrow conveyor yellow",
 		"enabled": false,
 		"disabled_sprite": "two arrow conveyor red",
+	},
+	{
+		"type": "CrossConveyorBelt",
+		"sprite": "cross conveyor blue",
 	},
 	{
 		"type": "MetaActionCounter",

@@ -128,8 +128,8 @@ class GameSession extends GridGameFlowBase
   
   void create_new()
   {
-    int w = (int)random(7, 10);
-    int h = (int)random(7, 10);
+    int w = (int)random(10, 16);
+    int h = (int)random(10, 16);
     
     String req_type   = random(10) > 4 ? "Iron Ingot" : "Cobalt Ingot";
     int    req_amount = 1;
@@ -141,29 +141,29 @@ class GameSession extends GridGameFlowBase
     WinCondition win_condition = new WinCondition(req_type, req_amount, (CountingOutputResourcePool)globals.gFactory.create_griddle("Output", ov, this));
     win_conditions.add(win_condition);
     
-    Grid g = new Grid(new PVector(100,100), new PVector(width - 200, height - 200), w, h, this);
+    Grid gg = new Grid(new PVector(20,20), new PVector(width - 40, height - 40), w, h, this);
     
     for (int y = 1; y < h; ++y)
-      g.set(0,y,new NullGriddle());
+      gg.set(0,y,new NullGriddle());
     
-    g.set(0,h-1, new NullGriddle());
-    g.set(1,h-1, win_condition.to_check);
-    g.set(2,h-1, globals.gFactory.create_griddle("GoldIngotOutput", this));
+    gg.set(0,h-1, new NullGriddle());
+    gg.set(1,h-1, win_condition.to_check);
+    gg.set(2,h-1, globals.gFactory.create_griddle("GoldIngotOutput", this));
     
     for (int x = 3; x < w; ++x)
-      g.set(x, h-1, new NullGriddle());
+      gg.set(x, h-1, new NullGriddle());
     
     ov = JSONObject.parse("{ 'resources': { 'Iron Ore': 5, 'Cobalt Ore': 5, 'Gold Speck': 1 } }");
-    g.set(0,0,globals.gFactory.create_griddle("RandomResourcePool", ov, this));
+    gg.set(0,0,globals.gFactory.create_griddle("RandomResourcePool", ov, this));
     
     for (int x = 1; x < w - 1; ++x)
-      g.set(x,0, globals.gFactory.create_griddle("GrabberBelt", this));
+      gg.set(x,0, globals.gFactory.create_griddle("GrabberBelt", this));
     
     ov = JSONObject.parse("{ 'automatic': true, 'speed': 0.005 }");
-    g.set(w - 1, 0, globals.gFactory.create_griddle("TrashCompactor",ov, this));
+    gg.set(w - 1, 0, globals.gFactory.create_griddle("TrashCompactor",ov, this));
     
     for (int y = 1; y < h - 6; ++y)
-      g.set(w - 1, y, new NullGriddle(this));
+      gg.set(w - 1, y, new NullGriddle(this));
     
     
     String[] to_place = { "Smelter", "Crusher", "Refiner", "Player" };
@@ -193,12 +193,12 @@ class GameSession extends GridGameFlowBase
             
             player.spritename = globals.gFactory.get_spritename("Player");
             player.sprite = globals.sprites.get_sprite(player.spritename);
-            player.pos = g.absolute_pos_from_grid_pos(new IntVec(xx,yy));
-            player.dim = g.get_square_dim();
+            player.pos = gg.absolute_pos_from_grid_pos(new IntVec(xx,yy));
+            player.dim = gg.get_square_dim();
             
           }
           else
-            g.set(xx,yy, globals.gFactory.create_griddle(tps, ov, this));
+            gg.set(xx,yy, globals.gFactory.create_griddle(tps, ov, this));
           
           used_spots.add(new IntVec(xx,yy));
           placed = true;
@@ -206,12 +206,7 @@ class GameSession extends GridGameFlowBase
       }
     }
     
-    //DEBUG
-    g.get(1,1).receive_ng(create_and_register_ng("Iron Ingot"));
-    g.get(1,2).receive_ng(create_and_register_ng("Cobalt Ingot"));
-    g.get(1,3).receive_ng(create_and_register_ng("Gold Ingot"));
-    
-    grid = g;
+    grid = gg;
   }
   
   void refresh_rewards()

@@ -1,19 +1,3 @@
-IntVec offset_from_quarter_turns(int quarter_turns)
-{
-  quarter_turns &= 3;
-  IntVec retval = new IntVec(0,0);
-  
-  switch (quarter_turns)
-  {
-    case 1: retval.y = -1; break;
-    case 0:  retval.x =  1; break;
-    case 3: retval.y =  1; break;
-    case 2:  retval.x = -1; break;
-  }
-  
-  return retval;
-}
-
 void translate(PVector p) { translate(p.x,p.y); }
 
 String right(String in, int characters) { if (in.length() < characters) return in; return in.substring(in.length() - characters); } 
@@ -52,3 +36,19 @@ class IntVec
 
 IntVec[] orthogonal_offsets() { IntVec[] retval = { new IntVec(1,0), new IntVec(0,-1), new IntVec(-1,0), new IntVec(0,1) }; return retval; }
 IntVec[] adjacent_offsets() { IntVec[] retval = { new IntVec(-1,-1), new IntVec(0,-1), new IntVec(1,-1), new IntVec(-1,0), new IntVec(1,0),new IntVec(-1,1), new IntVec(0,1), new IntVec(1,1) }; return retval; }
+
+IntVec offset_from_quarter_turns(int quarter_turns)
+{
+  quarter_turns &= 3;
+  IntVec retval = new IntVec(0,0);
+  
+  switch (quarter_turns)
+  {
+    case 1: retval.y = -1; break;
+    case 0:  retval.x =  1; break;
+    case 3: retval.y =  1; break;
+    case 2:  retval.x = -1; break;
+  }
+  
+  return retval;
+}

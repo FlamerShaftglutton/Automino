@@ -1,0 +1,1627 @@
+{
+  "rounds_completed": 32,
+  "grid": {
+    "grid": [
+      {
+        "ng_type": "Iron Ore",
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "RandomResourcePool",
+        "sprite": "freezer",
+        "x": 0,
+        "resources": [
+          "Cobalt Ore",
+          "Cobalt Ore",
+          "Cobalt Ore",
+          "Cobalt Ore",
+          "Cobalt Ore",
+          "Iron Ore",
+          "Iron Ore",
+          "Iron Ore",
+          "Iron Ore",
+          "Iron Ore",
+          "Gold Speck"
+        ],
+        "y": 0,
+        "type": "RandomResourcePool"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 1,
+        "y": 0,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 2,
+        "y": 0,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 3,
+        "y": 0,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 4,
+        "y": 0,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 5,
+        "y": 0,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 6,
+        "y": 0,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 7,
+        "y": 0,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 8,
+        "y": 0,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 9,
+        "y": 0,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 10,
+        "y": 0,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 11,
+        "y": 0,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": false,
+        "operations": [""],
+        "quarter_turns": 0,
+        "_template": "TrashCompactor",
+        "sprite": "trashcan",
+        "x": 12,
+        "automatic": true,
+        "y": 0,
+        "type": "TrashCompactor",
+        "speed": 0.004999999888241291
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 0,
+        "y": 1,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 3,
+        "_template": "SmartGrabberBelt",
+        "keyed_ng_type": "Cobalt Ore",
+        "sprite": "three arrow conveyor yellow",
+        "x": 1,
+        "y": 1,
+        "type": "SmartGrabberBelt"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 2,
+        "y": 1,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 3,
+        "y": 1,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 3,
+        "_template": "SmartGrabberBelt",
+        "keyed_ng_type": "Gold Speck",
+        "sprite": "three arrow conveyor yellow",
+        "x": 4,
+        "y": 1,
+        "type": "SmartGrabberBelt"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 5,
+        "y": 1,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 6,
+        "y": 1,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 7,
+        "y": 1,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 3,
+        "_template": "SmartGrabberBelt",
+        "keyed_ng_type": "Cobalt Ore",
+        "sprite": "three arrow conveyor yellow",
+        "x": 8,
+        "y": 1,
+        "type": "SmartGrabberBelt"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 9,
+        "y": 1,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 3,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 10,
+        "y": 1,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 3,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 11,
+        "y": 1,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 12,
+        "y": 1,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 0,
+        "y": 2,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 3,
+        "_template": "ConveyorBelt",
+        "sprite": "two arrow conveyor blue",
+        "x": 1,
+        "y": 2,
+        "type": "ConveyorBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 2,
+        "y": 2,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 3,
+        "y": 2,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 3,
+        "_template": "CrossConveyorBelt",
+        "sprite": "cross conveyor blue",
+        "x": 4,
+        "y": 2,
+        "type": "CrossConveyorBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "ConveyorBelt",
+        "sprite": "two arrow conveyor blue",
+        "x": 5,
+        "y": 2,
+        "type": "ConveyorBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "ConveyorBelt",
+        "sprite": "two arrow conveyor blue",
+        "x": 6,
+        "y": 2,
+        "type": "ConveyorBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 7,
+        "_template": "ConveyorBelt",
+        "sprite": "two arrow conveyor blue",
+        "x": 7,
+        "y": 2,
+        "type": "ConveyorBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 3,
+        "_template": "SmartGrabberBelt",
+        "keyed_ng_type": "Cobalt Ore",
+        "sprite": "three arrow conveyor yellow",
+        "x": 8,
+        "y": 2,
+        "type": "SmartGrabberBelt"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 9,
+        "y": 2,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "operations": [""],
+        "quarter_turns": 0,
+        "_template": "AutoTrashCompactor",
+        "sprite": "trashcan motor",
+        "x": 10,
+        "automatic": true,
+        "y": 2,
+        "type": "TrashCompactor",
+        "speed": 0.009999999776482582
+      },
+      {
+        "traversable": false,
+        "operations": [""],
+        "quarter_turns": 0,
+        "_template": "AutoTrashCompactor",
+        "sprite": "trashcan motor",
+        "x": 11,
+        "automatic": true,
+        "y": 2,
+        "type": "TrashCompactor",
+        "speed": 0.009999999776482582
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 12,
+        "y": 2,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 0,
+        "y": 3,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": false,
+        "operations": ["crush"],
+        "quarter_turns": 0,
+        "_template": "AutoFastConveyorCrusher",
+        "sprite": "crusher motor fast conveyor",
+        "x": 1,
+        "automatic": true,
+        "y": 3,
+        "type": "ConveyorTransformer",
+        "speed": 0.029999999329447746
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 2,
+        "y": 3,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 3,
+        "y": 3,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 3,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 4,
+        "y": 3,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 5,
+        "y": 3,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 6,
+        "y": 3,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "operations": ["crush"],
+        "quarter_turns": 0,
+        "_template": "AutoFastConveyorCrusher",
+        "sprite": "crusher motor fast conveyor",
+        "x": 7,
+        "automatic": true,
+        "y": 3,
+        "type": "ConveyorTransformer",
+        "speed": 0.029999999329447746
+      },
+      {
+        "traversable": false,
+        "operations": ["crush"],
+        "quarter_turns": 0,
+        "_template": "AutoFastConveyorCrusher",
+        "sprite": "crusher motor fast conveyor",
+        "x": 8,
+        "automatic": true,
+        "y": 3,
+        "type": "ConveyorTransformer",
+        "speed": 0.029999999329447746
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 9,
+        "y": 3,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 10,
+        "y": 3,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 11,
+        "y": 3,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 12,
+        "y": 3,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 0,
+        "y": 4,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": false,
+        "operations": ["extract"],
+        "quarter_turns": 0,
+        "_template": "AutoFastRefiner",
+        "sprite": "centrifuge fast",
+        "x": 1,
+        "automatic": true,
+        "y": 4,
+        "type": "Transformer",
+        "speed": 0.029999999329447746
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "SmartGrabberBelt",
+        "keyed_ng_type": "Tailings",
+        "sprite": "three arrow conveyor yellow",
+        "x": 2,
+        "y": 4,
+        "type": "SmartGrabberBelt"
+      },
+      {
+        "traversable": false,
+        "operations": ["sieve"],
+        "quarter_turns": 5,
+        "_template": "AutoFastConveyorGoldSieve",
+        "sprite": "trashcan gold motor fast conveyor",
+        "x": 3,
+        "automatic": true,
+        "y": 4,
+        "type": "ConveyorTransformer",
+        "speed": 0.029999999329447746
+      },
+      {
+        "traversable": false,
+        "operations": ["crush"],
+        "quarter_turns": 4,
+        "_template": "AutoConveyorCrusher",
+        "sprite": "crusher motor conveyor",
+        "x": 4,
+        "automatic": true,
+        "y": 4,
+        "type": "ConveyorTransformer",
+        "speed": 0.009999999776482582
+      },
+      {
+        "traversable": false,
+        "operations": ["sieve"],
+        "quarter_turns": 3,
+        "_template": "AutoFastConveyorGoldSieve",
+        "sprite": "trashcan gold motor fast conveyor",
+        "x": 5,
+        "automatic": true,
+        "y": 4,
+        "type": "ConveyorTransformer",
+        "speed": 0.029999999329447746
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 2,
+        "_template": "SmartGrabberBelt",
+        "keyed_ng_type": "Tailings",
+        "sprite": "three arrow conveyor yellow",
+        "x": 6,
+        "y": 4,
+        "type": "SmartGrabberBelt"
+      },
+      {
+        "traversable": false,
+        "operations": ["extract"],
+        "quarter_turns": 0,
+        "_template": "AutoFastConveyorRefiner",
+        "sprite": "centrifuge motor fast conveyor",
+        "x": 7,
+        "automatic": true,
+        "y": 4,
+        "type": "ConveyorTransformer",
+        "speed": 0.029999999329447746
+      },
+      {
+        "traversable": false,
+        "operations": ["extract"],
+        "quarter_turns": 0,
+        "_template": "AutoFastConveyorRefiner",
+        "sprite": "centrifuge motor fast conveyor",
+        "x": 8,
+        "automatic": true,
+        "y": 4,
+        "type": "ConveyorTransformer",
+        "speed": 0.029999999329447746
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "SmartGrabberBelt",
+        "keyed_ng_type": "Tailings",
+        "sprite": "three arrow conveyor yellow",
+        "x": 9,
+        "y": 4,
+        "type": "SmartGrabberBelt"
+      },
+      {
+        "traversable": false,
+        "operations": ["sieve"],
+        "quarter_turns": 0,
+        "_template": "AutoFastConveyorGoldSieve",
+        "sprite": "trashcan gold motor fast conveyor",
+        "x": 10,
+        "automatic": true,
+        "y": 4,
+        "type": "ConveyorTransformer",
+        "speed": 0.029999999329447746
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 11,
+        "y": 4,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 12,
+        "y": 4,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 0,
+        "y": 5,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 3,
+        "_template": "SmartGrabberBelt",
+        "keyed_ng_type": "Refined Cobalt",
+        "sprite": "three arrow conveyor yellow",
+        "x": 1,
+        "y": 5,
+        "type": "SmartGrabberBelt"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 2,
+        "y": 5,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 3,
+        "y": 5,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "operations": ["smelt"],
+        "quarter_turns": 0,
+        "_template": "AutoFastConveyorSmelter",
+        "sprite": "furnace motor fast conveyor",
+        "x": 4,
+        "automatic": true,
+        "y": 5,
+        "type": "ConveyorTransformer",
+        "speed": 0.029999999329447746
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 5,
+        "y": 5,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 6,
+        "y": 5,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "operations": ["smelt"],
+        "quarter_turns": 0,
+        "_template": "AutoFastConveyorSmelter",
+        "sprite": "furnace motor fast conveyor",
+        "x": 7,
+        "automatic": true,
+        "y": 5,
+        "type": "ConveyorTransformer",
+        "speed": 0.029999999329447746
+      },
+      {
+        "traversable": false,
+        "operations": ["smelt"],
+        "quarter_turns": 0,
+        "_template": "AutoFastConveyorSmelter",
+        "sprite": "furnace motor fast conveyor",
+        "x": 8,
+        "automatic": true,
+        "y": 5,
+        "type": "ConveyorTransformer",
+        "speed": 0.029999999329447746
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 9,
+        "y": 5,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 10,
+        "y": 5,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 11,
+        "y": 5,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 12,
+        "y": 5,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 0,
+        "y": 6,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": false,
+        "operations": ["smelt"],
+        "quarter_turns": 0,
+        "_template": "AutoFastConveyorSmelter",
+        "sprite": "furnace motor fast conveyor",
+        "x": 1,
+        "automatic": true,
+        "y": 6,
+        "type": "ConveyorTransformer",
+        "speed": 0.029999999329447746
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 2,
+        "y": 6,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 3,
+        "y": 6,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 2,
+        "_template": "CrossConveyorBelt",
+        "sprite": "cross conveyor blue",
+        "x": 4,
+        "y": 6,
+        "type": "CrossConveyorBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 2,
+        "_template": "ConveyorBelt",
+        "sprite": "two arrow conveyor blue",
+        "x": 5,
+        "y": 6,
+        "type": "ConveyorBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 2,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 6,
+        "y": 6,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 7,
+        "y": 6,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 2,
+        "_template": "ConveyorBelt",
+        "sprite": "two arrow conveyor blue",
+        "x": 8,
+        "y": 6,
+        "type": "ConveyorBelt"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 9,
+        "y": 6,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 3,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 10,
+        "y": 6,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 11,
+        "y": 6,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 12,
+        "y": 6,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 0,
+        "y": 7,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 1,
+        "y": 7,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 2,
+        "y": 7,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 3,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 3,
+        "y": 7,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 3,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 4,
+        "y": 7,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 2,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 5,
+        "y": 7,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 6,
+        "y": 7,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 2,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 7,
+        "y": 7,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 8,
+        "y": 7,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "operations": ["smelt"],
+        "quarter_turns": 3,
+        "_template": "AutoFastConveyorSmelter",
+        "sprite": "furnace motor fast conveyor",
+        "x": 9,
+        "automatic": true,
+        "y": 7,
+        "type": "ConveyorTransformer",
+        "speed": 0.029999999329447746
+      },
+      {
+        "traversable": false,
+        "operations": ["crush"],
+        "quarter_turns": 3,
+        "_template": "AutoFastConveyorCrusher",
+        "sprite": "crusher motor fast conveyor",
+        "x": 10,
+        "automatic": true,
+        "y": 7,
+        "type": "ConveyorTransformer",
+        "speed": 0.029999999329447746
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 11,
+        "y": 7,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 12,
+        "y": 7,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 0,
+        "y": 8,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 3,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 1,
+        "y": 8,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 2,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 2,
+        "y": 8,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 3,
+        "y": 8,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 4,
+        "y": 8,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 5,
+        "y": 8,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 6,
+        "y": 8,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 7,
+        "y": 8,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 8,
+        "y": 8,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 9,
+        "y": 8,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 10,
+        "y": 8,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 11,
+        "y": 8,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "operations": [""],
+        "quarter_turns": 0,
+        "_template": "TrashCompactor",
+        "sprite": "trashcan",
+        "x": 12,
+        "automatic": false,
+        "y": 8,
+        "type": "TrashCompactor",
+        "speed": 0.009999999776482582
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 0,
+        "y": 9,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 1,
+        "y": 9,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 2,
+        "y": 9,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 3,
+        "y": 9,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 3,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 4,
+        "y": 9,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 5,
+        "y": 9,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 6,
+        "y": 9,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "player green",
+        "x": 7,
+        "y": 9,
+        "type": "PlayerGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 8,
+        "y": 9,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 9,
+        "y": 9,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 10,
+        "y": 9,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 11,
+        "y": 9,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "operations": ["sieve"],
+        "quarter_turns": 0,
+        "_template": "GoldSieve",
+        "sprite": "trashcan gold",
+        "x": 12,
+        "automatic": false,
+        "y": 9,
+        "type": "Transformer",
+        "speed": 0.009999999776482582
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 0,
+        "y": 10,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 3,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 1,
+        "y": 10,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 2,
+        "y": 10,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 6,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 3,
+        "y": 10,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 4,
+        "y": 10,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 5,
+        "y": 10,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 6,
+        "y": 10,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 7,
+        "y": 10,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 8,
+        "y": 10,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 9,
+        "y": 10,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 10,
+        "y": 10,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 11,
+        "y": 10,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 12,
+        "y": 10,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 0,
+        "y": 11,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 3,
+        "_template": "ConveyorBelt",
+        "sprite": "two arrow conveyor blue",
+        "x": 1,
+        "y": 11,
+        "type": "ConveyorBelt"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 3,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 2,
+        "y": 11,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 3,
+        "y": 11,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 4,
+        "y": 11,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 5,
+        "y": 11,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 6,
+        "y": 11,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 7,
+        "y": 11,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 8,
+        "y": 11,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "operations": [""],
+        "quarter_turns": 0,
+        "_template": "TrashCompactor",
+        "sprite": "trashcan",
+        "x": 9,
+        "automatic": false,
+        "y": 11,
+        "type": "TrashCompactor",
+        "speed": 0.009999999776482582
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "ConveyorBelt",
+        "sprite": "two arrow conveyor blue",
+        "x": 10,
+        "y": 11,
+        "type": "ConveyorBelt"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 11,
+        "y": 11,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "operations": ["smelt"],
+        "quarter_turns": 0,
+        "_template": "Smelter",
+        "sprite": "furnace",
+        "x": 12,
+        "automatic": false,
+        "y": 11,
+        "type": "Transformer",
+        "speed": 0.009999999776482582
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 0,
+        "y": 12,
+        "type": "NullGriddle"
+      },
+      {
+        "ng_type": "Cobalt Ingot",
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "Output",
+        "sprite": "freezer",
+        "count": 0,
+        "x": 1,
+        "y": 12,
+        "type": "CountingOutputResourcePool",
+        "required": 33
+      },
+      {
+        "ng_type": "Gold Ingot",
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "GoldIngotOutput",
+        "sprite": "freezer",
+        "count": 42,
+        "x": 2,
+        "y": 12,
+        "type": "CountingOutputResourcePool",
+        "required": -1
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 3,
+        "y": 12,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 4,
+        "y": 12,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 5,
+        "y": 12,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 6,
+        "y": 12,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 7,
+        "y": 12,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 8,
+        "y": 12,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 9,
+        "y": 12,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 10,
+        "y": 12,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 11,
+        "y": 12,
+        "type": "NullGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 12,
+        "y": 12,
+        "type": "NullGriddle"
+      }
+    ],
+    "width": 13,
+    "height": 13
+  }
+}

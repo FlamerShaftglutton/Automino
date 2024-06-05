@@ -17,7 +17,7 @@ class GameFlowManager
   void push(GameFlow flow, String message) { flows.add(flow); flow.onFocus(message); }
   void push(GameFlow flow) { push(flow, ""); }
   
-  GameFlow active() { return flows.get(flows.size() - 1); }
+  GameFlow active() { if (flows.isEmpty()) exit(); return flows.get(flows.size() - 1); }
   
   void pop() 
   {

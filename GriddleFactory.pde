@@ -71,56 +71,21 @@ class GriddleFactory
     return g;
   }
   
+  String get_string(String griddle_name, String field_name) { return templates.get(griddle_name).getString(field_name,""); }
+  
+  StringList get_strings(String griddle_name, String field_name) { return getStringList(field_name, templates.get(griddle_name)); }
+  
   String get_spritename(String name) { return templates.get(name).getString("sprite"); }
+  
   String get_description(String name) { return templates.get(name).getString("description"); }
   
-  StringList get_tags(String name)
-  {
-    StringList retval = new StringList();
-    
-    JSONObject jo = templates.get(name);
-    
-    if (!jo.hasKey("tags"))
-        return retval;
-      
-    Object jou = jo.get("tags");
-    
-    if (jou instanceof String)
-      retval.append(jou.toString());
-    else if (jou instanceof JSONArray)
-    {
-      JSONArray ja = (JSONArray)jou;
-      
-      for (int i = 0; i < ja.size(); ++i)
-        retval.append(ja.getString(i));
-    }
-    
-    return retval;    
-  }
+  StringList get_tags(String name) { return getStringList("tags", templates.get(name)); }
   
-  StringList get_upgrades(String name)
-  {
-    StringList retval = new StringList();
-    
-    JSONObject jo = templates.get(name);
-    
-    if (!jo.hasKey("upgrades"))
-        return retval;
-      
-    Object jou = jo.get("upgrades");
-    
-    if (jou instanceof String)
-      retval.append(jou.toString());
-    else if (jou instanceof JSONArray)
-    {
-      JSONArray ja = (JSONArray)jou;
-      
-      for (int i = 0; i < ja.size(); ++i)
-        retval.append(ja.getString(i));
-    }
-    
-    return retval;
-  }
+  StringList get_names_by_tag(String tag) { StringList retval = all_template_names(); for (int i = 0; i < retval.size(); ++i) { if (!get_tags(retval.get(i)).hasValue(tag)) { retval.remove(i); --i; } } return retval; }
+  
+  StringList get_upgrades(String name) { return getStringList("upgrades", templates.get(name)); }
+  
+  StringList get_operations(String name) { return getStringList("operations", templates.get(name)); }
   
   StringList all_template_names() { return new StringList(templates.keySet()); }
   

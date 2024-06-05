@@ -25,6 +25,7 @@ void initglobals()
   globals.ngFactory.load(dataPath("NonGriddles.json"));
   globals.gFactory.load(dataPath("Griddles.json"));
   globals.interactions.load(dataPath("Interactions.json"));
+  globals.ruleFactory.load(dataPath("Rules.json"));
   
   MainMenuGameFlow mm = new MainMenuGameFlow();
   mm.save_path = dataPath("menu.json");

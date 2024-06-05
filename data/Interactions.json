@@ -6,6 +6,7 @@
 	{ "operation": "smelt", "input": "Refined Cobalt", "output": "Cobalt Ingot", "time": 5.0 },
 	{ "operation": "smelt", "input": "Refined Iron",   "output": "Iron Ingot",   "time": 6.0 },
 	{ "operation": "smelt", "input": [ "Refined Cobalt", "Refined Iron"], "output": "Permendur Ingot", "time": 7.0 },
+	{ "operation": "smelt", "input": [ "Cobalt Ingot", "Iron Ingot"], "output": "Permendur Ingot", "time": 3.0 },
 	{ "operation": "sieve", "input": [ "Tailings", "Tailings" ], "output": "Gold Speck", "time": 2.0 },
 	{ "operation": "crush", "input": [ "Gold Speck", "Gold Speck" ], "output": "Gold Powder", "time": 2.0 },
 	{ "operation": "smelt", "input": [ "Gold Powder", "Gold Powder" ], "output": "Gold Ingot", "time": 3.0 },

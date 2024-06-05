@@ -12,7 +12,7 @@ class Modifier
   Modifier(String to_parse)
   {
     this();
-    String[] chunks = to_parse.split(" ");
+    String[] chunks = split_respecting_quoted_whitespace(to_parse);
     
     if (chunks.length >= 4 && (chunks[2].toLowerCase().equals("to") || chunks[2].toLowerCase().equals("from")))
     {
@@ -99,13 +99,27 @@ class Rule
   Rule() { this("", "", RuleType.CURSE, new StringList(), new StringList()); }
   
   boolean is_locked(StringList rulenames) { for (String dep : dependencies) { if (!rulenames.hasValue(dep)) return true; } return false; }
+  
+  void deserialize(JSONObject o)
+  {
+    name = o.getString("name", "no name specified");
+    description = o.getString("description", "no description specified");
+    type = o.getString("type","curse").equals("boon") ? RuleType.BOON : RuleType.CURSE;
+    tags = getStringList("tags", o);
+    dependencies = getStringList("dependencies", o);
+    
+    mods = new ArrayList<Modifier>();
+    StringList mods_as_strings = getStringList("mods", o);
+    for (String m : mods_as_strings)
+      mods.add(new Modifier(m));
+  }
 }
 
 
-//maintains a list of rules. Also has a separate mapping of all the rules' modifiers keyed by field they modify.
+//maintains the active rules for a game session. Also has a separate mapping of all the rules' modifiers keyed by field they modify.
 class RuleManager
 {
-  ArrayList<Rule> rules = new ArrayList<Rule>();
+  RuleList rules = new RuleList();
   HashMap<String, ArrayList<Modifier>> mods = new HashMap<String, ArrayList<Modifier>>();
   
   void put(Rule r)
@@ -119,6 +133,12 @@ class RuleManager
       
       mods.get(m.field).add(m);
     }
+  }
+  
+  void put(RuleList rl)
+  {
+    for (int i = 0; i < rl.size(); ++i)
+      put(rl.get(i));
   }
   
   float get_float(String field, float current_value)
@@ -170,75 +190,190 @@ class RuleManager
   int    get_int   (String field) { return get_int   (field,0 ); }
   String get_string(String field) { return get_strings(field).join(", "); }
   
-  StringList get_rule_names() { StringList retval = new StringList(); for (int i = 0; i < rules.size(); ++i) retval.append(rules.get(i).name); return retval; }
-  ArrayList<Rule> get_rules() { return new ArrayList<Rule>(rules); }
+  StringList get_rule_names() { return rules.names(); }
+  RuleList   get_rules()      { return rules.clone(); }
   
-  StringList get_available_curses()
+  RuleList get_available_curses()
   {
-    StringList existing_rules = get_rule_names();
+    RuleList retval = globals.ruleFactory.get_all_curses();
     
-    StringList retval = globals.rules.get_all_curse_names();
+    retval.remove_all(rules);
     
-    for (String er : existing_rules)
-      retval.removeValue(er);
-    
-    StringList to_remove = new StringList();
-    
-    for (String rulename : retval)
+    for (int i = 0; i < retval.size(); ++i)
     {
-      if (globals.rules.get_curse(rulename).is_locked(existing_rules))
-        to_remove.append(rulename);
-    }
-    
-    for (String tr : to_remove)
-    {
-      retval.removeValue(tr);
+      if (retval.get(i).is_locked(rules.names()))
+      {
+        retval.remove(i);
+        --i;
+      }
     }
     
     return retval;
   }
   
-  StringList get_available_boons()
+  RuleList get_available_boons()
   {
-    StringList existing_rules = get_rule_names();
+    RuleList retval = globals.ruleFactory.get_all_boons();
     
-    StringList retval = globals.rules.get_all_boon_names();
+    retval.remove_all(rules);
     
-    for (String er : existing_rules)
-      retval.removeValue(er);
-    
-    StringList to_remove = new StringList();
-    
-    for (String rulename : retval)
+    for (int i = 0; i < retval.size(); ++i)
     {
-      if (globals.rules.get_boon(rulename).is_locked(existing_rules))
-        to_remove.append(rulename);
-    }
-    
-    for (String tr : to_remove)
-    {
-      retval.removeValue(tr);
+      if (retval.get(i).is_locked(rules.names()))
+      {
+        retval.remove(i);
+        --i;
+      }
     }
     
     return retval;
   }
 }
 
+class RuleList
+{
+  private ArrayList<Rule> rules;
+  
+  RuleList() { rules = new ArrayList<Rule>(); }
+  
+  RuleList(RuleList rhs) { this(); add_all(rhs); }
+  
+  StringList names() { StringList retval = new StringList(); for (int i = 0; i < rules.size(); ++i) retval.append(rules.get(i).name); return retval; }
+  
+  RuleList copy() { return new RuleList(this); }
+  RuleList clone() { return copy(); }
+  
+  Rule get(int i) { if (i < 0 || i >= rules.size()) return null; return rules.get(i); }
+  
+  Rule get_random() { int r = (int)random(0, rules.size()); return rules.get(r); }
+  
+  int size() { return rules.size(); }
+  
+  RuleList add(Rule rule) { rules.add(rule); return this; }
+  RuleList remove(Rule rule) { rules.remove(rule); return this; }
+  RuleList remove(int i) { if (i >= 0 && i < rules.size()) rules.remove(i); return this; }
+  
+  RuleList filter_by_all_tags(StringList tags)
+  {
+    for (int i = 0; i < rules.size(); ++i)
+    {
+      StringList this_rules_tags = rules.get(i).tags;
+      
+      for (String tag : tags)
+      {
+        if (!this_rules_tags.hasValue(tag))
+        {
+          rules.remove(i);
+          --i;
+          break;
+        }
+      }
+    }
+    
+    return this;
+  }
+  
+  RuleList filter_by_all_tags(String... tags) { return filter_by_all_tags(new StringList(tags)); }
+  
+  RuleList filter_by_any_tag(StringList tags)
+  {
+    for (int i = 0; i < rules.size(); ++i)
+    {
+      StringList this_rules_tags = rules.get(i).tags;
+      
+      boolean found_one = false;
+      for (String tag : tags)
+      {
+        if (this_rules_tags.hasValue(tag))
+        {
+          found_one = true;
+          break;
+        }
+      }
+      
+      if (!found_one)
+      {
+        rules.remove(i);
+        --i;
+      }
+    }
+    
+    return this;
+  }
+  
+  RuleList filter_by_any_tag(String... tags) { return filter_by_any_tag(new StringList(tags)); }
+  
+  RuleList filter_by_tag(String tag) { return filter_by_all_tags(tag); }
+  
+  RuleList filter_out_tags(StringList tags)
+  {
+    for (int i = 0; i < rules.size(); ++i)
+    {
+      StringList this_rules_tags = rules.get(i).tags;
+      
+      for (String tag : tags)
+      {
+        if (this_rules_tags.hasValue(tag))
+        {
+          rules.remove(i);
+          --i;
+          break;
+        }
+      }
+    }
+    
+    return this;
+  }
+  
+  RuleList clear() { rules.clear(); return this; }
+  
+  RuleList filter_out_tags(String... tags)
+  {
+    return filter_out_tags(new StringList(tags));
+  }
+  
+  RuleList filter_out_tag(String tag) { return filter_out_tags(tag); }
+  
+  RuleList remove_all(RuleList rhs) { rules.removeAll(rhs.rules); return this; }
+  RuleList add_all(RuleList rhs) { rules.addAll(rhs.rules); return this; }
+  
+  RuleList remove_all(StringList rhs_names) {  for (int i = 0; i < rules.size(); ++i) { if (rhs_names.hasValue(rules.get(i).name)) { rules.remove(i); --i; } } return this; }
+  RuleList add_all(StringList rhs_names) { for (String s : rhs_names) rules.add(globals.ruleFactory.get_rule(s)); return this; }
+}
+
 class RuleFactory
 {
-  HashMap<String, Rule> curses = new HashMap<String, Rule>();
-  HashMap<String, Rule> boons = new HashMap<String, Rule>();
+  private HashMap<String, Rule> rules = new HashMap<String, Rule>();
+  private RuleList all_curses;
+  private RuleList all_boons;
   
   void load(String filepath)
   {
-    //TODO: this
+    rules = new HashMap<String, Rule>();
+    all_curses = new RuleList();
+    all_boons = new RuleList();
+    
+    JSONArray list = loadJSONArray(filepath);
+    
+    for (int i = 0; i < list.size(); ++i)
+    {
+      Rule rr = new Rule();
+      rr.deserialize(list.getJSONObject(i));
+      rules.put(rr.name, rr);
+      
+      if (rr.type == RuleType.CURSE)
+        all_curses.add(rr);
+      else
+        all_boons.add(rr);
+    }
   }
   
-  Rule get_curse(String name) { return curses.get(name); }
-  Rule get_boon(String name)  { return  boons.get(name); }
+  Rule get_rule(String name) { return rules.get(name); }
   
-  StringList get_all_curse_names() { return new StringList(curses.keySet()); }
-  StringList get_all_boon_names()  { return new StringList( boons.keySet()); }
+  RuleList get_all_curses() { return all_curses.copy(); }
+  RuleList get_all_boons()  { return all_boons.copy();  }
+  
+  StringList get_tags(String name) { return new StringList(get_rule(name).tags); }
 }
 
 

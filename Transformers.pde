@@ -162,26 +162,7 @@ class Transformer extends Griddle
   
   StringList get_ng_names() { StringList retval = new StringList(); for (int i = 0; i < ngs.size(); ++i) retval.append(ngs.get(i).name); return retval; }
   
-  void deserialize(JSONObject o) 
-  { 
-    super.deserialize(o);
-    
-    speed = o.getFloat("speed", 0.01f);
-    automatic = o.getBoolean("automatic", false);
-    
-    if (o.hasKey("operations"))
-    {
-      JSONArray a = o.getJSONArray("operations");
-      
-      if (a != null)
-      {
-        for (int i = 0; i < a.size(); ++i)
-          operations.append(a.getString(i));
-      }
-    }
-    else
-      operations.append(o.getString("operation", ""));
-  }
+  void deserialize(JSONObject o) { super.deserialize(o); speed = o.getFloat("speed", 0.01f); automatic = o.getBoolean("automatic", false); operations = getStringList("operations", o); }
   
   JSONObject serialize() 
   {

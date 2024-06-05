@@ -5,7 +5,7 @@ class GameSession extends GridGameFlowBase
   ArrayList<RewardGriddle> rewards = new ArrayList<RewardGriddle>();
   GameState state = GameState.MENU;
   Griddle to_upgrade = null;
-  //curses/boons
+  RuleManager rules = new RuleManager();
   
   void update()
   {
@@ -60,6 +60,14 @@ class GameSession extends GridGameFlowBase
       
       to_upgrade = null;
     }
+    else if (message.contains("New Rule: "))
+    {
+      String rulename = message.substring(10);
+      
+      rules.put(globals.ruleFactory.get_rule(rulename));
+      
+      conform_to_rules();
+    }
   }
   
   void handle_message(Message message)
@@ -67,8 +75,6 @@ class GameSession extends GridGameFlowBase
     if (message.target.equals("upgrade"))
     {
       to_upgrade = (Griddle)message.sender;
-      
-      //IntVec griddy_pos = grid.get_grid_pos_from_object(griddy);
       
       StringList upgrades = globals.gFactory.get_upgrades(message.value);
       
@@ -124,8 +130,108 @@ class GameSession extends GridGameFlowBase
         }
       }
     }
+  }
+  
+  void conform_to_rules()
+  {
+    StringList required_operations = rules.get_strings("Required:Operations");
+    StringList required_outputs    = rules.get_strings("Required:Outputs");
     
-    //state = GameState.STARTING_PLAYLEVEL;
+    StringList found_outputs = new StringList();
+    StringList found_operations = new StringList();
+    for (int x = 0; x < grid.w; ++x)
+    {
+      for (int y = 0; y < grid.h; ++y)
+      {
+        Griddle eg = grid.get(x,y);
+        //String tname = eg.template;
+        //found_tags.append(globals.gFactory.get_tags(tname));
+        //found_operations.append(globals.gFactory.get_operations(tname));
+        
+        if (eg instanceof Transformer)
+          found_operations.append(((Transformer)eg).operations);
+        else if (eg instanceof CountingOutputResourcePool)
+          found_outputs.append(((CountingOutputResourcePool)eg).ng_type);
+      }
+    }
+    
+    StringList basic_griddles = globals.gFactory.get_names_by_tag("basic");
+    for (String operation : required_operations)
+    {
+      if (!found_operations.hasValue(operation))
+      {
+        //create the missing thing in a random spot
+        Griddle new_griddle = null;
+        for (String basic_griddle : basic_griddles)
+        {
+          if (globals.gFactory.get_operations(basic_griddle).hasValue(operation))
+          {
+            new_griddle = globals.gFactory.create_griddle(basic_griddle,this);
+            break;
+          }
+        }
+        
+        if (new_griddle == null)
+        {
+          new_griddle = new NullGriddle(this);
+          println("Couldn't find a griddle with the 'basic' tag that had the required operation of '" + operation + "'. No transformer with this operation exists on the board, so the player will not be able to win.");
+        }
+        
+        boolean placed = false;
+        
+        while (!placed)
+        {
+          int xx = (int)random(1,grid.w - 2);
+          int yy = (int)random(1,grid.h - 2);
+          
+          if (grid.get(xx,yy) instanceof EmptyGriddle)
+          {
+            grid.set(xx,yy, new_griddle);
+            placed = true;
+          }
+        }
+      }
+    }
+    
+    
+    for (String output : required_outputs)
+    {
+      if (!found_outputs.hasValue(output))
+      {
+        Griddle new_output = null;
+        
+        for (String basic_griddle : basic_griddles)
+        {
+          if (globals.gFactory.get_string(basic_griddle, "ng_type").equals(output))
+          {
+            new_output = globals.gFactory.create_griddle(basic_griddle, this);
+            break;
+          }
+        }
+        
+        if (new_output == null || new_output instanceof NullGriddle)
+        {
+          new_output = new NullGriddle(this);
+          println("Couldn't find a griddle with the 'basic' tag that had the required ng_type of '" + output + "'. No CountingOutputResourcePool with this operation exists on the board, so the player will not be able to win.");
+        }
+        
+        for (int x = 2; x < grid.w - 3; ++x)
+        {
+          Griddle existing_griddle = grid.get(x, grid.h - 1);
+          
+          if (!(existing_griddle instanceof CountingOutputResourcePool))
+          {
+            CountingOutputResourcePool corp = (CountingOutputResourcePool)new_output;
+            WinCondition wc = new WinCondition(output, 0, corp);
+            wc.increment();
+            win_conditions.add(wc); //<>//
+            
+            grid.set(x,grid.h - 1, corp);
+            break;
+          }
+        }
+      }
+    }
   }
   
   void create_new()
@@ -133,26 +239,31 @@ class GameSession extends GridGameFlowBase
     int w = (int)random(10, 16);
     int h = (int)random(10, 16);
     
-    String req_type   = random(10) > 4 ? "Iron Ingot" : "Cobalt Ingot";
-    int    req_amount = 1;
+    Rule rule = globals.ruleFactory.get_all_curses().filter_by_all_tags(new String[]{"basic", "recipe"}).get_random();
+    rules = new RuleManager();
+    rules.put(rule);
+    
+    //String req_type   = random(10) > 4 ? "Iron Ingot" : "Cobalt Ingot";
+    //int    req_amount = 1;
     
     JSONObject ov = new JSONObject();
-    ov.setString("ng_type", req_type);
-    ov.setInt("required", req_amount);
+    //ov.setString("ng_type", req_type);
+    //ov.setInt("required", req_amount);
     
-    WinCondition win_condition = new WinCondition(req_type, req_amount, (CountingOutputResourcePool)globals.gFactory.create_griddle("Output", ov, this));
-    win_conditions.add(win_condition);
+    //WinCondition win_condition = new WinCondition(req_type, req_amount, (CountingOutputResourcePool)globals.gFactory.create_griddle("Output", ov, this));
+    //win_conditions.add(win_condition);
     
     Grid gg = new Grid(new PVector(20,20), new PVector(width - 40, height - 40), w, h, this);
     
     for (int y = 1; y < h; ++y)
-      gg.set(0,y,new NullGriddle());
+    {
+      gg.set(0,  y,new NullGriddle());
+      gg.set(w-1,y,new NullGriddle());
+    }
+
+    gg.set(1,h-1, globals.gFactory.create_griddle("GoldIngotOutput", this));
     
-    gg.set(0,h-1, new NullGriddle());
-    gg.set(1,h-1, win_condition.to_check);
-    gg.set(2,h-1, globals.gFactory.create_griddle("GoldIngotOutput", this));
-    
-    for (int x = 3; x < w; ++x)
+    for (int x = 2; x < w - 1; ++x)
       gg.set(x, h-1, new NullGriddle());
     
     ov = JSONObject.parse("{ 'resources': { 'Iron Ore': 5, 'Cobalt Ore': 5, 'Gold Speck': 1 } }");
@@ -167,48 +278,17 @@ class GameSession extends GridGameFlowBase
     for (int y = 1; y < h - 6; ++y)
       gg.set(w - 1, y, new NullGriddle(this));
     
-    
-    String[] to_place = { "Smelter", "Crusher", "Refiner", "Player" };
-    ArrayList<IntVec> used_spots = new ArrayList<IntVec>();
-    ov = JSONObject.parse("{ 'automatic': false }");
-    
-    for (int i = 0; i < to_place.length; ++i)
-    {
-      boolean placed = false;
-      
-      String tps = to_place[i];
-      
-      while (!placed)
-      {
-        int xx = (int)random(2,w - 2);
-        int yy = (int)random(2,h - 2);
-        
-        boolean used = false;
-        for (int ii = 0; !used && ii < used_spots.size(); ++ii)
-          used = (used_spots.get(ii).x == xx && used_spots.get(ii).y == yy);
-        
-        if (!used)
-        {
-          if (tps.equals("Player"))
-          {
-            player = new Player(this);
+    player = new Player(this);
             
-            player.spritename = globals.gFactory.get_spritename("Player");
-            player.sprite = globals.sprites.get_sprite(player.spritename);
-            player.pos = gg.absolute_pos_from_grid_pos(new IntVec(xx,yy));
-            player.dim = gg.get_square_dim();
-            
-          }
-          else
-            gg.set(xx,yy, globals.gFactory.create_griddle(tps, ov, this));
-          
-          used_spots.add(new IntVec(xx,yy));
-          placed = true;
-        }
-      }
-    }
+    player.spritename = globals.gFactory.get_spritename("Player");
+    player.sprite = globals.sprites.get_sprite(player.spritename);
+    player.pos = gg.absolute_pos_from_grid_pos(new IntVec(w / 2,h / 2));
+    player.dim = gg.get_square_dim();
     
     grid = gg;
+    
+    grid.apply_alterations();
+    conform_to_rules(); //TODO: this might not need to be here, but need to confirm
   }
   
   void refresh_rewards()

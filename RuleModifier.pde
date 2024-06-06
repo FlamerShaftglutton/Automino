@@ -1,3 +1,4 @@
+import java.util.*; 
 
 class Modifier
 {
@@ -236,6 +237,8 @@ class RuleList
   
   RuleList() { rules = new ArrayList<Rule>(); }
   
+  RuleList(ArrayList<Rule> rules) { this.rules = rules; }
+  
   RuleList(RuleList rhs) { this(); add_all(rhs); }
   
   StringList names() { StringList retval = new StringList(); for (int i = 0; i < rules.size(); ++i) retval.append(rules.get(i).name); return retval; }
@@ -246,6 +249,10 @@ class RuleList
   Rule get(int i) { if (i < 0 || i >= rules.size()) return null; return rules.get(i); }
   
   Rule get_random() { int r = (int)random(0, rules.size()); return rules.get(r); }
+  
+  RuleList shuffle() { Collections.shuffle(rules); return this; }
+  
+  RuleList top(int num) { if (num < rules.size()) rules.subList(num, rules.size()).clear(); return this; }
   
   int size() { return rules.size(); }
   

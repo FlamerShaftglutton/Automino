@@ -74,7 +74,7 @@ class GrabberBelt extends ConveyorBelt
             PVector start = center_center();
             PVector end = start.copy().add(iv_offset.toPVec().mult(dim.x));
             
-            movement_progress = (start.dist(end) - end.dist(gg_ng.pos)) / start.dist(end); //<>// //<>// //<>// //<>// //<>//
+            movement_progress = (start.dist(end) - end.dist(gg_ng.pos)) / start.dist(end); //<>// //<>// //<>// //<>// //<>// //<>//
             
             break;
           }

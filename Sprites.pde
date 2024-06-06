@@ -27,7 +27,7 @@ class SpriteFactory
   { 
     if (!sprites.containsKey(name)) 
     { 
-      println("No sprite found with name '" + name + "'. Using null sprite."); //<>// //<>// //<>// //<>// //<>// //<>//
+      println("No sprite found with name '" + name + "'. Using null sprite."); //<>// //<>// //<>// //<>// //<>// //<>// //<>//
       return sprites.get("null"); 
     }
     

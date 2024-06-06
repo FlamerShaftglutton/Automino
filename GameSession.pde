@@ -16,8 +16,8 @@ class GameSession extends GridGameFlowBase
       case STARTING_PLAYLEVEL: start_level(); break;
       case PLAYLEVEL: check_for_level_end(); if (globals.keyReleased && key == 'q') globals.game.pop(); break;
       case LEVELEDITOR: level_editor(); break;
-      case WON_PLAYLEVEL: globals.game.push(new MessageScreenGameFlow(), "You won!"); player.ng = null; nongriddles.clear(); nongriddles_to_delete.clear(); grid = get_LevelEditor_from_level(grid); state = GameState.LEVELEDITOR; break;  //TODO: add in curse / boon stuff
-      case LOST_PLAYLEVEL: globals.game.push(new MessageScreenGameFlow(), "You lose..."); break;
+      case WON_PLAYLEVEL: win_level(); break;
+      case LOST_PLAYLEVEL: lose_level(); break;
       case MENU: grid = get_LevelEditor_from_level(grid); state = GameState.LEVELEDITOR; break;
     }
   }
@@ -34,13 +34,13 @@ class GameSession extends GridGameFlowBase
     }
   }
   
-  void onFocus(String message)
+  void onFocus(Message message)
   {
-    if (message.contains("lose") || message.contains("lost"))
+    if (message.target.equals("lose"))
       globals.game.pop();
-    else if (to_upgrade != null)
+    else if (message.target.equals("upgrade") && to_upgrade != null)
     {
-      Griddle griddy = globals.gFactory.create_griddle(message, this);
+      Griddle griddy = globals.gFactory.create_griddle(message.value, this);
       
       if (!(griddy instanceof NullGriddle))
       {
@@ -60,11 +60,9 @@ class GameSession extends GridGameFlowBase
       
       to_upgrade = null;
     }
-    else if (message.contains("New Rule: "))
+    else if (message.target.equals("rule"))
     {
-      String rulename = message.substring(10);
-      
-      rules.put(globals.ruleFactory.get_rule(rulename));
+      rules.put(globals.ruleFactory.get_rule(message.value));
       
       conform_to_rules();
     }
@@ -93,9 +91,9 @@ class GameSession extends GridGameFlowBase
       toasts.add(new Toast(message.value, 5f));
   }
   
-  String exit()
+  Message exit()
   {
-    return save_path;
+    return new Message("save",save_path);
   }
   
   JSONObject serialize()
@@ -243,15 +241,7 @@ class GameSession extends GridGameFlowBase
     rules = new RuleManager();
     rules.put(rule);
     
-    //String req_type   = random(10) > 4 ? "Iron Ingot" : "Cobalt Ingot";
-    //int    req_amount = 1;
-    
     JSONObject ov = new JSONObject();
-    //ov.setString("ng_type", req_type);
-    //ov.setInt("required", req_amount);
-    
-    //WinCondition win_condition = new WinCondition(req_type, req_amount, (CountingOutputResourcePool)globals.gFactory.create_griddle("Output", ov, this));
-    //win_conditions.add(win_condition);
     
     Grid gg = new Grid(new PVector(20,20), new PVector(width - 40, height - 40), w, h, this);
     
@@ -349,7 +339,7 @@ class GameSession extends GridGameFlowBase
     }
     
     if (won)
-      win_level();
+      state = GameState.WON_PLAYLEVEL;
     
     //check for a loss
     boolean all_finished = true;
@@ -364,7 +354,7 @@ class GameSession extends GridGameFlowBase
     }
     
     if (all_finished)
-      lose_level();
+      state = GameState.LOST_PLAYLEVEL;
   }
   
   void win_level()
@@ -374,14 +364,41 @@ class GameSession extends GridGameFlowBase
     for (WinCondition wc : win_conditions)
       wc.increment();
 
-    state = GameState.WON_PLAYLEVEL;
+    //get a boon every 10 rounds
+    if (rounds_completed % 10 == 0)
+    {
+      RuleMenuGameFlow rmgf = new RuleMenuGameFlow();
+      rmgf.ruletype = RuleType.BOON;
+      rmgf.options = rules.get_available_boons().shuffle().top(3).names();
+      rmgf.load();
+      
+      globals.game.push(rmgf, new Message("boon", "Congrats! Choose a boon."));
+    }
+    
+    //get a curse every 4 rounds (ignored during boon rounds, such as round 20 and 40)
+    else if (rounds_completed % 4 == 0)
+    {
+      RuleMenuGameFlow rmgf = new RuleMenuGameFlow();
+      rmgf.ruletype = RuleType.CURSE;
+      rmgf.options = rules.get_available_curses().shuffle().top(3).names();
+      rmgf.load();
+      
+      globals.game.push(rmgf, new Message("curse", "Congrats! Choose a curse."));
+    }
+    globals.game.push(new MessageScreenGameFlow(), new Message("win","You won!")); 
+    
+    player.ng = null; 
+    nongriddles.clear(); 
+    nongriddles_to_delete.clear(); 
+    
+    grid = get_LevelEditor_from_level(grid); 
+    
+    state = GameState.LEVELEDITOR;
   }
   
   void lose_level()
   {
-    //TODO: fill this in
-    
-    state = GameState.LOST_PLAYLEVEL;
+    globals.game.push(new MessageScreenGameFlow(), new Message("lose", "You lost!"));
   }
   
   Grid get_LevelEditor_from_level(Grid tg)

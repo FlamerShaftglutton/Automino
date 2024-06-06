@@ -4,8 +4,8 @@ interface GameFlow
   void draw();
   void save();
   void load();
-  String exit();
-  void onFocus(String message);
+  Message exit();
+  void onFocus(Message message);
 }
 
 class GameFlowManager
@@ -14,7 +14,8 @@ class GameFlowManager
   
   GameFlowManager() { flows = new ArrayList<GameFlow>(); }
   
-  void push(GameFlow flow, String message) { flows.add(flow); flow.onFocus(message); }
+  void push(GameFlow flow, Message message) { flows.add(flow); flow.onFocus(message); }
+  void push(GameFlow flow, String message) { flows.add(flow); flow.onFocus(new Message("", message)); }
   void push(GameFlow flow) { push(flow, ""); }
   
   GameFlow active() { if (flows.isEmpty()) exit(); return flows.get(flows.size() - 1); }
@@ -23,7 +24,7 @@ class GameFlowManager
   {
     GameFlow gf = flows.remove(flows.size()-1); 
     
-    String message = gf.exit();
+    Message message = gf.exit();
     
     if (flows.isEmpty())
       exit();
@@ -96,12 +97,12 @@ class GridGameFlowBase implements GameFlow
   
   void handle_message(Message message) { }
   
-  String exit()
+  Message exit()
   {
-    return "";
+    return new Message();
   }
   
-  void onFocus(String message)
+  void onFocus(Message message)
   {
     
   }
@@ -183,12 +184,12 @@ class GridGameFlowBase implements GameFlow
 class UpgradeMenuGameFlow extends GridGameFlowBase
 {
   StringList options = new StringList();
-  String outgoing_message = "cancel";
+  Message outgoing_message = new Message("cancel","");
   
   void handle_message(Message message)
   {
     if (message.target.equals("select"))
-      outgoing_message = message.value;
+      outgoing_message = new Message("upgrade",message.value);
     
     if (message.target.equals("select") || message.target.equals("cancel"))
       globals.game.pop();
@@ -197,7 +198,7 @@ class UpgradeMenuGameFlow extends GridGameFlowBase
       toasts.add(new Toast(message.value, 5f));
   }
   
-  String exit() { return outgoing_message; }
+  Message exit() { return outgoing_message; }
   
   void load()
   {
@@ -237,6 +238,70 @@ class UpgradeMenuGameFlow extends GridGameFlowBase
     cmac.sprite = globals.sprites.get_sprite("null");
     
     grid.set(x, 2, cmac);
+    
+    player = new Player(this);
+    player.spritename = globals.gFactory.get_spritename("Player");
+    player.sprite = globals.sprites.get_sprite(player.spritename);
+    player.rot = HALF_PI;
+    player.pos = grid.absolute_pos_from_grid_pos(new IntVec(1 + w / 2, 4));
+    player.dim = grid.get_square_dim();
+    
+    grid.apply_alterations();
+  }
+}
+
+class RuleMenuGameFlow extends GridGameFlowBase
+{
+  StringList options = new StringList();
+  Message outgoing_message = new Message("cancel","");
+  RuleType ruletype = RuleType.CURSE;
+  
+  void handle_message(Message message)
+  {
+    if (message.target.equals("select"))
+    {
+      outgoing_message = new Message(ruletype == RuleType.CURSE ? "curse" : "boon", message.value);
+      globals.game.pop();
+    }
+    
+    if (message.target.equals("info"))
+      toasts.add(new Toast(message.value, 5f));
+  }
+  
+  Message exit() { return outgoing_message; }
+  
+  void load()
+  {
+    int w,h;
+    
+    if (options.size() == 0)
+      w = h = 5;
+    else
+    {
+      w = options.size() * 2 + 1;
+      h = 5;
+    }
+    
+    grid = new Grid(new PVector(50,50), new PVector(width - 100, height - 100), w, h, this);
+    
+    int x = 1;
+    for (int i = 0; i < options.size(); ++i, x+= 2)
+    {
+      String option = options.get(i);
+      
+      MetaActionCounter mac = new MetaActionCounter(this);
+      mac.traversable = false;
+      Rule rr = globals.ruleFactory.get_rule(option);
+      mac.display_string = rr.name + "\n" + rr.description;
+      mac.action = "select";
+      mac.parameters.append(option);
+      mac.spritename = ruletype == RuleType.CURSE ? "curse" : "boon";
+      mac.sprite = globals.sprites.get_sprite(mac.spritename);
+      mac.dim = grid.get_square_dim();
+      mac.dim.y *= 2f;
+      
+      grid.set(x, 2, mac);
+    }
     
     player = new Player(this);
     player.spritename = globals.gFactory.get_spritename("Player");
@@ -344,7 +409,7 @@ class MainMenuGameFlow extends GridGameFlowBase
     }
   }
   
-  void onFocus(String message)
+  void onFocus(Message message)
   {
     load();
   }
@@ -352,7 +417,7 @@ class MainMenuGameFlow extends GridGameFlowBase
 
 class MessageScreenGameFlow implements GameFlow
 {
-  String message = "";
+  Message received;
   
   void update() { if (globals.keyReleased && key == 'y') globals.game.pop(); }
   void draw()
@@ -366,15 +431,15 @@ class MessageScreenGameFlow implements GameFlow
     
     textSize((int)height / 8);
     textAlign(CENTER,CENTER);
-    text(message, width * 0.5f, height * 0.4f);
+    text(received.value, width * 0.5f, height * 0.4f);
     
     textSize((int)height / 32);
     text("Press Y to continue", width * 0.5f, height * 0.6f);
   }
   void save() { }
   void load() { }
-  String exit() { return message; }
-  void onFocus(String message) { this.message = message; }
+  Message exit() { return received; }
+  void onFocus(Message message) { this.received = message; }
 }
 
 class Toast

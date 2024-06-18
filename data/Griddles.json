@@ -1,5 +1,10 @@
 [
 	{
+		"type": "WallGriddle",
+		"description": "You can't go here...",
+		"sprite": "square black",
+	},
+	{
 		"type": "ConveyorBelt",
 		"description": "Moves things from here to there.",
 		"sprite": "two arrow conveyor blue",
@@ -380,7 +385,7 @@
 		"parameters": [ ],
 	},
 	{
-		"_template": "Output",
+		"_template": "GenericOutput",
 		"description": "Put the goods in here and nobody has to lose...",
 		"type": "CountingOutputResourcePool",
 		"ng_type": "Gold Ingot",
@@ -388,11 +393,36 @@
 		"tags": [ "output" ],
 	},
 	{
+		"_template": "IronOutput",
+		"description": "Put the Iron Ingots in here and nobody has to lose...",
+		"type": "CountingOutputResourcePool",
+		"ng_type": "Iron Ingot",
+		"sprite": "freezer",
+		"tags": [ "output", "basic" ],
+	},
+	{
+		"_template": "CobaltOutput",
+		"description": "Put the Cobalt Ingots in here and nobody has to lose...",
+		"type": "CountingOutputResourcePool",
+		"ng_type": "Cobalt Ingot",
+		"sprite": "freezer",
+		"tags": [ "output", "basic" ],
+	},
+	{
+		"_template": "PermendurOutput",
+		"description": "Put the Permendur Ingots in here and nobody has to lose...",
+		"type": "CountingOutputResourcePool",
+		"ng_type": "Permendur Ingot",
+		"sprite": "freezer",
+		"tags": [ "output", "basic" ],
+	},
+	{
 		"_template": "GoldIngotOutput",
 		"description": "Store your gold here between rounds.",
 		"type": "CountingOutputResourcePool",
 		"ng_type": "Gold Ingot",
 		"sprite": "freezer",
+		"tags": [ "output", "basic" ],
 	},
 	{
 		"type": "RandomResourcePool",

@@ -30,7 +30,10 @@
 				"x": 3,
 				"y": 3,
 				"type": "CrossConveyorBelt",
-				"quarter_turns": 3,
+				"quarter_turns": 0,
+				"component" : { "base_speed": 0.02 },
+				"vertical"  : { "base_speed": 0.02 },
+				"horizontal": { "base_speed": 0.02 },
 			},
 			{
 				"traversable": false,
@@ -38,6 +41,7 @@
 				"type": "GrabberBelt",
 				"x": 1,
 				"y": 4,
+				"component" : { "base_speed": 0.02 },
 			},
 			{
 				"traversable": false,
@@ -45,6 +49,7 @@
 				"type": "GrabberBelt",
 				"x": 2,
 				"y": 5,
+				"component" : { "base_speed": 0.02 },
 			},
 			{
 				"traversable": false,
@@ -52,6 +57,7 @@
 				"type": "GrabberBelt",
 				"x": 3,
 				"y": 5,
+				"component" : { "base_speed": 0.02 },
 			},
 			{
 				"traversable": false,
@@ -59,6 +65,7 @@
 				"type": "GrabberBelt",
 				"x": 1,
 				"y": 3,
+				"component" : { "base_speed": 0.02 },
 			},
 			{
 				"traversable": false,
@@ -66,6 +73,7 @@
 				"type": "GrabberBelt",
 				"x": 2,
 				"y": 3,
+				"component" : { "base_speed": 0.02 },
 			},
 			{
 				"traversable": false,
@@ -73,6 +81,7 @@
 				"type": "GrabberBelt",
 				"x": 4,
 				"y": 3,
+				"component" : { "base_speed": 0.02 },
 			},
 			{
 				"traversable": false,
@@ -80,6 +89,7 @@
 				"type": "GrabberBelt",
 				"x": 3,
 				"y": 4,
+				"component" : { "base_speed": 0.02 },
 			},
 			{
 				"traversable": false,
@@ -87,6 +97,7 @@
 				"type": "GrabberBelt",
 				"x": 3,
 				"y": 2,
+				"component" : { "base_speed": 0.02 },
 			},
 			{
 				"sprite": "player green",

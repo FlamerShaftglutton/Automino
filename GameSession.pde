@@ -5,7 +5,44 @@ class GameSession extends GridGameFlowBase
   ArrayList<RewardGriddle> rewards = new ArrayList<RewardGriddle>();
   GameState state = GameState.MENU;
   Griddle to_upgrade = null;
-  //curses/boons
+  RuleManager rules = new RuleManager();
+  
+  void draw()
+  {
+    super.draw();
+    
+    //draw the rules
+    float outer_margin = 10f;
+    float inner_margin =  5f;
+    PVector dim = new PVector(width * 0.2f - 2f * outer_margin, 140f);
+    PVector pos = new PVector(width - outer_margin - dim.x, outer_margin);
+    
+    for (Rule rule : rules.get_rules().rules)
+    {
+      if (rule.type == RuleType.CURSE)
+        fill(#babaf6);
+      else
+        fill(#f6edba);
+      
+      stroke(#000000);
+      strokeWeight(2);
+      
+      rect(pos.x, pos.y, dim.x, dim.y);
+      
+      fill(#000000);
+      textSize(24f);
+      textAlign(CENTER,TOP);
+      
+      text(rule.name, pos.x + dim.x * 0.5f, pos.y + inner_margin); 
+      
+      textSize(16f);
+      textAlign(LEFT,TOP);
+      
+      text(rule.description, pos.x + inner_margin, pos.y + 24f + inner_margin + inner_margin, dim.x - inner_margin - inner_margin, dim.y - inner_margin - inner_margin - 24f - inner_margin);
+      
+      pos.y += dim.y + outer_margin;
+    }
+  }
   
   void update()
   {
@@ -14,17 +51,17 @@ class GameSession extends GridGameFlowBase
     switch (state)
     {
       case STARTING_PLAYLEVEL: start_level(); break;
-      case PLAYLEVEL: check_for_level_end(); if (globals.keyReleased && key == 'q') globals.game.pop(); break;
+      case PLAYLEVEL: check_for_level_end(); if (globals.keyboard.is_key_released('q')) globals.game.pop(); break;
       case LEVELEDITOR: level_editor(); break;
-      case WON_PLAYLEVEL: globals.game.push(new MessageScreenGameFlow(), "You won!"); player.ng = null; nongriddles.clear(); nongriddles_to_delete.clear(); grid = get_LevelEditor_from_level(grid); state = GameState.LEVELEDITOR; break;  //TODO: add in curse / boon stuff
-      case LOST_PLAYLEVEL: globals.game.push(new MessageScreenGameFlow(), "You lose..."); break;
+      case WON_PLAYLEVEL: win_level(); break;
+      case LOST_PLAYLEVEL: lose_level(); break;
       case MENU: grid = get_LevelEditor_from_level(grid); state = GameState.LEVELEDITOR; break;
     }
   }
   
   void level_editor()
   {
-    if (globals.keyReleased  && key == 'y') 
+    if (globals.keyboard.is_key_released('y')) 
     { 
       save(); 
       nongriddles.clear(); 
@@ -34,13 +71,13 @@ class GameSession extends GridGameFlowBase
     }
   }
   
-  void onFocus(String message)
+  void onFocus(Message message)
   {
-    if (message.contains("lose") || message.contains("lost"))
+    if (message.target.equals("lose"))
       globals.game.pop();
-    else if (to_upgrade != null)
+    else if (message.target.equals("upgrade") && to_upgrade != null)
     {
-      Griddle griddy = globals.gFactory.create_griddle(message, this);
+      Griddle griddy = globals.gFactory.create_griddle(message.value, this);
       
       if (!(griddy instanceof NullGriddle))
       {
@@ -60,6 +97,12 @@ class GameSession extends GridGameFlowBase
       
       to_upgrade = null;
     }
+    else if (message.target.equals("rule"))
+    {
+      rules.put(globals.ruleFactory.get_rule(message.value));
+      
+      conform_to_rules();
+    }
   }
   
   void handle_message(Message message)
@@ -67,8 +110,6 @@ class GameSession extends GridGameFlowBase
     if (message.target.equals("upgrade"))
     {
       to_upgrade = (Griddle)message.sender;
-      
-      //IntVec griddy_pos = grid.get_grid_pos_from_object(griddy);
       
       StringList upgrades = globals.gFactory.get_upgrades(message.value);
       
@@ -87,9 +128,9 @@ class GameSession extends GridGameFlowBase
       toasts.add(new Toast(message.value, 5f));
   }
   
-  String exit()
+  Message exit()
   {
-    return save_path;
+    return new Message("save",save_path);
   }
   
   JSONObject serialize()
@@ -98,6 +139,12 @@ class GameSession extends GridGameFlowBase
     
     root.setInt("rounds_completed", rounds_completed);
     
+    JSONArray jarules = new JSONArray();
+    for (String rule : rules.get_rules().names())
+      jarules.append(rule);
+    
+    root.setJSONArray("Rules", jarules);
+    
     return root;
   }
   
@@ -105,7 +152,14 @@ class GameSession extends GridGameFlowBase
   {    
     super.deserialize(root);
     
+    rules = new RuleManager();
+    
     rounds_completed = root.getInt("rounds_completed");
+    
+    JSONArray jarules = root.getJSONArray("Rules");
+    
+    for (int i = 0; i < jarules.size(); ++i)
+      rules.put(globals.ruleFactory.get_rule(jarules.getString(i)));
     
     win_conditions.clear();
     
@@ -124,8 +178,135 @@ class GameSession extends GridGameFlowBase
         }
       }
     }
+  }
+  
+  void conform_to_rules()
+  {
+    grid.apply_alterations();
     
-    //state = GameState.STARTING_PLAYLEVEL;
+    //TODO: Is this only going to be called in Level Editor mode? If so this can be simplified
+    StringList required_operations = rules.get_strings("Required:Operations");
+    StringList required_outputs    = rules.get_strings("Required:Outputs");
+    
+    StringList found_outputs = new StringList();
+    StringList found_operations = new StringList();
+    for (int x = 0; x < grid.w; ++x)
+    {
+      for (int y = 0; y < grid.h; ++y)
+      {
+        Griddle eg = grid.get(x,y);
+        
+        if (eg instanceof Transformer)
+          found_operations.append(((Transformer)eg).operations);
+        else if (eg instanceof CountingOutputResourcePool)
+          found_outputs.append(((CountingOutputResourcePool)eg).ng_type);
+        else if (eg instanceof LevelEditorGriddle)
+        {
+          LevelEditorGriddle leg = (LevelEditorGriddle)eg;
+          
+          if (leg.ng() != null)
+          {
+            LevelEditorNonGriddle leng = (LevelEditorNonGriddle)leg.ng();
+            
+            found_operations.append(getStringList("operations", leng.as_json));
+          }
+        }
+      }
+    }
+    
+    StringList basic_griddles = globals.gFactory.get_names_by_tag("basic"); //<>//
+    for (String operation : required_operations)
+    {
+      if (!found_operations.hasValue(operation))
+      {
+        //create the missing thing in a random spot
+        String basic_griddle_name = "";
+        for (String basic_griddle : basic_griddles)
+        {
+          if (globals.gFactory.get_operations(basic_griddle).hasValue(operation))
+          {
+            basic_griddle_name = basic_griddle;
+            //new_griddle = globals.gFactory.create_griddle(basic_griddle,this);
+            break;
+          }
+        }
+        
+        if (basic_griddle_name.length() == 0)
+        {
+          println("Couldn't find a griddle with the 'basic' tag that had the required operation of '" + operation + "'. No transformer with this operation exists on the board, so the player will not be able to win.");
+        }
+        
+        boolean placed = false;
+        
+        while (!placed)
+        {
+          int xx = (int)random(1,grid.w - 2);
+          int yy = (int)random(1,grid.h - 2);
+          
+          Griddle gxxyy = grid.get(xx,yy);
+
+          if (gxxyy instanceof LevelEditorGriddle) //<>//
+          {
+            LevelEditorGriddle legxxyy = (LevelEditorGriddle)gxxyy;
+            
+            if (legxxyy.ng() == null)
+            {
+              LevelEditorNonGriddle lengxxyy = globals.ngFactory.create_le_ng(basic_griddle_name);
+              lengxxyy.visible = false;
+              register_ng(lengxxyy);
+              legxxyy.receive_ng(lengxxyy);
+              
+              placed = true;
+            }
+          }
+          else if (gxxyy instanceof EmptyGriddle)
+          {
+            grid.set(xx,yy, globals.gFactory.create_griddle(basic_griddle_name,this));
+            placed = true;
+          }
+        }
+      }
+    }
+    
+    
+    for (String output : required_outputs)
+    {
+      if (!found_outputs.hasValue(output))
+      {
+        Griddle new_output = null;
+        
+        for (String basic_griddle : basic_griddles)
+        {
+          if (globals.gFactory.get_string(basic_griddle, "ng_type").equals(output))
+          {
+            new_output = globals.gFactory.create_griddle(basic_griddle, this);
+            break;
+          }
+        }
+        
+        if (new_output == null || new_output instanceof NullGriddle)
+        {
+          new_output = new NullGriddle(this);
+          println("Couldn't find a griddle with the 'basic' tag that had the required ng_type of '" + output + "'. No CountingOutputResourcePool with this operation exists on the board, so the player will not be able to win.");
+        }
+        
+        for (int x = 2; x < grid.w - 3; ++x)
+        {
+          Griddle existing_griddle = grid.get(x, grid.h - 1);
+          
+          if (!(existing_griddle instanceof CountingOutputResourcePool))
+          {
+            CountingOutputResourcePool corp = (CountingOutputResourcePool)new_output;
+            WinCondition wc = new WinCondition(output, 0, corp);
+            wc.increment();
+            win_conditions.add(wc);
+            
+            grid.set(x,grid.h - 1, corp);
+            break;
+          }
+        }
+      }
+    }
   }
   
   void create_new()
@@ -133,27 +314,25 @@ class GameSession extends GridGameFlowBase
     int w = (int)random(10, 16);
     int h = (int)random(10, 16);
     
-    String req_type   = random(10) > 4 ? "Iron Ingot" : "Cobalt Ingot";
-    int    req_amount = 1;
+    Rule rule = globals.ruleFactory.get_all_curses().filter_by_all_tags(new String[]{"basic", "recipe"}).get_random();
+    rules = new RuleManager();
+    rules.put(rule);
     
     JSONObject ov = new JSONObject();
-    ov.setString("ng_type", req_type);
-    ov.setInt("required", req_amount);
     
-    WinCondition win_condition = new WinCondition(req_type, req_amount, (CountingOutputResourcePool)globals.gFactory.create_griddle("Output", ov, this));
-    win_conditions.add(win_condition);
-    
-    Grid gg = new Grid(new PVector(20,20), new PVector(width - 40, height - 40), w, h, this);
+    Grid gg = new Grid(new PVector(20,20), new PVector(width * 0.75f, height - 40),w,h, this);
+    //Grid gg = new Grid(grid.pos.copy(), grid.dim.copy(), w, h, this);
     
     for (int y = 1; y < h; ++y)
-      gg.set(0,y,new NullGriddle());
+    {
+      gg.set(0,  y,new WallGriddle());
+      gg.set(w-1,y,new WallGriddle());
+    }
+
+    gg.set(1,h-1, globals.gFactory.create_griddle("GoldIngotOutput", this));
     
-    gg.set(0,h-1, new NullGriddle());
-    gg.set(1,h-1, win_condition.to_check);
-    gg.set(2,h-1, globals.gFactory.create_griddle("GoldIngotOutput", this));
-    
-    for (int x = 3; x < w; ++x)
-      gg.set(x, h-1, new NullGriddle());
+    for (int x = 2; x < w - 1; ++x)
+      gg.set(x, h-1, new WallGriddle());
     
     ov = JSONObject.parse("{ 'resources': { 'Iron Ore': 5, 'Cobalt Ore': 5, 'Gold Speck': 1 } }");
     gg.set(0,0,globals.gFactory.create_griddle("RandomResourcePool", ov, this));
@@ -165,50 +344,19 @@ class GameSession extends GridGameFlowBase
     gg.set(w - 1, 0, globals.gFactory.create_griddle("TrashCompactor",ov, this));
     
     for (int y = 1; y < h - 6; ++y)
-      gg.set(w - 1, y, new NullGriddle(this));
+      gg.set(w - 1, y, new WallGriddle(this));
     
-    
-    String[] to_place = { "Smelter", "Crusher", "Refiner", "Player" };
-    ArrayList<IntVec> used_spots = new ArrayList<IntVec>();
-    ov = JSONObject.parse("{ 'automatic': false }");
-    
-    for (int i = 0; i < to_place.length; ++i)
-    {
-      boolean placed = false;
-      
-      String tps = to_place[i];
-      
-      while (!placed)
-      {
-        int xx = (int)random(2,w - 2);
-        int yy = (int)random(2,h - 2);
-        
-        boolean used = false;
-        for (int ii = 0; !used && ii < used_spots.size(); ++ii)
-          used = (used_spots.get(ii).x == xx && used_spots.get(ii).y == yy);
-        
-        if (!used)
-        {
-          if (tps.equals("Player"))
-          {
-            player = new Player(this);
+    player = new Player(this);
             
-            player.spritename = globals.gFactory.get_spritename("Player");
-            player.sprite = globals.sprites.get_sprite(player.spritename);
-            player.pos = gg.absolute_pos_from_grid_pos(new IntVec(xx,yy));
-            player.dim = gg.get_square_dim();
-            
-          }
-          else
-            gg.set(xx,yy, globals.gFactory.create_griddle(tps, ov, this));
-          
-          used_spots.add(new IntVec(xx,yy));
-          placed = true;
-        }
-      }
-    }
+    player.spritename = globals.gFactory.get_spritename("Player");
+    player.sprite = globals.sprites.get_sprite(player.spritename);
+    player.pos = gg.absolute_pos_from_grid_pos(new IntVec(w / 2,h / 2));
+    player.dim = gg.get_square_dim();
     
     grid = gg;
+    
+    grid.apply_alterations();
+    conform_to_rules();
   }
   
   void refresh_rewards()
@@ -222,6 +370,7 @@ class GameSession extends GridGameFlowBase
     }
     
     StringList types = globals.gFactory.all_reward_names();
+    int upgrades = rules.get_int("Reward:upgrades");
     
     for (int i = 0; i < rewards.size(); ++i)
     {
@@ -229,7 +378,20 @@ class GameSession extends GridGameFlowBase
       
       int p = (int)random(types.size());
       
-      rg.reward_griddle_name = types.get(p);
+      String type_name = types.get(p);
+      
+      if (i >= 5 - upgrades)
+      {
+        StringList uppies = globals.gFactory.get_upgrades(type_name);
+        
+        if (uppies.size() > 0)
+        {
+          uppies.shuffle();
+          type_name = uppies.get(0);
+        }
+      }
+      
+      rg.reward_griddle_name = type_name;
       rg.time_used = 0f;
       rg.time_needed = 48;
       
@@ -269,7 +431,7 @@ class GameSession extends GridGameFlowBase
     }
     
     if (won)
-      win_level();
+      state = GameState.WON_PLAYLEVEL;
     
     //check for a loss
     boolean all_finished = true;
@@ -284,7 +446,7 @@ class GameSession extends GridGameFlowBase
     }
     
     if (all_finished)
-      lose_level();
+      state = GameState.LOST_PLAYLEVEL;
   }
   
   void win_level()
@@ -294,14 +456,41 @@ class GameSession extends GridGameFlowBase
     for (WinCondition wc : win_conditions)
       wc.increment();
 
-    state = GameState.WON_PLAYLEVEL;
+    //get a boon every 10 rounds
+    if (rounds_completed % 10 == 0)
+    {
+      RuleMenuGameFlow rmgf = new RuleMenuGameFlow();
+      rmgf.ruletype = RuleType.BOON;
+      rmgf.options = rules.get_available_boons().shuffle().top(3).names();
+      rmgf.load();
+      
+      globals.game.push(rmgf, new Message("boon", "Congrats! Choose a boon."));
+    }
+    
+    //get a curse every 4 rounds (ignored during boon rounds, such as round 20 and 40)
+    else if (rounds_completed % 4 == 0)
+    {
+      RuleMenuGameFlow rmgf = new RuleMenuGameFlow();
+      rmgf.ruletype = RuleType.CURSE;
+      rmgf.options = rules.get_available_curses().top(3).names();
+      rmgf.load();
+      
+      globals.game.push(rmgf, new Message("curse", "Congrats! Choose a curse."));
+    }
+    globals.game.push(new MessageScreenGameFlow(), new Message("win","You won!")); 
+    
+    player.ng = null; 
+    nongriddles.clear(); 
+    nongriddles_to_delete.clear();
+    
+    grid = get_LevelEditor_from_level(grid);
+    
+    state = GameState.LEVELEDITOR;
   }
   
   void lose_level()
   {
-    //TODO: fill this in
-    
-    state = GameState.LOST_PLAYLEVEL;
+    globals.game.push(new MessageScreenGameFlow(), new Message("lose", "You lost!"));
   }
   
   Grid get_LevelEditor_from_level(Grid tg)
@@ -314,8 +503,8 @@ class GameSession extends GridGameFlowBase
       {
         Griddle tgg = tg.get(x,y);
         
-        if (tgg instanceof NullGriddle)
-          le_grid.set(x,y,new NullGriddle());
+        if (tgg instanceof WallGriddle)
+          le_grid.set(x,y,new WallGriddle(this));
         else if (tgg instanceof CountingOutputResourcePool)
         {
           CountingOutputResourcePool output = new CountingOutputResourcePool(this);
@@ -337,6 +526,7 @@ class GameSession extends GridGameFlowBase
             JSONObject tggo = tgg.serialize();
             LevelEditorNonGriddle leng = globals.ngFactory.create_le_ng(tggo.getString("_template",tggo.getString("type")));
             leng.as_json = tggo;
+            
             leng.shape = globals.sprites.get_sprite(tggo.getString("sprite"));
             leng.visible = false;
             register_ng(leng);

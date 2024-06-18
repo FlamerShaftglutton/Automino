@@ -62,6 +62,7 @@ class GriddleFactory
       case "TrashCompactor":               g = new TrashCompactor(game);             break;
       case "ConveyorTransformer":          g = new ConveyorTransformer(game);        break;
       case "CrossConveyorBelt":            g = new CrossConveyorBelt(game);          break;
+      case "WallGriddle":                  g = new WallGriddle(game);                break;
       default:                             g = new NullGriddle(game);                break;
     }
     
@@ -71,56 +72,23 @@ class GriddleFactory
     return g;
   }
   
-  String get_spritename(String name) { return templates.get(name).getString("sprite"); }
-  String get_description(String name) { return templates.get(name).getString("description"); }
+  JSONObject get_template(String name) { if (!templates.containsKey(name)) return new JSONObject(); return templates.get(name); }
   
-  StringList get_tags(String name)
-  {
-    StringList retval = new StringList();
-    
-    JSONObject jo = templates.get(name);
-    
-    if (!jo.hasKey("tags"))
-        return retval;
-      
-    Object jou = jo.get("tags");
-    
-    if (jou instanceof String)
-      retval.append(jou.toString());
-    else if (jou instanceof JSONArray)
-    {
-      JSONArray ja = (JSONArray)jou;
-      
-      for (int i = 0; i < ja.size(); ++i)
-        retval.append(ja.getString(i));
-    }
-    
-    return retval;    
-  }
+  String get_string(String griddle_name, String field_name) { return get_template(griddle_name).getString(field_name,""); }
   
-  StringList get_upgrades(String name)
-  {
-    StringList retval = new StringList();
-    
-    JSONObject jo = templates.get(name);
-    
-    if (!jo.hasKey("upgrades"))
-        return retval;
-      
-    Object jou = jo.get("upgrades");
-    
-    if (jou instanceof String)
-      retval.append(jou.toString());
-    else if (jou instanceof JSONArray)
-    {
-      JSONArray ja = (JSONArray)jou;
-      
-      for (int i = 0; i < ja.size(); ++i)
-        retval.append(ja.getString(i));
-    }
-    
-    return retval;
-  }
+  StringList get_strings(String griddle_name, String field_name) { return getStringList(field_name, templates.get(griddle_name)); }
+  
+  String get_spritename(String name) { return get_template(name).getString("sprite",""); }
+  
+  String get_description(String name) { return get_template(name).getString("description",""); }
+  
+  StringList get_tags(String name) { return getStringList("tags", get_template(name)); }
+  
+  StringList get_names_by_tag(String tag) { StringList retval = all_template_names(); for (int i = 0; i < retval.size(); ++i) { if (!get_tags(retval.get(i)).hasValue(tag)) { retval.remove(i); --i; } } return retval; }
+  
+  StringList get_upgrades(String name) { return getStringList("upgrades", get_template(name)); }
+  
+  StringList get_operations(String name) { return getStringList("operations", get_template(name)); }
   
   StringList all_template_names() { return new StringList(templates.keySet()); }
   

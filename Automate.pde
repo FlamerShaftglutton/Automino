@@ -15,7 +15,13 @@ void draw()
   globals.game.active().draw();
   
   globals.mouseReleased = false;
-  globals.keyReleased = false;
+  globals.keyboard.update();
+  
+  fill(#000000);
+  textSize(14);
+  
+  //DEBUG
+  //text("" + mouseX + ", " + mouseY, width - 60f, 25f);
 }
 
 
@@ -25,6 +31,7 @@ void initglobals()
   globals.ngFactory.load(dataPath("NonGriddles.json"));
   globals.gFactory.load(dataPath("Griddles.json"));
   globals.interactions.load(dataPath("Interactions.json"));
+  globals.ruleFactory.load(dataPath("Rules.json"));
   
   MainMenuGameFlow mm = new MainMenuGameFlow();
   mm.save_path = dataPath("menu.json");
@@ -36,7 +43,12 @@ void mouseReleased()
   globals.mouseReleased = true;
 }
 
+void keyPressed()
+{
+  globals.keyboard.handle_keyPressed();
+}
+
 void keyReleased()
 {
-  globals.keyReleased = true;
+  globals.keyboard.handle_keyReleased();
 }

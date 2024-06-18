@@ -86,6 +86,8 @@ class Griddle
   void    player_interact(Player player) { }
   void    player_interact_end(Player player) { }
   
+  IntVec get_grid_pos() { return game.grid.get_grid_pos_from_object(this); }
+  
   
   PVector top_left() { return pos.copy(); }
   PVector top_center() { return pos.copy().add(dim.x * 0.5f, 0f); }
@@ -101,7 +103,7 @@ class Griddle
 class NullGriddle extends Griddle
 {
   NullGriddle(GridGameFlowBase game) { super(game); type = "NullGriddle"; }
-  NullGriddle() { super(null); type = "NullGriddle"; }
+  NullGriddle() { this(null); }
   
   boolean can_accept_ng(NonGriddle n) { return false; }
   
@@ -125,6 +127,14 @@ class EmptyGriddle extends Griddle
   }
   
   void update() { if (ng() != null) ng().pos = center_center(); }
+}
+
+class WallGriddle extends Griddle
+{
+  WallGriddle() { this(null); }
+  WallGriddle(GridGameFlowBase game) { super(game); traversable = false; type = "WallGriddle"; }
+  
+  boolean can_accept_ng(NonGriddle n) { return false; }
 }
 
 class PlayerGriddle extends Griddle

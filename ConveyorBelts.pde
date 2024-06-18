@@ -52,14 +52,12 @@ class GrabberBelt extends ConveyorBelt
   {
     super.update();
     
-    if (ng() == null)
+    if (ngs.isEmpty())
     {
       IntVec iv_offset = offset_from_quarter_turns(quarter_turns);
       IntVec xy = game.grid.get_grid_pos_from_object(this);
-      //IntVec to_neighbor = xy.copy().add(iv_offset);
       IntVec from_neighbor = xy.copy().sub(iv_offset);
       
-      //Griddle gg_to = game.grid.get(to_neighbor);
       Griddle gg_from = game.grid.get(from_neighbor);
 
       if (!(gg_from instanceof ConveyorBelt) || gg_from.quarter_turns != quarter_turns)
@@ -74,8 +72,11 @@ class GrabberBelt extends ConveyorBelt
             PVector start = center_center();
             PVector end = start.copy().add(iv_offset.toPVec().mult(dim.x));
             
-            movement_progress = (start.dist(end) - end.dist(gg_ng.pos)) / start.dist(end); //<>// //<>// //<>// //<>// //<>// //<>//
+            Griddle gg_to = game.grid.get(get_grid_pos().add(iv_offset));
             
+            comp.start_conveying(gg_to, start, end, gg_ng);
+            comp.movement_progress = (start.dist(end) - end.dist(gg_ng.pos)) / start.dist(end);
+
             break;
           }
         }
@@ -115,110 +116,91 @@ class SwitchGrabberBelt extends GrabberBelt
   }
 }
 
+
 class CrossConveyorBelt extends ConveyorBelt
 {
-  NonGriddle ng_vertical = null;
-  NonGriddle ng_horizontal = null;
-  float movement_progress_vertical = 0f;
-  float movement_progress_horizontal = 0f;
+  ConveyorComponent horizontal;
+  ConveyorComponent vertical;
   
-  CrossConveyorBelt(GridGameFlowBase game) { super(game); type = "CrossConveyorBelt"; }
+  CrossConveyorBelt(GridGameFlowBase game) { super(game); type = "CrossConveyorBelt"; horizontal = new ConveyorComponent(game, this); vertical = new ConveyorComponent(game, this); ngs = new ArrayList<NonGriddle>(); ngs.add(null); ngs.add(null); }
+  
+  void deserialize(JSONObject o) { super.deserialize(o); horizontal.deserialize(o.getJSONObject("horizontal")); vertical.deserialize(o.getJSONObject("vertical"));  }
+  JSONObject serialize() { JSONObject retval = super.serialize(); retval.setJSONObject("horizontal", horizontal.serialize()); retval.setJSONObject("vertical", vertical.serialize()); return retval; }
   
   void update()
   {
-    if (ng_vertical != null)
-      movement_progress_vertical = move_conveyor(ng_vertical, movement_progress_vertical, (quarter_turns & 3) < 2 ? 1 : 3);
-    
-    if (ng_horizontal != null)
-      movement_progress_horizontal = move_conveyor(ng_horizontal, movement_progress_horizontal, (quarter_turns & 3) == 0 || (quarter_turns & 3) == 3 ? 0 : 2);
-  }
+    horizontal.update();
+    vertical.update();
+  } 
   
-  float move_conveyor(NonGriddle ng, float amount, int qts)
+  boolean can_accept_ng(NonGriddle n) { return horizontal.ng == null || vertical.ng == null; }
+  
+  void start_horizontal(NonGriddle ng)
   {
-    float retval = amount + 0.03f;
-    
-    IntVec offset = offset_from_quarter_turns(qts);
     PVector start = center_center();
-    PVector end   = offset.toPVec().mult(dim.x).add(start);
+    PVector end = start.copy();
     
-    if (retval < 0.4f)
-      ng.pos = PVector.lerp(start, end, retval);
-    else
-    {
-      Griddle reciever = game.grid.get(game.grid.get_grid_pos_from_object(this).add(offset));
-      
-      if (retval < 1f)
-      {
-        if (!reciever.can_accept_ng(ng))
-        {
-          retval = min(amount,0.4f);
-        }
-        
-        ng.pos = PVector.lerp(start, end, retval);
-      }
-      else
-      {
-        if (reciever.receive_ng(ng))
-        {
-          remove_ng(ng);
-          retval = 0f;
-        }
-        else
-        {
-          retval = 1f;
-        }
-      }
-    }
+    IntVec offset = new IntVec((quarter_turns & 3) == 0 || (quarter_turns & 3) == 3 ? 1 : -1, 0);
     
-    return retval;
+    end.add(offset.toPVec().mult(dim.x));
+    
+    horizontal.start_conveying(game.grid.get(get_grid_pos().add(offset)), start, end, ng);
   }
   
-  boolean can_accept_ng(NonGriddle n) { return ng_vertical == null || ng_horizontal == null; }
+  void start_vertical(NonGriddle ng)
+  {
+    PVector start = center_center();
+    PVector end = start.copy();
+    
+    IntVec offset = new IntVec(0,(quarter_turns & 3) < 2 ? -1 : 1);
+    
+    end.add(offset.toPVec().mult(dim.x));
+    
+    vertical.start_conveying(game.grid.get(get_grid_pos().add(offset)), start, end, ng);
+    
+  }
   
   boolean receive_ng(NonGriddle ng)
   {
-    
     IntVec sender_offset = get_ng_owner_offset(ng);
     
     //this is coming from a player
     if (sender_offset == null)
     {
-      if (ng_vertical == null)
+      PVector ppos = game.player.pos.copy().sub(dim.copy().div(2));
+      
+      if (vertical.ng == null && abs(ppos.y - pos.y) > 0.1f)
       {
-        ng_vertical = ng;
-        //ng.pos = center_center();
-        movement_progress_vertical = 0f;
+        ngs.set(1,ng);
+        start_vertical(ng);
         return true;
       }
-      
-      if (ng_horizontal == null)
+      else if (horizontal.ng == null && abs(ppos.x - pos.x) > 0.1f)
       {
-        ng_horizontal = ng;
-        //ng_pos = center_center();
-        movement_progress_horizontal = 0f;
+        ngs.set(0,ng);
+        start_horizontal(ng);
         return true;
       }
-      
-      return false;
+      else
+        return false;
     }
-    
-    //this is coming from one of the sides
-    else if (sender_offset.x != 0 && ng_horizontal == null)
+    else
     {
-      ng_horizontal = ng;
-      movement_progress_horizontal = 0f;
-      return true;
+      if (sender_offset.x != 0 && horizontal.ng == null)
+      {
+        ngs.set(0,ng);
+        start_horizontal(ng);
+        return true;
+      }
+      else if (sender_offset.y != 0 && vertical.ng == null)
+      {
+        ngs.set(1,ng);
+        start_vertical(ng);
+        return true;
+      }
+      else
+        return false;
     }
-    
-    //this is coming from the top or bottom
-    else if (sender_offset.y != 0 && ng_vertical == null)
-    {
-      ng_vertical = ng;
-      movement_progress_horizontal = 0f;
-      return true;
-    }
-    
-    return false;
   }
   
   IntVec get_ng_owner_offset(NonGriddle ng)
@@ -238,77 +220,88 @@ class CrossConveyorBelt extends ConveyorBelt
     return null;
   }
   
-  void    remove_ng(NonGriddle ng) { if (ng_horizontal == ng) ng_horizontal = null; else if (ng_vertical == ng) ng_vertical = null; else println("Not sure what to remove from CrossConveyor"); }
+  void    remove_ng(NonGriddle ng) { if (ngs.get(0) == ng) { ngs.set(0, null); horizontal.ng = null; } else if (ngs.get(1) == ng) {ngs.set(1,null); vertical.ng = null; } else println("Not sure what to remove from CrossConveyor"); }
   void    remove_ng() 
   {
-    //DEBUG
-    println("Probably shouldn't do this..."); 
-    
-    if ((ng_horizontal == null && ng_vertical != null) || movement_progress_vertical > movement_progress_horizontal)
-      ng_vertical = null; 
-    else //if ((ng_horizontal != null && ng_vertical == null) || movement_progress_vertical < movement_progress_horizontal)
-      ng_horizontal = null;
+    if (ngs.get(0) == null && ngs.get(1) != null)
+    {
+      ngs.set(1,null);
+      vertical.ng = null;
+    }
+    else
+    {
+      ngs.set(0,null);
+      horizontal.ng = null;
+    }
   }
 }
 
-class ConveyorBelt extends Griddle
+class ConveyorComponent
 {
-  float movement_progress = 0f;
+  float base_speed = 0.03f;
+  float modified_speed;
+  float movement_progress;
+  GridGameFlowBase game;
+  Griddle parent_griddle;
+  NonGriddle ng = null;
+  PVector start;
+  PVector end;
+  Griddle destination_griddle;
   
-  ConveyorBelt(GridGameFlowBase game) { super(game); type = "ConveyorBelt"; }
+  ConveyorComponent(GridGameFlowBase game, Griddle parent_griddle) { this.game = game; this.parent_griddle = parent_griddle; }
+  
+  void deserialize(JSONObject o) { if (o != null) { base_speed = o.getFloat("base_speed", 0.03f); } if (game instanceof GameSession) { modified_speed = ((GameSession)game).rules.get_float("Speed:ConveyorBelt", base_speed);  } else modified_speed = base_speed; }
+  JSONObject serialize() { JSONObject retval = new JSONObject(); retval.setFloat("base_speed", base_speed); return retval; }
+  
+  void start_conveying(Griddle destination, PVector start, PVector end, NonGriddle target)
+  {
+    destination_griddle = destination;
+    this.start = start.copy();
+    this.end   = end.copy();
+    ng = target;
+    
+    movement_progress = 0f;
+  }
   
   void update()
   {
-    NonGriddle ng = ng();
-    
     if (ng != null)
     {
-      movement_progress += 0.03f;//0.015f;
-      IntVec iv_offset = offset_from_quarter_turns(quarter_turns);
-      IntVec xy = game.grid.get_grid_pos_from_object(this).add(iv_offset);
+      movement_progress += modified_speed;
       
       if (movement_progress < 1f)
-      {
-        //stop if the next thing can't take this yet
-        Griddle gg = game.grid.get(xy.x, xy.y);
-        
-        if (!gg.can_accept_ng(ng))//(!(gg instanceof ConveyorBelt) && !gg.can_accept_ng(ng))
-          movement_progress = min(0.0f, movement_progress);
-
-        
-        PVector start = center_center();
-        PVector end = start.copy().add(iv_offset.toPVec().mult(dim.x));
-        
-        /*
-        PVector start;
-        PVector end;
-        
-        switch (quarter_turns & 3)
-        {
-          case 0: start = center_left(); end = center_right(); break;
-          case 1: start = bottom_center(); end = top_center(); break;
-          case 2: start = center_right(); end = center_left(); break;
-          case 3: start = top_center(); end = bottom_center(); break;
-          default: start = end = center_center(); break;
-        }
-        */
-        
-        //PVector offset = iv_offset.toPVec();
-        //offset.x *= dim.x;
-        //offset.y *= dim.y;
-        //end.add(offset);
-        
         ng.pos = PVector.lerp(start,end,movement_progress);
-      }
-      else
+      
+      if (movement_progress > 0f && movement_progress < 1f)
       {
-        //find the neighboring griddle and try to pass this off
-        if (game.grid.get(xy.x,xy.y).receive_ng(ng))
-          remove_ng(ng);
+        if (!destination_griddle.can_accept_ng(ng))//(!(gg instanceof ConveyorBelt) && !gg.can_accept_ng(ng))
+          movement_progress = 0.0f;
+      }
+      else if (movement_progress >= 1f)
+      {
+        if (destination_griddle.receive_ng(ng))
+          parent_griddle.remove_ng(ng);
         else
           movement_progress = 1f;
       }
     }
+  }
+  
+  boolean is_empty() { return ng == null; }
+}
+
+class ConveyorBelt extends Griddle
+{
+  ConveyorComponent comp;
+  
+  ConveyorBelt(GridGameFlowBase game) { super(game); type = "ConveyorBelt"; comp = new ConveyorComponent(game, this); }
+  
+  void deserialize(JSONObject o) { super.deserialize(o); comp.deserialize(o.getJSONObject("component"));  }
+  JSONObject serialize() { JSONObject retval = super.serialize(); retval.setJSONObject("component", comp.serialize()); return retval; }
+  
+  void update()
+  {
+    comp.update();
   }
   
   boolean can_accept_ng(NonGriddle n) { return ngs.isEmpty(); }
@@ -318,8 +311,17 @@ class ConveyorBelt extends Griddle
     if (!super.receive_ng(ng))
       return false;
     
-    movement_progress = 0f;
+    IntVec iv_offset = offset_from_quarter_turns(quarter_turns);
+    IntVec xy = get_grid_pos().add(iv_offset);
+    Griddle gg = game.grid.get(xy.x, xy.y);
+    
+    PVector start = center_center();
+    PVector end = start.copy().add(iv_offset.toPVec().mult(dim.x));
+    
+    comp.start_conveying(gg, start, end, ng);
     
     return true;
   }
+  
+  void remove_ng(NonGriddle ng) { super.remove_ng(ng); comp.ng = null; }
 }

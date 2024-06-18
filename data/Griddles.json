@@ -1,5 +1,10 @@
 [
 	{
+		"type": "WallGriddle",
+		"description": "You can't go here...",
+		"sprite": "square black",
+	},
+	{
 		"type": "ConveyorBelt",
 		"description": "Moves things from here to there.",
 		"sprite": "two arrow conveyor blue",
@@ -400,6 +405,14 @@
 		"description": "Put the Cobalt Ingots in here and nobody has to lose...",
 		"type": "CountingOutputResourcePool",
 		"ng_type": "Cobalt Ingot",
+		"sprite": "freezer",
+		"tags": [ "output", "basic" ],
+	},
+	{
+		"_template": "PermendurOutput",
+		"description": "Put the Permendur Ingots in here and nobody has to lose...",
+		"type": "CountingOutputResourcePool",
+		"ng_type": "Permendur Ingot",
 		"sprite": "freezer",
 		"tags": [ "output", "basic" ],
 	},

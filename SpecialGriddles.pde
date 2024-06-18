@@ -27,6 +27,7 @@ class RandomResourcePool extends ResourcePool
 {
   StringList resources = new StringList();
   StringList remaining_resources = new StringList();
+  StringList extra_resources = new StringList();
   
   RandomResourcePool(GridGameFlowBase game) { super(game); type = "RandomResourcePool"; }
   
@@ -35,6 +36,7 @@ class RandomResourcePool extends ResourcePool
     if (remaining_resources.size() == 0)
     {
       remaining_resources = resources.copy();
+      remaining_resources.append(extra_resources);
       remaining_resources.shuffle();
     }
     
@@ -70,6 +72,12 @@ class RandomResourcePool extends ResourcePool
         for (int i = 0; i < times; ++i)
           resources.append(k);
       }
+    }
+    
+    if (game instanceof GameSession) 
+    {
+      GameSession gs = (GameSession)game;
+      extra_resources = gs.rules.get_strings("Resource:Random");
     }
   }
 }
@@ -149,8 +157,8 @@ class MetaActionCounter extends Griddle
       fill(#000000);
       stroke(#000000);
       textSize(14f);
-      textAlign(CENTER,CENTER);
-      text(display_string, pos.x + dim.x * 0.5f, pos.y + dim.y * 0.5f);
+      textAlign(CENTER,TOP);
+      text(display_string, pos.x, pos.y + dim.y * 0.5f, dim.x, dim.y);
     }
   }
   
@@ -195,10 +203,9 @@ class LevelEditorGriddle extends EmptyGriddle
 {
   boolean locked = false;
   
-  
   LevelEditorGriddle(GridGameFlowBase game) { super(game); type = "LevelEditorGriddle"; }
   
-  void update() { traversable = ngs.isEmpty(); }
+  void update() { traversable = true; }// ngs.isEmpty(); }
   
   void player_interact_end(Player player)
   {

@@ -35,7 +35,7 @@ class GameFlowManager
 
 class GridGameFlowBase implements GameFlow
 {
-  Grid grid;
+  Grid grid;// = new Grid(new PVector(20f,20f), new PVector(width * 0.75f, height - 40f), this);
   String save_path;
   Player player;
   
@@ -56,8 +56,8 @@ class GridGameFlowBase implements GameFlow
     
     for (Message m = globals.messages.consume_message(); m != null; m = globals.messages.consume_message())
     {
-      //DEBUG
-      println("Message '" + m.target + "' = '" + m.value + "', caller: " + (m.sender == null ? "null" : "not null"));
+      ////DEBUG
+      //println("Message '" + m.target + "' = '" + m.value + "', caller: " + (m.sender == null ? "null" : "not null"));
       
       handle_message(m);
     }
@@ -91,7 +91,7 @@ class GridGameFlowBase implements GameFlow
       textSize(14);
       fill(color(0,0,0, 255 * ((t.time_to_display - t.time_used) / t.time_to_display)));
       textAlign(CENTER,CENTER);
-      text(t.text_to_display, width * 0.5f, height - 16f * (i + 1));
+      text(t.text_to_display, width * 0.8f, height - 16f * (i + 1));
     }
   }
   
@@ -135,7 +135,7 @@ class GridGameFlowBase implements GameFlow
   
   void deserialize(JSONObject root)
   {    
-    Grid gg = new Grid(new PVector(20,20), new PVector(width - 40, height - 40), this);
+    Grid gg = new Grid(new PVector(20,20), new PVector(width * 0.75f, height - 40), this);
     
     gg.deserialize(root.getJSONObject("grid"), this);
     
@@ -167,6 +167,8 @@ class GridGameFlowBase implements GameFlow
   NonGriddle create_and_register_ng(String name)
   {
     NonGriddle retval = globals.ngFactory.create_ng(name);
+    
+    retval.dim = grid.get_square_dim().mult(0.4f);
     
     register_ng(retval);
     
@@ -258,9 +260,15 @@ class RuleMenuGameFlow extends GridGameFlowBase
   
   void handle_message(Message message)
   {
+    if (message.target.equals("win"))
+    {
+      outgoing_message = new Message("win","");
+      globals.game.pop();
+    }
+    
     if (message.target.equals("select"))
     {
-      outgoing_message = new Message(ruletype == RuleType.CURSE ? "curse" : "boon", message.value);
+      outgoing_message = new Message("rule", message.value);
       globals.game.pop();
     }
     
@@ -271,7 +279,7 @@ class RuleMenuGameFlow extends GridGameFlowBase
   Message exit() { return outgoing_message; }
   
   void load()
-  {
+  { 
     int w,h;
     
     if (options.size() == 0)
@@ -283,6 +291,13 @@ class RuleMenuGameFlow extends GridGameFlowBase
     }
     
     grid = new Grid(new PVector(50,50), new PVector(width - 100, height - 100), w, h, this);
+    
+    
+    if (options.size() == 0)
+    {
+      globals.game.push(new MessageScreenGameFlow(), new Message("win","There are no curses or boons left. You won the entire game! Please quit.")); 
+      return;
+    }
     
     int x = 1;
     for (int i = 0; i < options.size(); ++i, x+= 2)
@@ -320,7 +335,7 @@ class MainMenuGameFlow extends GridGameFlowBase
   {
     super.update();
     
-    if (globals.keyReleased && key == 'q') 
+    if (globals.keyboard.is_key_released('q')) 
       globals.game.pop();
   }
   
@@ -419,7 +434,7 @@ class MessageScreenGameFlow implements GameFlow
 {
   Message received;
   
-  void update() { if (globals.keyReleased && key == 'y') globals.game.pop(); }
+  void update() { if (globals.keyboard.is_key_released('y')) globals.game.pop(); }
   void draw()
   {
     fill(color(255,255,255,100));

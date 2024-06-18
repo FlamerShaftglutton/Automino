@@ -15,7 +15,13 @@ void draw()
   globals.game.active().draw();
   
   globals.mouseReleased = false;
-  globals.keyReleased = false;
+  globals.keyboard.update();
+  
+  fill(#000000);
+  textSize(14);
+  
+  //DEBUG
+  //text("" + mouseX + ", " + mouseY, width - 60f, 25f);
 }
 
 
@@ -37,7 +43,12 @@ void mouseReleased()
   globals.mouseReleased = true;
 }
 
+void keyPressed()
+{
+  globals.keyboard.handle_keyPressed();
+}
+
 void keyReleased()
 {
-  globals.keyReleased = true;
+  globals.keyboard.handle_keyReleased();
 }

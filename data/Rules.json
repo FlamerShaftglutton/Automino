@@ -54,15 +54,16 @@
 		"mods": [
 			"add 2 to 'Required:Gold Ingot'",
 		],
+		"disabled": true,
 	},
 	{
 		"name": "Tough Ore",
 		"description": "Crushers are 50% slower.",
 		"type": "curse",
-		"tags": ["speed", "Crusher"],
+		"tags": ["speed", "crush"],
 		"dependencies": [ ],
 		"mods": [
-			"multiply 0.5 to Speed:Crusher",
+			"multiply 0.5 to Speed:crush",
 		],
 	},
 	{
@@ -72,7 +73,7 @@
 		"tags": ["output", "Crusher"],
 		"dependencies": [ ],
 		"mods": [
-			"add Tailings to Outputs:Crusher",
+			"add Tailings to Outputs:crush",
 		],
 	},
 	{
@@ -84,6 +85,7 @@
 		"mods": [
 			"add 'Iron Ore' to 'Inputs:crush:Iron Ore'",
 		],
+		"disabled": true,
 	},
 	{
 		"name": "Oops! All Cobalt!",
@@ -139,7 +141,7 @@
 		"tags": ["speed", "Refiner"],
 		"dependencies": [ ],
 		"mods": [
-			"multiply 1.5 to Speed:Refiner",
+			"multiply 1.5 to Speed:extract",
 		],
 	},
 ]

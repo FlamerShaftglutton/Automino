@@ -62,6 +62,7 @@ class GriddleFactory
       case "TrashCompactor":               g = new TrashCompactor(game);             break;
       case "ConveyorTransformer":          g = new ConveyorTransformer(game);        break;
       case "CrossConveyorBelt":            g = new CrossConveyorBelt(game);          break;
+      case "WallGriddle":                  g = new WallGriddle(game);                break;
       default:                             g = new NullGriddle(game);                break;
     }
     
@@ -71,21 +72,23 @@ class GriddleFactory
     return g;
   }
   
-  String get_string(String griddle_name, String field_name) { return templates.get(griddle_name).getString(field_name,""); }
+  JSONObject get_template(String name) { if (!templates.containsKey(name)) return new JSONObject(); return templates.get(name); }
+  
+  String get_string(String griddle_name, String field_name) { return get_template(griddle_name).getString(field_name,""); }
   
   StringList get_strings(String griddle_name, String field_name) { return getStringList(field_name, templates.get(griddle_name)); }
   
-  String get_spritename(String name) { return templates.get(name).getString("sprite"); }
+  String get_spritename(String name) { return get_template(name).getString("sprite",""); }
   
-  String get_description(String name) { return templates.get(name).getString("description"); }
+  String get_description(String name) { return get_template(name).getString("description",""); }
   
-  StringList get_tags(String name) { return getStringList("tags", templates.get(name)); }
+  StringList get_tags(String name) { return getStringList("tags", get_template(name)); }
   
   StringList get_names_by_tag(String tag) { StringList retval = all_template_names(); for (int i = 0; i < retval.size(); ++i) { if (!get_tags(retval.get(i)).hasValue(tag)) { retval.remove(i); --i; } } return retval; }
   
-  StringList get_upgrades(String name) { return getStringList("upgrades", templates.get(name)); }
+  StringList get_upgrades(String name) { return getStringList("upgrades", get_template(name)); }
   
-  StringList get_operations(String name) { return getStringList("operations", templates.get(name)); }
+  StringList get_operations(String name) { return getStringList("operations", get_template(name)); }
   
   StringList all_template_names() { return new StringList(templates.keySet()); }
   

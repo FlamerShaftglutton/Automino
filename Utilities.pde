@@ -132,3 +132,8 @@ IntVec offset_from_quarter_turns(int quarter_turns)
   
   return retval;
 }
+
+IntVec offset_from_angle(float angle)
+{
+  return offset_from_quarter_turns(int(0.01f + (TWO_PI - angle) / HALF_PI));
+}

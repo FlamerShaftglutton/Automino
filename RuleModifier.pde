@@ -181,7 +181,7 @@ class RuleManager
     if (ms != null)
     {
       for (int i = 0; i < ms.size(); ++i)
-        retval.append(ms.get(i).get_string());
+        retval.appendUnique(ms.get(i).get_string());
     }
     
     return retval;
@@ -341,6 +341,9 @@ class RuleList
   
   RuleList filter_out_tag(String tag) { return filter_out_tags(tag); }
   
+  RuleList filter_just_curses() { RuleList retval = copy(); for (int i = rules.size(); i >= 0; --i) { if (rules.get(i).type == RuleType.BOON ) retval.remove(i); } return retval; }
+  RuleList filter_just_boons()  { RuleList retval = copy(); for (int i = rules.size(); i >= 0; --i) { if (rules.get(i).type == RuleType.CURSE) retval.remove(i); } return retval; }
+  
   RuleList remove_all(RuleList rhs) { rules.removeAll(rhs.rules); return this; }
   RuleList add_all(RuleList rhs) { rules.addAll(rhs.rules); return this; }
   
@@ -364,8 +367,14 @@ class RuleFactory
     
     for (int i = 0; i < list.size(); ++i)
     {
+      JSONObject lojo = list.getJSONObject(i);
+      
+      if (lojo.getBoolean("disabled",false))
+        continue;
+      
       Rule rr = new Rule();
-      rr.deserialize(list.getJSONObject(i));
+      
+      rr.deserialize(lojo);
       rules.put(rr.name, rr);
       
       if (rr.type == RuleType.CURSE)

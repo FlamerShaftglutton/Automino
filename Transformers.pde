@@ -5,7 +5,10 @@ class Transformer extends Griddle
   float time_used = 0f;
   Interaction current_interaction;
   boolean automatic = false;
-  float speed = 0.01f;
+  float base_speed = 0.01f;
+  float modified_speed;
+  StringList extra_inputs = new StringList();
+  StringList extra_outputs = new StringList();
   
   Transformer(GridGameFlowBase game) { super(game); type = "Transformer"; }
   
@@ -21,7 +24,7 @@ class Transformer extends Griddle
     if (running)
     {
       if (automatic)
-        time_used += speed;
+        time_used += get_speed();
       
       if (time_used >= current_interaction.time)
         finish_transformation();
@@ -29,6 +32,8 @@ class Transformer extends Griddle
     
     super.update();
   }
+  
+  float get_speed() { return modified_speed; }
   
   void remove_ng(NonGriddle ng)
   { 
@@ -46,8 +51,18 @@ class Transformer extends Griddle
   void start_transformation()
   {
     time_used = 0f;
+    current_interaction = null;
     
-    current_interaction = first_matching_interaction(ngs);
+    StringList to_find_extra_inputs = extra_inputs.copy();
+    
+    for (NonGriddle ng : ngs)
+    {
+      if (to_find_extra_inputs.hasValue(ng.name))
+        to_find_extra_inputs.removeValue(ng.name);
+    }
+    
+    if (to_find_extra_inputs.size() == 0)
+      current_interaction = first_matching_interaction(ngs);
     
     running = current_interaction != null;
   }
@@ -63,7 +78,9 @@ class Transformer extends Griddle
     ngs.clear();
     
     //create the outputs
-    for (String output_ng_name : current_interaction.output_ngs)
+    StringList modified_outputs = current_interaction.output_ngs.copy();
+    modified_outputs.append(extra_outputs);
+    for (String output_ng_name : modified_outputs)
     {
       NonGriddle ng2 = game.create_and_register_ng(output_ng_name);
       
@@ -77,7 +94,7 @@ class Transformer extends Griddle
     if (!automatic)
     {
       if (running)
-        time_used += speed;
+        time_used += get_speed();
       else
         start_transformation();
     }
@@ -140,7 +157,6 @@ class Transformer extends Griddle
     sl.push(n.name);
     
     return first_matching_interaction(sl) != null;
-    
   }
   
   
@@ -162,12 +178,32 @@ class Transformer extends Griddle
   
   StringList get_ng_names() { StringList retval = new StringList(); for (int i = 0; i < ngs.size(); ++i) retval.append(ngs.get(i).name); return retval; }
   
-  void deserialize(JSONObject o) { super.deserialize(o); speed = o.getFloat("speed", 0.01f); automatic = o.getBoolean("automatic", false); operations = getStringList("operations", o); }
+  void deserialize(JSONObject o)
+  {
+    super.deserialize(o); 
+    base_speed = o.getFloat("speed", 0.01f); 
+    automatic = o.getBoolean("automatic", false); 
+    operations = getStringList("operations", o);
+    extra_inputs  = new StringList();
+    extra_outputs = new StringList();
+    
+    if (game instanceof GameSession) 
+    {
+      GameSession gs = (GameSession)game;
+      modified_speed = base_speed;
+      for (String operation : operations)
+      {
+        modified_speed = gs.rules.get_float("Speed:"+operation, modified_speed);
+        extra_inputs.append (gs.rules.get_strings("Inputs:"+operation));
+        extra_outputs.append(gs.rules.get_strings("Outputs:"+operation));
+      }
+    }
+  }
   
   JSONObject serialize() 
   {
     JSONObject o = super.serialize(); 
-    o.setFloat("speed", speed);
+    o.setFloat("speed", base_speed);
     o.setBoolean("automatic", automatic);
     
     JSONArray a = new JSONArray();
@@ -198,6 +234,8 @@ class ConveyorTransformer extends Transformer
   boolean conveying = false;
   NonGriddle conveying_ng = null;
   Interaction previous_interaction = null;
+  float base_conveyor_speed = 0.03f;
+  float modified_conveyor_speed;
   
   ConveyorTransformer(GridGameFlowBase game) { super(game); type = "ConveyorTransformer"; }
   
@@ -211,7 +249,7 @@ class ConveyorTransformer extends Transformer
     
     if (conveying || start_conveying())
     {
-      movement_progress += 0.04;//0.015f;
+      movement_progress += get_conveyor_speed();
       IntVec iv_offset = offset_from_quarter_turns(quarter_turns+3);
       IntVec xy = game.grid.get_grid_pos_from_object(this).add(iv_offset);
       
@@ -246,10 +284,12 @@ class ConveyorTransformer extends Transformer
     }
   }
   
+  float get_conveyor_speed() { return modified_conveyor_speed; }
+  
   boolean start_conveying()
   {
     //we have a lot of reasons not to do this. Like if we have no ngs, or if we have no previous interaction to look against to see if our ngs are outputs
-    if (conveying || ngs.isEmpty())
+    if (running || conveying || ngs.isEmpty())
       return false;
     
     if (previous_interaction == null && current_interaction != null)
@@ -295,4 +335,6 @@ class ConveyorTransformer extends Transformer
   void finish_transformation() { previous_interaction = current_interaction.copy(); start_conveying(); super.finish_transformation(); }
   
   boolean can_accept_ng(NonGriddle n) { return !conveying && super.can_accept_ng(n); }
+  
+  void deserialize(JSONObject o) { super.deserialize(o); if (game instanceof GameSession) { modified_conveyor_speed = ((GameSession)game).rules.get_float("Speed:ConveyorBelt", base_conveyor_speed);  } }
 }

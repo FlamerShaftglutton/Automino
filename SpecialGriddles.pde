@@ -12,12 +12,12 @@ class ResourcePool extends Griddle
   void update()
   {
     if (ngs.isEmpty())
-      produce_resource(game);
+      produce_resource();
     
     super.update();
   }
   
-  void produce_resource(GridGameFlowBase game) { ngs.add(game.create_and_register_ng(ng_type)); }
+  NonGriddle produce_resource() { NonGriddle retval = game.create_and_register_ng(ng_type); ngs.add(retval); return retval; }
   
   JSONObject serialize() { JSONObject o = super.serialize(); o.setString("ng_type", ng_type); return o;  }
   void deserialize(JSONObject o) { super.deserialize(o); ng_type = o.getString("ng_type", ""); }
@@ -82,21 +82,23 @@ class RandomResourcePool extends ResourcePool
   }
 }
 
-class CountingOutputResourcePool extends ResourcePool
+class CountingResourcePool extends ResourcePool
 {
   int count = 0;
-  int required = -1;
   PShape ng_sprite;
   
-  CountingOutputResourcePool(GridGameFlowBase game) { super(game); type = "CountingOutputResourcePool"; }
+  CountingResourcePool(GridGameFlowBase game) { super(game); type = "CountingResourcePool"; ng_type = ""; }
   
-  boolean receive_ng(NonGriddle ng) { if (!can_accept_ng(ng)) return false; game.destroy_ng(ng); ++count; return true; }
+  boolean can_accept_ng(NonGriddle ng) { return ng_type.length() == 0 || super.can_accept_ng(ng); }
   
-  void produce_resource(GridGameFlowBase game) { if (count > 0) { super.produce_resource(game); --count; } }
+  boolean receive_ng(NonGriddle ng) { if (!can_accept_ng(ng)) return false; if (ng_type.length() == 0) { ng_type = ng.name; ng_sprite = ng.shape; } game.destroy_ng(ng); ++count; return true; }
+  
+  NonGriddle produce_resource() { NonGriddle retval = null; if (count > 0) { retval = super.produce_resource(); --count; } return retval; }
   
   int get_count() { return count + ngs.size(); }
   
-  //void update() { this.game = game;  }
+  String get_display_string() { return "" + get_count(); }
+  
   void draw()
   {
     super.draw();
@@ -106,18 +108,14 @@ class CountingOutputResourcePool extends ResourcePool
     translate(pos);
     
     PVector text_spot   = new PVector(dim.x * 0.5f, dim.y * 0.2f);
-    PVector sprite_dim  = dim.copy().mult(0.4f);
-    PVector sprite_spot = new PVector(dim.x * 0.5f, dim.y * 0.6f).sub(sprite_dim.copy().mult(0.5f));
+    PVector sprite_dim  = dim.copy().mult(0.25f);
+    PVector sprite_spot = new PVector(dim.x * 0.2f, dim.y * 0.7f).sub(sprite_dim.copy().mult(0.5f));
     
     textAlign(CENTER,CENTER);
-    String s = "" + get_count();
     
-    if (required > 0)
-      s += " / " + required;
-    
-    textSize(24);
+    textSize(18);
     fill(#000000);
-    text(s, text_spot.x, text_spot.y);
+    text(get_display_string(), text_spot.x, text_spot.y);
     
     if (ng_sprite != null && get_count() == 0)
       shape(ng_sprite, sprite_spot.x, sprite_spot.y, sprite_dim.x, sprite_dim.y);
@@ -125,17 +123,71 @@ class CountingOutputResourcePool extends ResourcePool
     popMatrix();
   }
   
-  JSONObject serialize() { JSONObject o = super.serialize(); o.setString("ng_type", ng_type); o.setInt("required", required); o.setInt("count", get_count()); return o;  }
+  JSONObject serialize() { JSONObject o = super.serialize(); o.setString("ng_type", ng_type); o.setInt("count", get_count()); return o;  }
   
   void deserialize(JSONObject o)
   {
     super.deserialize(o); 
     count = o.getInt("count", 0); 
-    required = o.getInt("required", -1);   
     
     if (!ng_type.equals("")) 
       ng_sprite = globals.ngFactory.create_ng(ng_type).shape; 
   }
+}
+
+class ConveyorCountingResourcePool extends CountingResourcePool
+{
+  ConveyorComponent comp;
+  
+  ConveyorCountingResourcePool(GridGameFlowBase game) { super(game); type = "ConveyorCountingResourcePool"; comp = new ConveyorComponent(game, this); }
+  
+  void deserialize(JSONObject o) { super.deserialize(o); comp.deserialize(o.getJSONObject("component"));  }
+  JSONObject serialize() { JSONObject retval = super.serialize(); retval.setJSONObject("component", comp.serialize()); return retval; }
+  
+  void update()
+  {
+    super.update();
+    
+    if (get_count() > 0 && comp.ng == null)
+    {
+      IntVec iv_offset = offset_from_quarter_turns(quarter_turns+3);
+      IntVec xy = get_grid_pos().add(iv_offset);
+      Griddle gg = game.grid.get(xy.x, xy.y);
+      
+      PVector start = center_center();
+      PVector end = start.copy().add(iv_offset.toPVec().mult(dim.x));
+      
+      NonGriddle ng = ng();
+      
+      if (count > 0)
+        ng = produce_resource();
+      
+      comp.start_conveying(gg, start, end, ng);
+    }
+    
+    comp.update();
+  }
+  
+  void remove_ng(NonGriddle ng) 
+  {
+    super.remove_ng(ng); 
+  
+    if (ng == comp.ng)
+      comp.ng = null;
+  }
+  
+}
+
+class CountingOutputResourcePool extends CountingResourcePool
+{
+  int required = 1;
+  
+  CountingOutputResourcePool(GridGameFlowBase game) { super(game); type = "CountingOutputResourcePool"; }
+  
+  String get_display_string() { if (required < 0) return super.get_display_string(); return "" + get_count() + " / " + required; }
+  
+  JSONObject serialize() { JSONObject o = super.serialize(); o.setInt("required", required); return o;  }
+  void deserialize(JSONObject o){ super.deserialize(o); required = o.getInt("required", -1); }
 }
 
 class MetaActionCounter extends Griddle

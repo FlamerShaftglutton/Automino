@@ -64,7 +64,7 @@ class GrabberBelt extends ConveyorBelt
       {
         for (NonGriddle gg_ng : gg_from.ngs)
         {
-          if (can_grab(gg_ng) && receive_ng(gg_ng))
+          if (gg_ng != null && can_grab(gg_ng) && receive_ng(gg_ng))
           {
             gg_from.remove_ng(gg_ng);
             

@@ -25,12 +25,26 @@
 		"ng_type": "Cobalt Ore",
 	},
 	{
+		"type": "CountingResourcePool",
+		"description": "Allows you to stash your stuff.",
+		"sprite": "freezer",
+		"ng_type": "",
+		"tags": [ "reward" ],
+		"upgrades": [ "ConveyorCountingResourcePool" ],
+	},
+	{
+		"type": "ConveyorCountingResourcePool",
+		"description": "Allows you to stash your stuff, then kicks it out.",
+		"sprite": "freezer conveyor",
+		"ng_type": "",
+	},
+	{
 		"_template": "CobaltOrePool",
 		"description": "Your own secret stash of cobalt ore.",
 		"type": "ResourcePool",
 		"sprite": "freezer",
 		"ng_type": "Cobalt Ore",
-		"tags": [ "reward" ],
+		"tags": [ ],
 	},
 	{
 		"_template": "IronOrePool",
@@ -38,7 +52,7 @@
 		"type": "ResourcePool",
 		"sprite": "freezer",
 		"ng_type": "Iron Ore",
-		"tags": [ "reward" ],
+		"tags": [ ],
 	},
 	{
 		"type": "EmptyGriddle",

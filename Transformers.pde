@@ -181,7 +181,8 @@ class Transformer extends Griddle
   void deserialize(JSONObject o)
   {
     super.deserialize(o); 
-    base_speed = o.getFloat("speed", 0.01f); 
+    base_speed = o.getFloat("speed", 0.01f);
+    modified_speed = base_speed;
     automatic = o.getBoolean("automatic", false); 
     operations = getStringList("operations", o);
     extra_inputs  = new StringList();
@@ -230,79 +231,32 @@ class TrashCompactor extends Transformer
 
 class ConveyorTransformer extends Transformer
 {
-  float movement_progress = 0f;
-  boolean conveying = false;
-  NonGriddle conveying_ng = null;
-  Interaction previous_interaction = null;
-  float base_conveyor_speed = 0.03f;
-  float modified_conveyor_speed;
+  ConveyorComponent comp;
+  ArrayList<NonGriddle> previous_outputs = new ArrayList<NonGriddle>();
   
-  ConveyorTransformer(GridGameFlowBase game) { super(game); type = "ConveyorTransformer"; }
+  ConveyorTransformer(GridGameFlowBase game) { super(game); type = "ConveyorTransformer"; comp = new ConveyorComponent(game, this); }
   
   void update()
   {
-    if (conveying_ng == null && conveying)
-    {
-      conveying = false;
-      movement_progress = 0f;
-    }
-    
-    if (conveying || start_conveying())
-    {
-      movement_progress += get_conveyor_speed();
-      IntVec iv_offset = offset_from_quarter_turns(quarter_turns+3);
-      IntVec xy = game.grid.get_grid_pos_from_object(this).add(iv_offset);
-      
-      if (movement_progress < 1f)
-      {
-        if (movement_progress > 0.5f)
-        {
-          //stop half-way if the next thing can't take this yet (unless it's another conveyor belt)
-          Griddle gg = game.grid.get(xy.x, xy.y);
-          
-          if (!gg.can_accept_ng(conveying_ng))//(!(gg instanceof ConveyorBelt) && !gg.can_accept_ng(ng))
-            movement_progress = 0.5f;
-        }
-        
-        PVector start = center_center();
-        PVector end = iv_offset.toPVec().mult(dim.x).add(start);
-        
-        conveying_ng.pos = PVector.lerp(start,end,movement_progress);
-      }
-      else
-      {
-        //find the neighboring griddle and try to pass this off
-        if (game.grid.get(xy.x,xy.y).receive_ng(conveying_ng))
-          remove_ng(conveying_ng);
-        else
-          movement_progress = 1f;
-      }
-    }
-    else
-    {
+    if (comp.ng == null && !start_conveying() && previous_outputs.isEmpty())
       super.update();
-    }
+    
+    comp.update();
   }
   
-  float get_conveyor_speed() { return modified_conveyor_speed; }
   
   boolean start_conveying()
   {
     //we have a lot of reasons not to do this. Like if we have no ngs, or if we have no previous interaction to look against to see if our ngs are outputs
-    if (running || conveying || ngs.isEmpty())
+    if (running || comp.ng != null || previous_outputs.isEmpty())
       return false;
     
-    if (previous_interaction == null && current_interaction != null)
-      previous_interaction = current_interaction.copy();
-    
-    if (previous_interaction == null)
-      return false;
-    
-    StringList interaction_outputs = previous_interaction.output_ngs.copy();
     StringList neighbor_smartgrabber_ng_keys = new StringList();
-    for (IntVec iv : adjacent_offsets())
+    IntVec gridpos = game.grid.get_grid_pos_from_object(this);
+    for (IntVec iv : orthogonal_offsets())
     {
-      Griddle neighbor = game.grid.get(iv.add(game.grid.get_grid_pos_from_object(this)));
+      IntVec offset_pos = iv.copy().add(gridpos);
+      Griddle neighbor = game.grid.get(offset_pos);
       
       if (neighbor instanceof SmartGrabberBelt)
       {
@@ -314,15 +268,21 @@ class ConveyorTransformer extends Transformer
     }
     
     //check each nongriddle in reverse order
-    for (int i = ngs.size()-1; i >= 0; --i)
+    for (int i = previous_outputs.size()-1; i >= 0; --i)
     {
-      NonGriddle ng = ngs.get(i);
+      NonGriddle ng = previous_outputs.get(i);
       
-      if (interaction_outputs.hasValue(ng.name) && !neighbor_smartgrabber_ng_keys.hasValue(ng.name))
+      if (!neighbor_smartgrabber_ng_keys.hasValue(ng.name))
       {
-        conveying = true;
-        movement_progress = 0f;
-        conveying_ng = ng;
+        IntVec iv_offset = offset_from_quarter_turns(quarter_turns+3);
+        IntVec xy = get_grid_pos().add(iv_offset);
+        Griddle gg = game.grid.get(xy.x, xy.y);
+        
+        PVector start = center_center();
+        PVector end = start.copy().add(iv_offset.toPVec().mult(dim.x));
+        
+        comp.start_conveying(gg, start, end, ng);
+        
         return true;
       }
     }
@@ -330,11 +290,12 @@ class ConveyorTransformer extends Transformer
     return false;
   }
   
-  void remove_ng(NonGriddle ng) { if(ng == conveying_ng) { conveying = false; movement_progress = 0f; conveying_ng = null; } super.remove_ng(ng); }
+  void remove_ng(NonGriddle ng) { super.remove_ng(ng); previous_outputs.remove(ng); if (ng == comp.ng) comp.ng = null; }
   
-  void finish_transformation() { previous_interaction = current_interaction.copy(); start_conveying(); super.finish_transformation(); }
+  void finish_transformation() { super.finish_transformation(); previous_outputs = new ArrayList<NonGriddle>(ngs); start_conveying(); }
   
-  boolean can_accept_ng(NonGriddle n) { return !conveying && super.can_accept_ng(n); }
+  boolean can_accept_ng(NonGriddle n) { return comp.ng == null && previous_outputs.isEmpty() && super.can_accept_ng(n); }
   
-  void deserialize(JSONObject o) { super.deserialize(o); if (game instanceof GameSession) { modified_conveyor_speed = ((GameSession)game).rules.get_float("Speed:ConveyorBelt", base_conveyor_speed);  } }
+  void deserialize(JSONObject o) { super.deserialize(o); comp.deserialize(o.getJSONObject("component"));  }
+  JSONObject serialize() { JSONObject retval = super.serialize(); retval.setJSONObject("component", comp.serialize()); return retval; }
 }

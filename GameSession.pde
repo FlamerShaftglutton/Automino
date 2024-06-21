@@ -311,8 +311,8 @@ class GameSession extends GridGameFlowBase
   
   void create_new()
   {
-    int w = (int)random(10, 16);
-    int h = (int)random(10, 16);
+    int w = (int)random(10, 30);
+    int h = (int)random(10, 30);
     
     Rule rule = globals.ruleFactory.get_all_curses().filter_by_all_tags(new String[]{"basic", "recipe"}).get_random();
     rules = new RuleManager();

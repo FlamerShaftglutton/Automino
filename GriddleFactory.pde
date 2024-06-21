@@ -45,25 +45,27 @@ class GriddleFactory
     String type = template.getString("type","NullGriddle");
     switch (type)
     {
-      case "Player": case "PlayerGriddle": g = new PlayerGriddle(game);              break;
-      case "ConveyorBelt":                 g = new ConveyorBelt(game);               break;
-      case "ResourcePool":                 g = new ResourcePool(game);               break;
-      case "NullGriddle":                  g = new NullGriddle(game);                break;
-      case "EmptyGriddle":                 g = new EmptyGriddle(game);               break;
-      case "Griddle":                      g = new Griddle(game);                    break;
-      case "Transformer":                  g = new Transformer(game);                break;
-      case "GrabberBelt":                  g = new GrabberBelt(game);                break;
-      case "SmartGrabberBelt":             g = new SmartGrabberBelt(game);           break;
-      case "SwitchGrabberBelt":            g = new SwitchGrabberBelt(game);          break;
-      case "MetaActionCounter":            g = new MetaActionCounter(game);          break;
-      case "LevelEditorGriddle":           g = new LevelEditorGriddle(game);         break;
-      case "CountingOutputResourcePool":   g = new CountingOutputResourcePool(game); break;
-      case "RandomResourcePool":           g = new RandomResourcePool(game);         break;
-      case "TrashCompactor":               g = new TrashCompactor(game);             break;
-      case "ConveyorTransformer":          g = new ConveyorTransformer(game);        break;
-      case "CrossConveyorBelt":            g = new CrossConveyorBelt(game);          break;
-      case "WallGriddle":                  g = new WallGriddle(game);                break;
-      default:                             g = new NullGriddle(game);                break;
+      case "Player": case "PlayerGriddle": g = new PlayerGriddle(game);                break;
+      case "ConveyorBelt":                 g = new ConveyorBelt(game);                 break;
+      case "ResourcePool":                 g = new ResourcePool(game);                 break;
+      case "NullGriddle":                  g = new NullGriddle(game);                  break;
+      case "EmptyGriddle":                 g = new EmptyGriddle(game);                 break;
+      case "Griddle":                      g = new Griddle(game);                      break;
+      case "Transformer":                  g = new Transformer(game);                  break;
+      case "GrabberBelt":                  g = new GrabberBelt(game);                  break;
+      case "SmartGrabberBelt":             g = new SmartGrabberBelt(game);             break;
+      case "SwitchGrabberBelt":            g = new SwitchGrabberBelt(game);            break;
+      case "MetaActionCounter":            g = new MetaActionCounter(game);            break;
+      case "LevelEditorGriddle":           g = new LevelEditorGriddle(game);           break;
+      case "CountingResourcePool":         g = new CountingResourcePool(game);         break;
+      case "ConveyorCountingResourcePool": g = new ConveyorCountingResourcePool(game); break;
+      case "CountingOutputResourcePool":   g = new CountingOutputResourcePool(game);   break;
+      case "RandomResourcePool":           g = new RandomResourcePool(game);           break;
+      case "TrashCompactor":               g = new TrashCompactor(game);               break;
+      case "ConveyorTransformer":          g = new ConveyorTransformer(game);          break;
+      case "CrossConveyorBelt":            g = new CrossConveyorBelt(game);            break;
+      case "WallGriddle":                  g = new WallGriddle(game);                  break;
+      default:                             g = new NullGriddle(game);                  break;
     }
     
     

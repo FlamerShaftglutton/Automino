@@ -89,9 +89,9 @@ class CountingResourcePool extends ResourcePool
   
   CountingResourcePool(GridGameFlowBase game) { super(game); type = "CountingResourcePool"; ng_type = ""; }
   
-  boolean can_accept_ng(NonGriddle ng) { return ng_type.length() == 0 || super.can_accept_ng(ng); }
+  boolean can_accept_ng(NonGriddle ng) { return get_count() == 0 || ng_type.length() == 0 || super.can_accept_ng(ng); }
   
-  boolean receive_ng(NonGriddle ng) { if (!can_accept_ng(ng)) return false; if (ng_type.length() == 0) { ng_type = ng.name; ng_sprite = ng.shape; } game.destroy_ng(ng); ++count; return true; }
+  boolean receive_ng(NonGriddle ng) { if (!can_accept_ng(ng)) return false; if (!ng_type.equals(ng.name)) { ng_type = ng.name; ng_sprite = ng.shape; } game.destroy_ng(ng); ++count; return true; }
   
   NonGriddle produce_resource() { NonGriddle retval = null; if (count > 0) { retval = super.produce_resource(); --count; } return retval; }
   

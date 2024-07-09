@@ -67,6 +67,26 @@
 		],
 	},
 	{
+		"name": "Extra Fine",
+		"description": "Refiners are 40% slower.",
+		"type": "curse",
+		"tags": ["speed", "extract"],
+		"dependencies": [ ],
+		"mods": [
+			"multiply 0.6 to Speed:extract",
+		],
+	},
+	{
+		"name": "Forge Majeure",
+		"description": "Smelters are 30% slower.",
+		"type": "curse",
+		"tags": ["speed", "smelt"],
+		"dependencies": [ ],
+		"mods": [
+			"multiply 0.7 to Speed:smelt",
+		],
+	},
+	{
 		"name": "Dirty Ore",
 		"description": "Crushers now output tailings as well.",
 		"type": "curse",
@@ -77,7 +97,7 @@
 		],
 	},
 	{
-		"name": "Ironic",
+		"name": "Double the flavor",
 		"description": "You need to crush two Iron Ore to make Iron Powder.",
 		"type": "curse",
 		"tags": ["input", "Crusher", "iron"],
@@ -99,6 +119,34 @@
 			"add 'Cobalt Ore' to Resource:Random",
 			"add 'Cobalt Ore' to Resource:Random",
 			"add 'Cobalt Ore' to Resource:Random",
+		],
+	},
+	{
+		"name": "Ironic",
+		"description": "The resource line now carries extra iron.",
+		"type": "curse",
+		"tags": [ "resource", "iron" ],
+		"dependencies": [ "Cobalt Ingots" ],
+		"mods": [
+			"add 'Iron Ore' to Resource:Random",
+			"add 'Iron Ore' to Resource:Random",
+			"add 'Iron Ore' to Resource:Random",
+			"add 'Iron Ore' to Resource:Random",
+			"add 'Iron Ore' to Resource:Random",
+		],
+	},
+	{
+		"name": "Wasteful",
+		"description": "The resource line now carries tailings.",
+		"type": "curse",
+		"tags": [ "resource", "iron" ],
+		"dependencies": [ "Cobalt Ingots" ],
+		"mods": [
+			"add 'Tailings' to Resource:Random",
+			"add 'Tailings' to Resource:Random",
+			"add 'Tailings' to Resource:Random",
+			"add 'Tailings' to Resource:Random",
+			"add 'Tailings' to Resource:Random",
 		],
 	},
 	
@@ -142,6 +190,54 @@
 		"dependencies": [ ],
 		"mods": [
 			"multiply 1.5 to Speed:extract",
+		],
+	},
+	{
+		"name": "Nice moves",
+		"description": "The last reward is always a conveyor belt.",
+		"type": "boon",
+		"tags": ["reward", "conveyor"],
+		"dependencies": [ ],
+		"mods": [ "add 1 to Reward:conveyor" ],
+	},
+	{
+		"name": "Gotta go fast",
+		"description": "Conveyor belts are twice as fast.",
+		"type": "boon",
+		"tags": [ "speed", "conveyor" ],
+		"dependencies": [ ],
+		"mods": [ "multiply 2 to Speed:ConveyorBelt" ],
+	},
+	{
+		"name": "All that glitters",
+		"description": "The resource line now carries extra gold specks.",
+		"type": "boon",
+		"tags": [ "resource", "gold" ],
+		"dependencies": [ ],
+		"mods": [
+			"add 'Gold Speck' to Resource:Random",
+			"add 'Gold Speck' to Resource:Random",
+			"add 'Gold Speck' to Resource:Random",
+		],
+	},
+	{
+		"name": "Crushing it",
+		"description": "Crushers are 50% faster.",
+		"type": "boon",
+		"tags": ["speed", "Crusher"],
+		"dependencies": [ ],
+		"mods": [
+			"multiply 1.5 to Speed:crush",
+		],
+	},
+	{
+		"name": "Fired Up",
+		"description": "Smelters are 50% faster.",
+		"type": "boon",
+		"tags": ["speed", "Smelter"],
+		"dependencies": [ ],
+		"mods": [
+			"multiply 1.5 to Speed:smelt",
 		],
 	},
 ]

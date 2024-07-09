@@ -290,11 +290,14 @@ class GameSession extends GridGameFlowBase
           println("Couldn't find a griddle with the 'basic' tag that had the required ng_type of '" + output + "'. No CountingOutputResourcePool with this operation exists on the board, so the player will not be able to win.");
         }
         
-        for (int x = 2; x < grid.w - 3; ++x)
+        boolean output_placed = false;
+        
+        while (!output_placed)
         {
+          int x = (int)random(2,grid.w - 3);
           Griddle existing_griddle = grid.get(x, grid.h - 1);
           
-          if (!(existing_griddle instanceof CountingOutputResourcePool))
+          if (existing_griddle instanceof WallGriddle)
           {
             CountingOutputResourcePool corp = (CountingOutputResourcePool)new_output;
             WinCondition wc = new WinCondition(output, 0, corp);
@@ -302,7 +305,7 @@ class GameSession extends GridGameFlowBase
             win_conditions.add(wc);
             
             grid.set(x,grid.h - 1, corp);
-            break;
+            output_placed = true;
           }
         }
       }
@@ -325,14 +328,14 @@ class GameSession extends GridGameFlowBase
     
     for (int y = 1; y < h; ++y)
     {
-      gg.set(0,  y,new WallGriddle());
-      gg.set(w-1,y,new WallGriddle());
+      gg.set(0,  y,globals.gFactory.create_griddle("WallGriddle", this));
+      gg.set(w-1,y,globals.gFactory.create_griddle("WallGriddle", this));
     }
-
-    gg.set(1,h-1, globals.gFactory.create_griddle("GoldIngotOutput", this));
     
-    for (int x = 2; x < w - 1; ++x)
-      gg.set(x, h-1, new WallGriddle());
+    for (int x = 1; x < w - 1; ++x)
+      gg.set(x, h-1, globals.gFactory.create_griddle("WallGriddle", this));
+    
+    gg.set((int)random(2,w-3),h-1, globals.gFactory.create_griddle("GoldIngotOutput", this));
     
     ov = JSONObject.parse("{ 'resources': { 'Iron Ore': 5, 'Cobalt Ore': 5, 'Gold Speck': 1 } }");
     gg.set(0,0,globals.gFactory.create_griddle("RandomResourcePool", ov, this));
@@ -344,7 +347,12 @@ class GameSession extends GridGameFlowBase
     gg.set(w - 1, 0, globals.gFactory.create_griddle("TrashCompactor",ov, this));
     
     for (int y = 1; y < h - 6; ++y)
-      gg.set(w - 1, y, new WallGriddle(this));
+      gg.set(w - 1, y, globals.gFactory.create_griddle("WallGriddle", this));
+      
+    //add a random number of walls as well
+    int num_extra_walls = (int)random(1, w * h / 8);
+    for (int r = 0; r < num_extra_walls; ++r)
+      gg.set((int)random(2,w - 2), (int)random(2,h-2), globals.gFactory.create_griddle("WallGriddle", this));
     
     player = new Player(this);
             
@@ -375,10 +383,12 @@ class GameSession extends GridGameFlowBase
     for (int i = 0; i < rewards.size(); ++i)
     {
       RewardGriddle rg = rewards.get(i);
+      String type_name;
       
-      int p = (int)random(types.size());
-      
-      String type_name = types.get(p);
+      if (i == rewards.size() - 1 && rules.get_int("Reward:conveyor") > 0)
+        type_name = "ConveyorBelt";
+      else
+        type_name = types.get((int)random(types.size()));
       
       if (i >= 5 - upgrades)
       {
@@ -504,7 +514,7 @@ class GameSession extends GridGameFlowBase
         Griddle tgg = tg.get(x,y);
         
         if (tgg instanceof WallGriddle)
-          le_grid.set(x,y,new WallGriddle(this));
+          le_grid.set(x,y,globals.gFactory.create_griddle("WallGriddle", this));
         else if (tgg instanceof CountingOutputResourcePool)
         {
           CountingOutputResourcePool output = new CountingOutputResourcePool(this);
@@ -551,10 +561,10 @@ class GameSession extends GridGameFlowBase
       {
         RewardGriddle rg = (RewardGriddle)tgg;
         
+        LevelEditorGriddle leg = new LevelEditorGriddle(this);
+        
         if (!rg.finished)
         {
-          LevelEditorGriddle leg = new LevelEditorGriddle(this);
-          
           JSONObject tggo = globals.gFactory.create_griddle(rg.reward_griddle_name, this).serialize();
           
           LevelEditorNonGriddle leng = globals.ngFactory.create_le_ng(tggo.getString("type"));
@@ -563,12 +573,12 @@ class GameSession extends GridGameFlowBase
           leng.visible = false;
           register_ng(leng);
           leg.receive_ng(leng);
-          
-          leg.locked = false;
-          leg.traversable = true;
-          
-          le_grid.set(tg.w - 1,y,leg);
         }
+        
+        leg.locked = false;
+        leg.traversable = true;
+        
+        le_grid.set(tg.w - 1,y,leg);
       }
     }
     

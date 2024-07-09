@@ -30,7 +30,7 @@
 		"sprite": "freezer",
 		"ng_type": "",
 		"tags": [ "reward" ],
-		"upgrades": [ "ConveyorCountingResourcePool" ],
+		"upgrades": [ "ConveyorCountingResourcePool", "CobaltOrePool", "IronOrePool" ],
 	},
 	{
 		"type": "ConveyorCountingResourcePool",

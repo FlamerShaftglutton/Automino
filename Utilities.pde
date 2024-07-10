@@ -137,3 +137,70 @@ IntVec offset_from_angle(float angle)
 {
   return offset_from_quarter_turns(int(0.01f + (TWO_PI - angle) / HALF_PI));
 }
+
+//returns a color with full brightness, about 3/5 saturation, and a random hue. This should turn out slightly muted/pastel instead of the harshness of a truly random color.
+color random_color()
+{
+  colorMode(HSB);
+  
+  int random_hue = (int)random(255);
+  
+  color retval = color(random_hue, 150, 255);
+  
+  colorMode(RGB);
+  
+  return retval;
+}
+
+//returns a random color within a hue range of the supplied color. So if you supply purple and 0.05 as the range you'll still get purple, but slightly different. 0.5 would be a full swing of any hue. Uses the same saturation and brightness as the supplied color.
+color random_color(color midpoint, float max_range)
+{
+  colorMode(HSB);
+  
+  int random_hue = (255 + (int)hue(midpoint) + (int)random(-max_range * 255f, max_range * 255f)) & 255;
+  
+  color retval = color(random_hue, saturation(midpoint), brightness(midpoint));
+  
+  colorMode(RGB);
+  
+  return retval;
+}
+
+float text_size_to_fit(String t, float w)
+{
+  textSize(100);
+  
+  float tw = textWidth(t);
+  
+  return 100 / (tw / w);
+}
+
+//using the current textSize, word-wrap a string so it doesn't overflow the width given. Note that it does not handle width-exceeding single words gracefully (it actually loses the bulk of the letters). So don't do that.
+StringList wrap_string(String s, float w)
+{
+  StringList retval = new StringList();
+  
+  int start_index = 0;
+  int end_index = 1;
+  int previous_index;
+  
+  while (end_index > 0 && end_index < s.length() - 1)
+  {
+    previous_index = end_index;
+    end_index = s.indexOf(' ', previous_index+1);
+    
+    if (end_index < 0)
+      end_index = s.length() - 1;
+    
+    if (textWidth(s.substring(start_index, end_index)) > w)
+    {
+      retval.append(s.substring(start_index, previous_index));
+      start_index = previous_index + 1;
+      end_index = start_index;
+    }
+  }
+  
+  retval.append(s.substring(start_index));
+  
+  return retval;
+}

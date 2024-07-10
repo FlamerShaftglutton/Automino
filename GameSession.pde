@@ -75,7 +75,7 @@ class GameSession extends GridGameFlowBase
   {
     if (message.target.equals("lose"))
       globals.game.pop();
-    else if (message.target.equals("upgrade") && to_upgrade != null)
+    else if (message.target.equals("upgrade") && !message.value.equals("cancel") && to_upgrade != null)
     {
       Griddle griddy = globals.gFactory.create_griddle(message.value, this);
       
@@ -115,13 +115,13 @@ class GameSession extends GridGameFlowBase
       
       if (upgrades.size() > 0)
       {
-        UpgradeMenuGameFlow upmenu = new UpgradeMenuGameFlow();
+        CardPickMenu cpm = new CardPickMenu();
+        for (String s : upgrades)
+          cpm.addCard(s, globals.gFactory.get_description(s), globals.sprites.get_sprite(globals.gFactory.get_spritename(s)));
         
-        upmenu.options = upgrades;
+        cpm.addCard("Cancel", "Return without upgrading or spending your gold");
         
-        upmenu.load();
-        
-        globals.game.push(upmenu);
+        globals.game.push(cpm, new Message("upgrade","Choose an upgrade"));
       }
     }
     if (message.target.equals("info"))
@@ -314,17 +314,16 @@ class GameSession extends GridGameFlowBase
   
   void create_new()
   {
-    int w = (int)random(10, 30);
-    int h = (int)random(10, 30);
+    int w = (int)random(7, 16);
+    int h = (int)random(7, 16);
     
-    Rule rule = globals.ruleFactory.get_all_curses().filter_by_all_tags(new String[]{"basic", "recipe"}).get_random();
+    Rule rule = globals.ruleFactory.get_all_curses().filter_by_all_tags("basic", "recipe").get_random();
     rules = new RuleManager();
     rules.put(rule);
     
     JSONObject ov = new JSONObject();
     
     Grid gg = new Grid(new PVector(20,20), new PVector(width * 0.75f, height - 40),w,h, this);
-    //Grid gg = new Grid(grid.pos.copy(), grid.dim.copy(), w, h, this);
     
     for (int y = 1; y < h; ++y)
     {
@@ -469,24 +468,27 @@ class GameSession extends GridGameFlowBase
     //get a boon every 10 rounds
     if (rounds_completed % 10 == 0)
     {
-      RuleMenuGameFlow rmgf = new RuleMenuGameFlow();
-      rmgf.ruletype = RuleType.BOON;
-      rmgf.options = rules.get_available_boons().shuffle().top(3).names();
-      rmgf.load();
+      CardPickMenu cpm = new CardPickMenu();
+      RuleList options = rules.get_available_boons().top(3);
+      color boon_color = #f6edba;
+      for (int i = 0; i < options.size(); ++i)
+        cpm.addCard(options.get(i).name, options.get(i).description, random_color(boon_color, 0.05));
       
-      globals.game.push(rmgf, new Message("boon", "Congrats! Choose a boon."));
+      globals.game.push(cpm, new Message("rule", "Congrats! Choose a boon."));
     }
     
     //get a curse every 4 rounds (ignored during boon rounds, such as round 20 and 40)
     else if (rounds_completed % 4 == 0)
     {
-      RuleMenuGameFlow rmgf = new RuleMenuGameFlow();
-      rmgf.ruletype = RuleType.CURSE;
-      rmgf.options = rules.get_available_curses().top(3).names();
-      rmgf.load();
+      CardPickMenu cpm = new CardPickMenu();
+      RuleList options = rules.get_available_curses().top(3);
+      color curse_color = #babaf6;
+      for (int i = 0; i < options.size(); ++i)
+        cpm.addCard(options.get(i).name, options.get(i).description, random_color(curse_color, 0.05));
       
-      globals.game.push(rmgf, new Message("curse", "Congrats! Choose a curse."));
+      globals.game.push(cpm, new Message("rule", "Congrats! Choose a curse."));
     }
+    
     globals.game.push(new MessageScreenGameFlow(), new Message("win","You won!")); 
     
     player.ng = null; 

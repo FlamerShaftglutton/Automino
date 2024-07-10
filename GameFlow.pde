@@ -33,6 +33,162 @@ class GameFlowManager
   }
 }
 
+class CardPickMenu implements GameFlow
+{
+  ArrayList<CardPickMenuCard> cards = new ArrayList<CardPickMenuCard>();
+  color background_color = color(200);
+  String title = "";
+  int selected_index = 0;
+  String return_target;
+  
+  void addCard(CardPickMenuCard card) { cards.add(card); }
+  void addCard(String title, String description, String return_value, color bg, color text_color, PShape sprite) { addCard(new CardPickMenuCard(title, description, return_value, bg, text_color,sprite)); }
+  void addCard(String title, String description, String return_value, color bg, color text_color) { addCard(new CardPickMenuCard(title, description, return_value, bg, text_color)); }
+  void addCard(String title, String description, color bg, PShape sprite) { addCard(new CardPickMenuCard(title, description, title, bg, color(0,0,0,255),sprite)); }
+  void addCard(String title, String description, color bg) { addCard(new CardPickMenuCard(title, description, title, bg, color(0,0,0,255))); }
+  void addCard(String title, String description, String return_value, PShape sprite) { addCard(title, description, return_value, random_color(), color(0,0,0,255),sprite); }  
+  void addCard(String title, String description, String return_value) { addCard(title, description, return_value, random_color(), color(0,0,0,255)); }
+  void addCard(String title, String description, PShape sprite) { addCard(title, description, title,sprite); }
+  void addCard(String title, String description) { addCard(title, description, title); }
+  void addCard(String title, PShape sprite) { addCard(title, "",sprite); }
+  void addCard(String title) { addCard(title, ""); }
+  void addCards(StringList titles) { for (String s : titles) addCard(s); }
+  
+  void update()
+  {
+    if (globals.keyboard.is_key_released('y') || globals.keyboard.is_key_released('x') || globals.keyboard.is_key_released('q'))
+      globals.game.pop();
+    else if (globals.keyboard.is_coded_key_pressed(LEFT) && selected_index > 0)
+    {
+      --selected_index;
+      redistribute();
+    }
+    else if (globals.keyboard.is_coded_key_pressed(RIGHT) && selected_index < cards.size() - 1)
+    {
+      ++selected_index;
+      redistribute();
+    }
+  }
+  
+  void redistribute()
+  {
+    PVector card_dim = new PVector(width / 6f, height / 4f);
+    
+    for (CardPickMenuCard c : cards)
+      c.dim = card_dim.copy();
+    
+    //center and expand the selected card
+    CardPickMenuCard selected_card = cards.get(selected_index);
+    selected_card.dim = card_dim.copy().mult(1.5f);
+    selected_card.pos = new PVector(width / 2f, height / 2f);
+    
+    //now do the left side
+    PVector lpos = new PVector(card_dim.x, height /2f);
+    PVector rpos = selected_card.pos.copy().sub(selected_card.dim.x,0f);
+    if (selected_index == 1)
+      cards.get(0).pos = PVector.lerp(lpos, rpos, 0.5f);
+    else for (int x = 0; x < selected_index; ++x)
+      cards.get(x).pos = PVector.lerp(lpos, rpos, x / float(selected_index-1));
+    
+    //finally do the right side
+    lpos = selected_card.pos.copy().add(selected_card.dim.x, 0f);
+    rpos = new PVector(width - card_dim.x, height / 2f);
+    
+    if (selected_index == cards.size() - 2)
+      cards.get(cards.size() - 1).pos = PVector.lerp(lpos, rpos, 0.5f);
+    else for (int x = selected_index + 1; x < cards.size(); ++x)
+      cards.get(x).pos = PVector.lerp(lpos, rpos, (x - selected_index - 1) / float(cards.size() - selected_index - 2));
+  }
+  
+  void draw()
+  {
+    background(background_color);
+    
+    if (title.length() > 0)
+    {
+      fill(0);
+      textSize(72);
+      textAlign(CENTER,CENTER);
+      text(title, width * 0.5f, height * 0.2f);
+    }
+    
+    for (int x = 0; x < selected_index; ++x)
+      cards.get(x).draw();
+      
+    for (int x = cards.size() - 1; x > selected_index; --x)
+      cards.get(x).draw();
+      
+    CardPickMenuCard selected_card = cards.get(selected_index);
+    selected_card.draw();
+    
+    if (selected_card.description.length() > 0)
+    {
+      fill(0);
+      int text_size = 24;
+      textSize(text_size);
+      textAlign(CENTER,CENTER);
+      StringList chunks = wrap_string(selected_card.description, width * 0.8f);
+      
+      for (int i = 0; i < chunks.size(); ++i)
+        text(chunks.get(i), width * 0.5f, height * 0.8f + text_size * i * 1.1f);
+    }
+  }
+  
+  void save() { }
+  void load() { redistribute(); }
+  Message exit() { return new Message(return_target, cards.get(selected_index).return_value); }
+  void onFocus(Message message) { redistribute(); if (title == null || title.length() == 0) title = message.value; if (return_target == null || return_target.length() == 0) return_target = message.target; if (return_target.length() == 0) return_target = "select"; }
+
+  class CardPickMenuCard
+  {
+    String title;
+    String description;
+    String return_value;
+    color bg;
+    color text_color;
+    PVector pos;
+    PVector dim;
+    PShape sprite;
+    
+    CardPickMenuCard(String title, String description, String return_value, color bg, color text_color, PShape sprite)
+    {
+      this.title = title;
+      this.description = description;
+      this.return_value = return_value;
+      this.bg = bg;
+      this.text_color = text_color;
+      this.sprite = sprite;
+      
+      pos = new PVector(0,0);
+      dim = new PVector(100,100);
+    }
+    
+    CardPickMenuCard(String title, String description, String return_value, color bg, color text_color) { this(title,description,return_value,bg,text_color,null); }
+    
+    void draw()
+    {
+      fill(bg);
+      strokeWeight(3f);
+      stroke(255);
+      rect(pos.x - dim.x * 0.5f, pos.y - dim.y * 0.5f, dim.x, dim.y);
+      
+      float text_y_pos = pos.y;
+      
+      if (sprite != null)
+      {
+        text_y_pos -= dim.y * 0.4f;
+        
+        shape(sprite, pos.x - dim.x * 0.4f, pos.y - dim.y * 0.3f, dim.x * 0.8f, dim.x * 0.8f);
+      }
+      
+      textSize(text_size_to_fit(title, dim.x * 0.9f));
+      textAlign(CENTER,CENTER);
+      fill(text_color);
+      text(title, pos.x, text_y_pos);
+    }
+  }
+}
+
 class GridGameFlowBase implements GameFlow
 {
   Grid grid;// = new Grid(new PVector(20f,20f), new PVector(width * 0.75f, height - 40f), this);
@@ -180,152 +336,6 @@ class GridGameFlowBase implements GameFlow
   void destroy_ng(NonGriddle ng)
   {
     nongriddles_to_delete.add(ng);
-  }
-}
-
-class UpgradeMenuGameFlow extends GridGameFlowBase
-{
-  StringList options = new StringList();
-  Message outgoing_message = new Message("cancel","");
-  
-  void handle_message(Message message)
-  {
-    if (message.target.equals("select"))
-      outgoing_message = new Message("upgrade",message.value);
-    
-    if (message.target.equals("select") || message.target.equals("cancel"))
-      globals.game.pop();
-      
-    if (message.target.equals("info"))
-      toasts.add(new Toast(message.value, 5f));
-  }
-  
-  Message exit() { return outgoing_message; }
-  
-  void load()
-  {
-    int w,h;
-    
-    if (options.size() == 0)
-      w = h = 5;
-    else
-    {
-      w = (options.size() + 1) * 2 + 1;
-      h = 5;
-    }
-    
-    grid = new Grid(new PVector(100,100), new PVector(width - 200, height - 200), w, h, this);
-    
-    int x = 1;
-    for (int i = 0; i < options.size(); ++i, x+= 2)
-    {
-      String option = options.get(i);
-      
-      MetaActionCounter mac = new MetaActionCounter(this);
-      mac.traversable = false;
-      mac.display_string = "";
-      mac.action = "select";
-      mac.parameters.append(option);
-      mac.spritename = globals.gFactory.get_spritename(option);
-      mac.sprite = globals.sprites.get_sprite(mac.spritename);
-      
-      grid.set(x, 2, mac);
-    }
-    
-    MetaActionCounter cmac = new MetaActionCounter(this);
-    cmac.traversable = false;
-    cmac.template = "Cancel";
-    cmac.action = "cancel";
-    cmac.spritename = "null";
-    cmac.sprite = globals.sprites.get_sprite("null");
-    
-    grid.set(x, 2, cmac);
-    
-    player = new Player(this);
-    player.spritename = globals.gFactory.get_spritename("Player");
-    player.sprite = globals.sprites.get_sprite(player.spritename);
-    player.rot = HALF_PI;
-    player.pos = grid.absolute_pos_from_grid_pos(new IntVec(1 + w / 2, 4));
-    player.dim = grid.get_square_dim();
-    
-    grid.apply_alterations();
-  }
-}
-
-class RuleMenuGameFlow extends GridGameFlowBase
-{
-  StringList options = new StringList();
-  Message outgoing_message = new Message("cancel","");
-  RuleType ruletype = RuleType.CURSE;
-  
-  void handle_message(Message message)
-  {
-    if (message.target.equals("win"))
-    {
-      outgoing_message = new Message("win","");
-      globals.game.pop();
-    }
-    
-    if (message.target.equals("select"))
-    {
-      outgoing_message = new Message("rule", message.value);
-      globals.game.pop();
-    }
-    
-    if (message.target.equals("info"))
-      toasts.add(new Toast(message.value, 5f));
-  }
-  
-  Message exit() { return outgoing_message; }
-  
-  void load()
-  { 
-    int w,h;
-    
-    if (options.size() == 0)
-      w = h = 5;
-    else
-    {
-      w = options.size() * 2 + 1;
-      h = 5;
-    }
-    
-    grid = new Grid(new PVector(50,50), new PVector(width - 100, height - 100), w, h, this);
-    
-    
-    if (options.size() == 0)
-    {
-      globals.game.push(new MessageScreenGameFlow(), new Message("win","There are no curses or boons left. You won the entire game! Please quit.")); 
-      return;
-    }
-    
-    int x = 1;
-    for (int i = 0; i < options.size(); ++i, x+= 2)
-    {
-      String option = options.get(i);
-      
-      MetaActionCounter mac = new MetaActionCounter(this);
-      mac.traversable = false;
-      Rule rr = globals.ruleFactory.get_rule(option);
-      mac.display_string = rr.name + "\n" + rr.description;
-      mac.action = "select";
-      mac.parameters.append(option);
-      mac.spritename = ruletype == RuleType.CURSE ? "curse" : "boon";
-      mac.sprite = globals.sprites.get_sprite(mac.spritename);
-      mac.dim = grid.get_square_dim();
-      mac.dim.y *= 2f;
-      
-      grid.set(x, 2, mac);
-    }
-    
-    player = new Player(this);
-    player.spritename = globals.gFactory.get_spritename("Player");
-    player.sprite = globals.sprites.get_sprite(player.spritename);
-    player.rot = HALF_PI;
-    player.pos = grid.absolute_pos_from_grid_pos(new IntVec(1 + w / 2, 4));
-    player.dim = grid.get_square_dim();
-    
-    grid.apply_alterations();
   }
 }
 

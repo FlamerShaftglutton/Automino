@@ -478,7 +478,7 @@ class GameSession extends GridGameFlowBase
     }
     
     //get a curse every 4 rounds (ignored during boon rounds, such as round 20 and 40)
-    else if (rounds_completed % 1 == 0)//DEBUG
+    else if (rounds_completed % 4 == 0)
     {
       CardPickMenu cpm = new CardPickMenu();
       RuleList options = rules.get_available_curses().top(3);

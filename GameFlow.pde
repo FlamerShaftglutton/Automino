@@ -31,6 +31,9 @@ class GameFlowManager
     else
       active().onFocus(message);
   }
+  
+  GameFlow get(int i) { if (i >= size() || i < 0) return null; return flows.get(i); }
+  int size() { return flows.size(); }
 }
 
 class CardPickMenu implements GameFlow
@@ -54,9 +57,13 @@ class CardPickMenu implements GameFlow
   void addCard(String title) { addCard(title, ""); }
   void addCards(StringList titles) { for (String s : titles) addCard(s); }
   
+  void handle_card_select() { globals.game.pop(); }
+  
   void update()
   {
-    if (globals.keyboard.is_key_released('y') || globals.keyboard.is_key_released('x') || globals.keyboard.is_key_released('q'))
+    if (globals.keyboard.is_key_released('y') || globals.keyboard.is_key_released('x'))
+      handle_card_select();
+    else if (globals.keyboard.is_key_released('q'))
       globals.game.pop();
     else if (globals.keyboard.is_coded_key_pressed(LEFT) && selected_index > 0)
     {
@@ -189,6 +196,65 @@ class CardPickMenu implements GameFlow
   }
 }
 
+class PauseMenu extends CardPickMenu
+{
+  void load()
+  {
+    title = "Paused";
+    return_target = "resume";
+    selected_index = 1;
+    
+    cards = new ArrayList<CardPickMenuCard>();
+    color rc = random_color();
+    
+    addCard("Resume","", random_color(rc, 0.1));
+    addCard("Rules","", random_color(rc, 0.1));
+    addCard("Quit","", random_color(rc, 0.1));
+    
+    super.load();
+  }
+  
+  void onFocus(Message message) { load(); } 
+  
+  void handle_card_select()
+  {
+    switch (cards.get(selected_index).title)
+    {
+      case "Resume": globals.game.pop(); break;
+      case "Quit": return_target = "quit"; globals.game.pop(); break;
+      case "Rules":
+        //get the rule list by crawling up the game stack until we find the GameSession. Not very elegant, but it's probably better than passing the list around.
+        RuleList rules = null;
+        
+        for (int i = globals.game.size() - 2; i >= 0; --i)
+        {
+          GameFlow gf = globals.game.get(i);
+          
+          if (gf instanceof GameSession)
+          {
+            rules = ((GameSession)gf).rules.get_rules();
+            break;
+          }
+        }
+        
+        if (rules == null)
+        {
+          println("Something's messed up with the Rules button in the pause menu.");
+          return;
+        }
+        
+        CardPickMenu cpm = new CardPickMenu();
+        
+        for (Rule r : rules.rules)
+          cpm.addCard(r.name,r.description, r.type == RuleType.CURSE ? random_color(#babaf6, 0.03) : random_color(#f6edba, 0.03));
+        
+        globals.game.push(cpm, new Message("none", "Active Rules"));
+        
+      break;
+    }
+  }
+}
+
 class GridGameFlowBase implements GameFlow
 {
   Grid grid;// = new Grid(new PVector(20f,20f), new PVector(width * 0.75f, height - 40f), this);
@@ -291,7 +357,7 @@ class GridGameFlowBase implements GameFlow
   
   void deserialize(JSONObject root)
   {    
-    Grid gg = new Grid(new PVector(20,20), new PVector(width * 0.75f, height - 40), this);
+    Grid gg = new Grid(new PVector(20,20), new PVector(width - 40f, height - 40), this);
     
     gg.deserialize(root.getJSONObject("grid"), this);
     

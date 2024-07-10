@@ -7,51 +7,17 @@ class GameSession extends GridGameFlowBase
   Griddle to_upgrade = null;
   RuleManager rules = new RuleManager();
   
-  void draw()
-  {
-    super.draw();
-    
-    //draw the rules
-    float outer_margin = 10f;
-    float inner_margin =  5f;
-    PVector dim = new PVector(width * 0.2f - 2f * outer_margin, 140f);
-    PVector pos = new PVector(width - outer_margin - dim.x, outer_margin);
-    
-    for (Rule rule : rules.get_rules().rules)
-    {
-      if (rule.type == RuleType.CURSE)
-        fill(#babaf6);
-      else
-        fill(#f6edba);
-      
-      stroke(#000000);
-      strokeWeight(2);
-      
-      rect(pos.x, pos.y, dim.x, dim.y);
-      
-      fill(#000000);
-      textSize(24f);
-      textAlign(CENTER,TOP);
-      
-      text(rule.name, pos.x + dim.x * 0.5f, pos.y + inner_margin); 
-      
-      textSize(16f);
-      textAlign(LEFT,TOP);
-      
-      text(rule.description, pos.x + inner_margin, pos.y + 24f + inner_margin + inner_margin, dim.x - inner_margin - inner_margin, dim.y - inner_margin - inner_margin - 24f - inner_margin);
-      
-      pos.y += dim.y + outer_margin;
-    }
-  }
-  
   void update()
   {
     super.update();
     
+    if (globals.keyboard.is_key_released('p')) 
+      globals.game.push(new PauseMenu());
+    
     switch (state)
     {
       case STARTING_PLAYLEVEL: start_level(); break;
-      case PLAYLEVEL: check_for_level_end(); if (globals.keyboard.is_key_released('q')) globals.game.pop(); break;
+      case PLAYLEVEL: check_for_level_end(); break;
       case LEVELEDITOR: level_editor(); break;
       case WON_PLAYLEVEL: win_level(); break;
       case LOST_PLAYLEVEL: lose_level(); break;
@@ -73,7 +39,7 @@ class GameSession extends GridGameFlowBase
   
   void onFocus(Message message)
   {
-    if (message.target.equals("lose"))
+    if (message.target.equals("lose") || message.target.equals("quit"))
       globals.game.pop();
     else if (message.target.equals("upgrade") && !message.value.equals("cancel") && to_upgrade != null)
     {

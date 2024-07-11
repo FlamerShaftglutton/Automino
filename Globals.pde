@@ -8,10 +8,11 @@ class Globals
   RuleFactory ruleFactory = new RuleFactory();
   GameFlowManager game = new GameFlowManager();
   MessageQueue messages = new MessageQueue();
+  ProfileManager profiles = new ProfileManager();
   
   KeyboardManager keyboard = new KeyboardManager();
   
-  boolean mouseReleased = false;
+  //boolean mouseReleased = false;
 }
 
 
@@ -117,6 +118,81 @@ class KeyboardManager
       if (codedkeystates.get(c) == KeyState.PRESSED)
         codedkeystates.put(c, KeyState.HELD);
     }
+  }
+}
+
+class ProfileManager
+{
+  ArrayList<Profile> profiles = new ArrayList<Profile>();
+  int current_profile = 0;
+  String save_path;
+  
+  void load(String json_file)
+  {
+    JSONArray root = loadJSONArray(json_file);
+    
+    for (int i = 0; i < root.size(); ++i)
+    {
+      Profile p = new Profile();
+      JSONObject o = root.getJSONObject(i);
+      p.deserialize(o);
+      profiles.add(p);
+      
+      if (o.getBoolean("default",false))
+        current_profile = i;
+    }
+    
+    save_path = json_file;
+  }
+  
+  void save()
+  {
+    JSONArray root = new JSONArray();
+    
+    for (int i = 0; i < profiles.size(); ++i)
+    {
+      JSONObject o = profiles.get(i).serialize(); 
+      if (i == current_profile)
+        o.setBoolean("default",true);
+      
+      root.append(o);
+    }
+    
+    saveJSONArray(root, save_path);
+  }
+  
+  Profile current() { return profiles.get(current_profile); }
+  Profile get(String name) { for (Profile p : profiles) { if (p.name.equals(name)) return p; } return null; }
+  Profile get(int index) { return profiles.get(index); }
+  
+  StringList get_names() { StringList retval = new StringList(); for (Profile p : profiles) retval.append(p.name); return retval; }
+  
+  int size() { return profiles.size(); }
+}
+
+class Profile
+{
+  String name;
+  String sprite;
+  StringList discovered_rules;
+  int highest_round;
+  
+  void deserialize(JSONObject o)
+  {
+    name = o.getString("name","nullname");
+    sprite = o.getString("sprite", "player red");
+    discovered_rules = getStringList("discovered_rules", o);
+    highest_round = o.getInt("highest_round",0);
+  }
+  
+  JSONObject serialize()
+  {
+    JSONObject o = new JSONObject();
+    o.setString("name", name);
+    o.setString("sprite", sprite);
+    o.setInt("highest_round", highest_round);
+    o.setJSONArray("discovered_rules", new JSONArray(discovered_rules));
+    return o;
   }
 }
 

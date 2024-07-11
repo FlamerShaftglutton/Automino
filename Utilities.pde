@@ -31,12 +31,16 @@ StringList getStringList(String field, JSONObject o)
   if (of instanceof String)
     retval.append((String)of);
   else if (of instanceof JSONArray)
+    retval = ((JSONArray)of).toStringList();
+  
+  /*
   {
     JSONArray a = (JSONArray)of;
     
     for (int i = 0; i < a.size(); ++i)
       retval.append(a.getString(i));
   }
+  */
   
   return retval;
 }

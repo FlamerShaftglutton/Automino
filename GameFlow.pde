@@ -385,8 +385,8 @@ class GridGameFlowBase implements GameFlow
         if (gr instanceof PlayerGriddle)
         {
           player = new Player(this);
-          player.spritename = gr.spritename;
-          player.sprite = gr.sprite;
+          player.spritename = globals.profiles.current().sprite;
+          player.sprite = globals.sprites.get_sprite(player.spritename);
           player.pos = gg.absolute_pos_from_grid_pos(new IntVec(x,y));
           player.dim = gg.get_square_dim();
           

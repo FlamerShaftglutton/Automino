@@ -198,18 +198,34 @@ class CardPickMenu implements GameFlow
 
 class PauseMenu extends CardPickMenu
 {
+  GameSession parent;
+  
+  PauseMenu(GameSession parent) { this.parent = parent; }
+  
+  void update()
+  {
+    super.update();
+    
+    if (globals.keyboard.is_key_released('d') && globals.keyboard.is_coded_key_held(36))
+    {
+      addCard("Cheat","Give yourself 100 gold",color(#FF0000));
+      redistribute();
+    }
+  }
+  
   void load()
   {
     title = "Paused";
     return_target = "resume";
+    String round_reminder = "Round " + (parent.rounds_completed + 1);
     selected_index = 1;
     
     cards = new ArrayList<CardPickMenuCard>();
     color rc = random_color();
     
-    addCard("Resume","", random_color(rc, 0.1));
-    addCard("Rules","", random_color(rc, 0.1));
-    addCard("Quit","", random_color(rc, 0.1));
+    addCard("Resume",round_reminder, random_color(rc, 0.1));
+    addCard("Rules",round_reminder, random_color(rc, 0.1));
+    addCard("Quit",round_reminder, random_color(rc, 0.1));
     
     super.load();
   }
@@ -223,34 +239,30 @@ class PauseMenu extends CardPickMenu
       case "Resume": globals.game.pop(); break;
       case "Quit": return_target = "quit"; globals.game.pop(); break;
       case "Rules":
-        //get the rule list by crawling up the game stack until we find the GameSession. Not very elegant, but it's probably better than passing the list around.
-        RuleList rules = null;
-        
-        for (int i = globals.game.size() - 2; i >= 0; --i)
-        {
-          GameFlow gf = globals.game.get(i);
-          
-          if (gf instanceof GameSession)
-          {
-            rules = ((GameSession)gf).rules.get_rules();
-            break;
-          }
-        }
-        
-        if (rules == null)
-        {
-          println("Something's messed up with the Rules button in the pause menu.");
-          return;
-        }
-        
         CardPickMenu cpm = new CardPickMenu();
         
-        for (Rule r : rules.rules)
+        for (Rule r : parent.rules.rules.rules)
           cpm.addCard(r.name,r.description, r.type == RuleType.CURSE ? random_color(#babaf6, 0.03) : random_color(#f6edba, 0.03));
         
         globals.game.push(cpm, new Message("none", "Active Rules"));
         
-      break;
+        break;
+      case "Cheat":
+        Grid gg = parent.grid;
+        
+        for (int x = 1; x < gg.w; ++x)
+        {
+          Griddle griddy = gg.get(x,gg.h-1);
+          
+          if (griddy instanceof CountingOutputResourcePool)
+          {
+            CountingOutputResourcePool corp = (CountingOutputResourcePool)griddy;
+            
+            if (corp.ng_type.equals("Gold Ingot"))
+              corp.count += 100;
+          }
+        }
+        break;
     }
   }
 }

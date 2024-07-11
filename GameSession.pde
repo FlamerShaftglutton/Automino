@@ -11,8 +11,8 @@ class GameSession extends GridGameFlowBase
   {
     super.update();
     
-    if (globals.keyboard.is_key_released('p')) 
-      globals.game.push(new PauseMenu());
+    if (globals.keyboard.is_key_released('p'))
+      globals.game.push(new PauseMenu(this));
     
     switch (state)
     {
@@ -29,11 +29,25 @@ class GameSession extends GridGameFlowBase
   {
     if (globals.keyboard.is_key_released('y')) 
     { 
-      save(); 
-      nongriddles.clear(); 
-      nongriddles_to_delete.clear();
-      load(); 
-      state = GameState.STARTING_PLAYLEVEL; 
+      boolean is_free_to_start = false;
+      
+      IntVec player_grid_pos = grid.grid_pos_from_absolute_pos(player.pos);
+      Griddle griddle_player_is_standing_on = grid.get(player_grid_pos);
+      if (player_grid_pos.x > 0 && player_grid_pos.y > 0 && player_grid_pos.x < grid.w - 1 && player_grid_pos.y < grid.h - 1 && griddle_player_is_standing_on instanceof LevelEditorGriddle)
+      {
+        LevelEditorGriddle leg_player_is_standing_on = (LevelEditorGriddle)griddle_player_is_standing_on;
+        
+        is_free_to_start = leg_player_is_standing_on.ngs.isEmpty();
+      }
+      
+      if (is_free_to_start)
+      {
+        save(); 
+        nongriddles.clear(); 
+        nongriddles_to_delete.clear();
+        load(); 
+        state = GameState.STARTING_PLAYLEVEL; 
+      }
     }
   }
   
@@ -289,7 +303,7 @@ class GameSession extends GridGameFlowBase
     
     JSONObject ov = new JSONObject();
     
-    Grid gg = new Grid(new PVector(20,20), new PVector(width * 0.75f, height - 40),w,h, this);
+    Grid gg = new Grid(new PVector(20,20), new PVector(width -40f, height - 40),w,h, this);
     
     for (int y = 1; y < h; ++y)
     {

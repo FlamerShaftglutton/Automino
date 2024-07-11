@@ -2,7 +2,7 @@ Globals globals = new Globals();
 
 void setup()
 {
-  size(2300,1300);
+  size(900,800);
   
   initglobals();
 }
@@ -14,7 +14,7 @@ void draw()
   globals.game.active().update();
   globals.game.active().draw();
   
-  globals.mouseReleased = false;
+  //globals.mouseReleased = false;
   globals.keyboard.update();
   
   fill(#000000);
@@ -32,16 +32,17 @@ void initglobals()
   globals.gFactory.load(dataPath("Griddles.json"));
   globals.interactions.load(dataPath("Interactions.json"));
   globals.ruleFactory.load(dataPath("Rules.json"));
+  globals.profiles.load(dataPath("Profiles.json"));
   
   MainMenuGameFlow mm = new MainMenuGameFlow();
   mm.save_path = dataPath("menu.json");
   globals.game.push(mm);
 }
 
-void mouseReleased()
-{
-  globals.mouseReleased = true;
-}
+//void mouseReleased()
+//{
+//  globals.mouseReleased = true;
+//}
 
 void keyPressed()
 {

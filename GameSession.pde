@@ -335,7 +335,7 @@ class GameSession extends GridGameFlowBase
     
     player = new Player(this);
             
-    player.spritename = globals.gFactory.get_spritename("Player");
+    player.spritename = globals.profiles.current().sprite;
     player.sprite = globals.sprites.get_sprite(player.spritename);
     player.pos = gg.absolute_pos_from_grid_pos(new IntVec(w / 2,h / 2));
     player.dim = gg.get_square_dim();
@@ -482,6 +482,12 @@ class GameSession extends GridGameFlowBase
   
   void lose_level()
   {
+    for (String rule_name : rules.get_rules().names())
+      globals.profiles.current().discovered_rules.appendUnique(rule_name);
+   
+    globals.profiles.current().highest_round = max(globals.profiles.current().highest_round, rounds_completed);
+    globals.profiles.save();
+    
     globals.game.push(new MessageScreenGameFlow(), new Message("lose", "You lost!"));
   }
   

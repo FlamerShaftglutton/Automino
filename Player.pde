@@ -45,11 +45,6 @@ class Player
     {
       IntVec offset = new IntVec(0,0);
       
-      //rot = pressed_right ? 0f : pressed_down ? HALF_PI : pressed_left ? PI : PI + HALF_PI;
-      
-      //if (!held_ctrl)
-      //  offset
-      
       if (pressed_right)
       {
         rot = 0f;
@@ -134,99 +129,6 @@ class Player
     }
     else if (held_x)
       get_faced_griddle(parent.grid).player_interact(this);
-    
-    /*
-    
-    if (globals.keyReleased)
-    {
-      
-      if (key == CODED && (keyCode == RIGHT || keyCode == DOWN || keyCode == LEFT || keyCode == UP))
-      {
-        IntVec offset = new IntVec(0,0);
-        
-        //float old_rot = rot;
-        
-        switch (keyCode)
-        {
-          case RIGHT: rot = 0f;            ++offset.x; break;
-          case DOWN:  rot = HALF_PI;       ++offset.y; break;
-          case LEFT:  rot = PI;            --offset.x; break;
-          case UP:    rot = PI + HALF_PI;  --offset.y; break;
-          default: break;
-        }
-        
-        //if (abs(rot - old_rot) < 0.1f)
-        //{
-          Griddle fg = get_faced_griddle(parent.grid);
-          
-          if (fg.traversable)// || PVector.dist(pos, fg.center_center()) > dim.x)
-          {
-            //TODO: make this not gridlocked. 
-            pos.add(PVector.fromAngle(rot).mult(dim.x));
-          }
-        //}
-      }
-      else if (key == 'x')
-      {
-        //IntVec offset = offset_from_direction(face);
-        //IntVec gpos = globals.active_grid.get_grid_pos_from_object(this);
-        get_faced_griddle(parent.grid).player_interact_end(this);
-      }
-      else if (key == ' ')
-      {
-        //IntVec offset = offset_from_direction(face);
-        //IntVec gpos = globals.active_grid.get_grid_pos_from_object(this);
-        
-        //Griddle g = globals.active_grid.get(gpos.copy().add(offset));
-        Griddle fg = get_faced_griddle(parent.grid);
-        
-        //try put down
-        if (ng != null)
-        {
-          if (fg.receive_ng(ng))
-          {
-            if (ng instanceof LevelEditorNonGriddle)
-              ((LevelEditorNonGriddle)ng).visible = false;
-              
-            ng = null;
-          }
-        }
-        //try to pick up
-        else if (fg.can_give_ng() && !fg.ngs.isEmpty())
-        {
-          NonGriddle gng = fg.ngs.get(0);
-          
-          if (gng instanceof LevelEditorNonGriddle)
-            ((LevelEditorNonGriddle)gng).visible = true;
-          
-          fg.remove_ng(gng);
-          ng = gng;
-        }
-      }
-      else if (key == '?' || key == '/')
-      {
-        Griddle fg = get_faced_griddle(parent.grid);
-        
-        if (fg instanceof LevelEditorGriddle)
-        {
-          LevelEditorGriddle leg = (LevelEditorGriddle)fg;
-          
-          if (!leg.ngs.isEmpty())
-          {
-            JSONObject lengo = ((LevelEditorNonGriddle)leg.ng()).as_json;
-            globals.messages.post_message("info", globals.gFactory.get_description(lengo.getString("_template",lengo.getString("type",""))));
-          }
-        }
-        else if (fg instanceof MetaActionCounter)
-          globals.messages.post_message("info", globals.gFactory.get_description(((MetaActionCounter)fg).parameters.get(0)));
-        else
-          globals.messages.post_message("info", globals.gFactory.get_description(fg.template));
-      }
-    }
-    else if (keyPressed && key == 'x')
-      get_faced_griddle(parent.grid).player_interact(this);
-    */  
-    
       
     if (ng != null)
       ng.pos = PVector.fromAngle(rot).mult(dim.x * 0.4f).add(pos);

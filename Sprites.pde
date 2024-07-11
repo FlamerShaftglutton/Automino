@@ -35,4 +35,9 @@ class SpriteFactory
   }
 
   boolean has_sprite(String name) { return sprites.containsKey(name); }
+  
+  StringList get_sprite_names()
+  {
+    return new StringList(sprites.keySet());
+  }
 }

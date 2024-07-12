@@ -1,6 +1,7 @@
 [
   {
     "highest_round": 13,
+    "default": true,
     "name": "Charlie",
     "sprite": "player yellow",
     "discovered_rules": [
@@ -19,7 +20,6 @@
   },
   {
     "highest_round": 12,
-    "default": true,
     "name": "Mac",
     "sprite": "player purple",
     "discovered_rules": [
@@ -34,10 +34,23 @@
   {
     "highest_round": 45,
     "name": "Dee",
-    "sprite": "player green",
+    "sprite": "player orange",
     "discovered_rules": [
       "Iron Ingots",
       "Cobalt Ingots"
+    ]
+  },
+  {
+    "highest_round": 15,
+    "name": "Sharp",
+    "sprite": "player pink",
+    "discovered_rules": [
+      "Iron Ingots",
+      "Cobalt Ingots",
+      "Tough Ore",
+      "Extra Fine",
+      "Nice moves",
+      "Forge Majeure"
     ]
   }
 ]

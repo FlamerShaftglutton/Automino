@@ -2,11 +2,11 @@ interface GameFlow
 {
   void update();
   void draw();
-  void save();
-  void load();
   Message exit();
   void onFocus(Message message);
 }
+
+class NullGameFlow implements GameFlow { void update() { } void draw() { } Message exit() { return new Message(); } void onFocus(Message message) { } }
 
 class GameFlowManager
 {
@@ -18,7 +18,7 @@ class GameFlowManager
   void push(GameFlow flow, String message) { flows.add(flow); flow.onFocus(new Message("", message)); }
   void push(GameFlow flow) { push(flow, ""); }
   
-  GameFlow active() { if (flows.isEmpty()) exit(); return flows.get(flows.size() - 1); }
+  GameFlow active() { if (flows.isEmpty()) { exit(); return new NullGameFlow(); } else return flows.get(flows.size() - 1); }
   
   void pop() 
   {
@@ -32,7 +32,7 @@ class GameFlowManager
       active().onFocus(message);
   }
   
-  GameFlow get(int i) { if (i >= size() || i < 0) return null; return flows.get(i); }
+  GameFlow get(int i) { if (i >= size() || i < 0) return new NullGameFlow(); return flows.get(i); }
   int size() { return flows.size(); }
 }
 
@@ -79,7 +79,7 @@ class CardPickMenu implements GameFlow
   
   void redistribute()
   {
-    PVector card_dim = new PVector(width / 6f, height / 4f);
+    PVector card_dim = new PVector(height / 5f, height / 4f);
     
     for (CardPickMenuCard c : cards)
       c.dim = card_dim.copy();
@@ -141,8 +141,6 @@ class CardPickMenu implements GameFlow
     }
   }
   
-  void save() { }
-  void load() { redistribute(); }
   Message exit() { return new Message(return_target, cards.get(selected_index).return_value); }
   void onFocus(Message message) { redistribute(); if (title == null || title.length() == 0) title = message.value; if (return_target == null || return_target.length() == 0) return_target = message.target; if (return_target.length() == 0) return_target = "select"; }
 
@@ -177,7 +175,7 @@ class CardPickMenu implements GameFlow
       fill(bg);
       strokeWeight(3f);
       stroke(255);
-      rect(pos.x - dim.x * 0.5f, pos.y - dim.y * 0.5f, dim.x, dim.y);
+      rect(pos.x - dim.x * 0.5f, pos.y - dim.y * 0.5f, dim.x, dim.y, dim.x * 0.05f);
       
       float text_y_pos = pos.y;
       
@@ -200,21 +198,10 @@ class PauseMenu extends CardPickMenu
 {
   GameSession parent;
   
-  PauseMenu(GameSession parent) { this.parent = parent; }
-  
-  void update()
-  {
-    super.update();
+  PauseMenu(GameSession parent) 
+  { 
+    this.parent = parent;
     
-    if (globals.keyboard.is_key_released('d') && globals.keyboard.is_coded_key_held(36))
-    {
-      addCard("Cheat","Give yourself 100 gold",color(#FF0000));
-      redistribute();
-    }
-  }
-  
-  void load()
-  {
     title = "Paused";
     return_target = "resume";
     String round_reminder = "Round " + (parent.rounds_completed + 1);
@@ -227,10 +214,19 @@ class PauseMenu extends CardPickMenu
     addCard("Rules",round_reminder, random_color(rc, 0.1));
     addCard("Quit",round_reminder, random_color(rc, 0.1));
     
-    super.load();
+    redistribute();
   }
   
-  void onFocus(Message message) { load(); } 
+  void update()
+  {
+    super.update();
+    
+    if (globals.keyboard.is_key_released('d') && globals.keyboard.is_coded_key_held(36))
+    {
+      addCard("Cheat","Give yourself 100 gold",color(#FF0000));
+      redistribute();
+    }
+  }
   
   void handle_card_select()
   {
@@ -449,6 +445,11 @@ class MainMenuGameFlow extends GridGameFlowBase
         debuggame.load();
         globals.game.push(debuggame);
         break;
+      case "profile":
+        ProfileGameFlow pgf = new ProfileGameFlow();
+        pgf.save_path = dataPath("profilemenu.json");
+        globals.game.push(pgf);
+        break;
       case "save":
         println("Saving... psych! I ain't doing nothing'.");
         break;
@@ -515,6 +516,123 @@ class MainMenuGameFlow extends GridGameFlowBase
   void onFocus(Message message)
   {
     load();
+  }
+}
+
+class ProfileGameFlow extends GridGameFlowBase
+{
+  void update()
+  {
+    super.update();
+    
+    if (globals.keyboard.is_key_released('q')) 
+      globals.game.pop();
+  }
+  
+  void handle_message(Message message)
+  {
+    switch (message.target)
+    {
+      case "newprofile":
+        StringList names = new StringList("Stamper","Truman","Frost","Chick","Rockhound","Sharp","Oscar","Bear","Noonan","Lennert","Andropov");
+        
+        for (int i = 0; i < globals.profiles.size(); ++i)
+          names.removeValue(globals.profiles.get(i).name);
+        
+        names.shuffle();
+        Profile p = globals.profiles.add();
+        p.name = names.get(0);
+        p.sprite = "player pink";
+        p.discovered_rules = new StringList("Iron Ingots","Cobalt Ingots");
+        p.highest_round = 0;
+        globals.profiles.set_current(p);
+        load();
+        break;
+      case "selectprofile":
+        CardPickMenu cpm = new CardPickMenu();
+        
+        for (Profile profile : globals.profiles.profiles)
+          cpm.addCard(profile.name, "Most rounds completed: " + profile.highest_round, random_color(color(150,150,200), 0.05), globals.sprites.get_sprite(profile.sprite));
+        
+        globals.game.push(cpm, new Message("selectedprofile", "Pick your profile"));
+        break;
+      case "changesprite":
+        CardPickMenu cpm2 = new CardPickMenu();
+        StringList spritenames = globals.sprites.get_sprite_names();
+        StringList player_spritenames = new StringList();
+        
+        for (String s : spritenames)
+        {
+          if (s.startsWith("player"))
+            player_spritenames.append(s);
+        }
+        
+        for (String spritename : player_spritenames)
+          cpm2.addCard(spritename, "", random_color(color(150,150,200), 0.05), globals.sprites.get_sprite(spritename));
+        
+        globals.game.push(cpm2, new Message("selectedsprite", "Pick your skin"));
+        break;
+      case "viewrules":
+        CardPickMenu cpm3 = new CardPickMenu();
+        
+        for (String rulename : globals.profiles.current().discovered_rules)
+        {
+          Rule r = globals.ruleFactory.get_rule(rulename);
+          cpm3.addCard(r.name,r.description, r.type == RuleType.CURSE ? random_color(#babaf6, 0.03) : random_color(#f6edba, 0.03));
+        }
+        
+        globals.game.push(cpm3, new Message("none", "Active Rules"));
+        break;
+      case "quit":
+        globals.game.pop();
+        break;
+    }
+  }
+  
+  void load()
+  {
+    super.load();
+    
+    for (int y = 0; y < grid.h; ++y)
+    {
+      for (int x = 0; x < grid.w; ++x)
+      {
+        Griddle gg = grid.get(x,y);
+        
+        if (gg instanceof MetaActionCounter)
+        {
+          MetaActionCounter mac = (MetaActionCounter)gg;
+          
+          if (mac.display_string.equals("Current Profile"))
+          {
+            mac.display_string = globals.profiles.current().name;
+            return;
+          }
+        }
+      }
+    }
+  }
+  
+  void onFocus(Message message)
+  {
+    switch (message.target)
+    {
+      case "selectedprofile":
+        globals.profiles.set_current(globals.profiles.get(message.value));
+        break;
+      case "selectedsprite":
+        globals.profiles.current().sprite = message.value;
+        break;
+    }
+    
+    load();
+  }
+  
+  Message exit()
+  {
+    globals.profiles.save();
+    
+    return new Message();
   }
 }
 

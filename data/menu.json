@@ -23,6 +23,13 @@
 				"y": 2,
 				"type": "PlayerGriddle"
 			},
+			{
+				"x": 0,
+				"y": 4,
+				"type": "MetaActionCounter",
+				"display": "Profile",
+				"action": "profile",
+			},
 		],
 	},
 }

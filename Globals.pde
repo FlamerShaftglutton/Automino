@@ -161,6 +161,10 @@ class ProfileManager
     saveJSONArray(root, save_path);
   }
   
+  Profile add() { Profile p = new Profile(); profiles.add(p); return p; }
+  
+  void set_current(Profile p) { current_profile = profiles.indexOf(p); }
+  
   Profile current() { return profiles.get(current_profile); }
   Profile get(String name) { for (Profile p : profiles) { if (p.name.equals(name)) return p; } return null; }
   Profile get(int index) { return profiles.get(index); }

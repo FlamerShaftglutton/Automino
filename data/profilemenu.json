@@ -1,0 +1,48 @@
+{
+	"grid": {
+		"width": 5,
+		"height": 5,
+		"grid": [
+			{
+				"x": 0,
+				"y": 0,
+				"type": "MetaActionCounter",
+				"display": "New Profile",
+				"action": "newprofile",
+			},
+			{
+				"x": 2,
+				"y": 0,
+				"type": "MetaActionCounter",
+				"display": "Current Profile",
+				"action": "selectprofile",
+			},
+			{
+				"x": 4,
+				"y": 0,
+				"type": "MetaActionCounter",
+				"display": "Change outfit",
+				"action": "changesprite",				
+			},
+			{
+				"x": 2,
+				"y": 2,
+				"type": "PlayerGriddle"
+			},
+			{
+				"x": 4,
+				"y": 2,
+				"type": "MetaActionCounter",
+				"display": "Found Rules",
+				"action": "viewrules",				
+			},
+			{
+				"x": 0,
+				"y": 4,
+				"type": "MetaActionCounter",
+				"display": "Save and Exit",
+				"action": "quit",						
+			},
+		],
+	},
+}

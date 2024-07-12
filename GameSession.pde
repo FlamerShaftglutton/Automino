@@ -488,6 +488,10 @@ class GameSession extends GridGameFlowBase
     globals.profiles.current().highest_round = max(globals.profiles.current().highest_round, rounds_completed);
     globals.profiles.save();
     
+    File f = new File(save_path);
+    
+    f.delete();
+    
     globals.game.push(new MessageScreenGameFlow(), new Message("lose", "You lost!"));
   }
   

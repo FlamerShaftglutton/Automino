@@ -428,10 +428,20 @@ class MainMenuGameFlow extends GridGameFlowBase
     switch (message.target)
     {
       case "newgame":
-        GameSession newgame = new GameSession();
-        newgame.save_path = dataPath(save_filename());
-        newgame.create_new();
-        globals.game.push(newgame);
+        if ((new RuleList()).add_all(globals.profiles.current().discovered_rules).filter_just_boons().size() == 0)
+        {
+          GameSession newgame = new GameSession();
+          newgame.save_path = dataPath(save_filename());
+          newgame.create_new();
+          globals.game.push(newgame);
+        }
+        else
+        {
+          NewGameFlow ngf = new NewGameFlow();
+          ngf.save_path = dataPath("newgamemenu.json");
+          globals.game.push(ngf);
+        }
+        
         break;
       case "load":
         GameSession loadgame = new GameSession();
@@ -450,27 +460,10 @@ class MainMenuGameFlow extends GridGameFlowBase
         pgf.save_path = dataPath("profilemenu.json");
         globals.game.push(pgf);
         break;
-      case "save":
-        println("Saving... psych! I ain't doing nothing'.");
-        break;
     }
   }
   
-  String save_filename()
-  {
-    String retval = "save_";
-    
-    retval += right("0000" + year(),4);
-    retval += right("00" + month(),2);
-    retval += right("00" + day(),2);
-    retval += right("00" + hour(),2);
-    retval += right("00" + minute(),2);
-    retval += right("00" + second(),2);
-    
-    retval += ".json";
-    
-    return retval;
-  }
+
   
   void load()
   {
@@ -513,9 +506,169 @@ class MainMenuGameFlow extends GridGameFlowBase
     }
   }
   
+  String save_filename()
+  {
+    String retval = "save_";
+    
+    retval += right("0000" + year(),4);
+    retval += right("00" + month(),2);
+    retval += right("00" + day(),2);
+    retval += right("00" + hour(),2);
+    retval += right("00" + minute(),2);
+    retval += right("00" + second(),2);
+    
+    retval += ".json";
+    
+    return retval;
+  }
+  
   void onFocus(Message message)
   {
     load();
+  }
+}
+
+class NewGameFlow extends GridGameFlowBase
+{
+  MetaActionCounter selecting_mac = null;
+  ArrayList<MetaActionCounter> macs = new ArrayList<MetaActionCounter>();
+  boolean has_loaded = false;
+  
+  void update()
+  {
+    super.update();
+    
+    if (globals.keyboard.is_key_released('q')) 
+      globals.game.pop();
+  }
+  
+  void handle_message(Message message)
+  {
+    switch (message.target)
+    {
+      case "chooseboon":
+        selecting_mac = (MetaActionCounter)message.sender;
+        make_card_select_menu((new RuleList()).add_all(globals.profiles.current().discovered_rules).remove_all(get_selected_rules()).filter_just_boons());
+        break;
+      case "choosecurse":
+        selecting_mac = (MetaActionCounter)message.sender;
+        make_card_select_menu((new RuleList()).add_all(globals.profiles.current().discovered_rules).remove_all(get_selected_rules()).filter_just_curses());
+        break;
+      case "startgame":
+        if (ready_to_start())
+        {
+          globals.game.pop();
+          create_new_game();
+        }
+        else
+          toasts.add(new Toast("Must have an equal number of curses and boons selected, with at least one recipe curse.", 3.0));
+        break;
+    }
+  }
+  
+  RuleList get_selected_rules()
+  {
+    RuleList rules = new RuleList();
+    
+    for (MetaActionCounter mac : macs)
+    {
+      if (!mac.display_string.startsWith("Choose a "))
+        rules.add(mac.display_string);
+    }
+    
+    return rules;
+  }
+  
+  void make_card_select_menu(RuleList rules)
+  {
+    CardPickMenu cpm = new CardPickMenu();
+    
+    for (Rule r : rules.rules)
+      cpm.addCard(r.name,r.description, r.type == RuleType.CURSE ? random_color(#babaf6, 0.03) : random_color(#f6edba, 0.03));
+      
+    cpm.addCard("None", "Remove this selection", #FF9595);
+    
+    globals.game.push(cpm, new Message("selectedrule", "Pick a rule"));
+  }
+  
+  boolean ready_to_start()
+  {
+    int num_curses_selected = 0;
+    int num_boons_selected = 0;
+    
+    RuleList selected_rules = get_selected_rules();
+    
+    for (Rule r : selected_rules.rules)
+    {
+      if (r.type == RuleType.CURSE)
+        ++num_curses_selected;
+      else
+        ++num_boons_selected;
+    }
+    
+    return num_curses_selected == num_boons_selected && num_boons_selected > 0 && selected_rules.filter_by_tag("recipe").size() > 0;
+  }
+  
+  void create_new_game()
+  {
+    GameSession newgame = new GameSession();
+    newgame.save_path = dataPath(save_filename());
+    newgame.rules.put(get_selected_rules());
+    newgame.create_new();
+    globals.game.push(newgame);
+  }
+  
+  String save_filename()
+  {
+    String retval = "save_";
+    
+    retval += right("0000" + year(),4);
+    retval += right("00" + month(),2);
+    retval += right("00" + day(),2);
+    retval += right("00" + hour(),2);
+    retval += right("00" + minute(),2);
+    retval += right("00" + second(),2);
+    
+    retval += ".json";
+    
+    return retval;
+  }
+  
+  void load()
+  {
+    if (has_loaded)
+      return;
+    
+    super.load();
+    
+    for (int y = 0; y < grid.h; ++y)
+    {
+      for (int x = 0; x < grid.w; ++x)
+      {
+        Griddle griddy = grid.get(x,y);
+        
+        if (griddy instanceof MetaActionCounter)
+        {
+          MetaActionCounter mac = (MetaActionCounter)griddy;
+          
+          if (mac.action.startsWith("choose"))
+            macs.add(mac);
+        }
+      }
+    }
+    
+    has_loaded = true;
+  }
+  
+  void onFocus(Message message)
+  {
+    load();
+    
+    if (message.value.equals("None"))
+      selecting_mac.display_string = selecting_mac.action.equals("choosecurse") ? "Choose a Curse" : "Choose a Boon";
+    else if (message.target.equals("selectedrule"))
+      selecting_mac.display_string = message.value;
+      
   }
 }
 

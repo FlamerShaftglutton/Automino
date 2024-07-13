@@ -41,6 +41,7 @@ class MessageQueue
   
   void post_message(Message message) { queue.add(message); }
   void post_message(String target, String value) { post_message(new Message(target, value)); }
+  void post_message(String target, String value, Object sender) { post_message(new Message(target,value, sender)); }
   
   Message consume_message() { return isEmpty() ? null : queue.remove(0); }
   

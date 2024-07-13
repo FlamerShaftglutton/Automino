@@ -1,0 +1,65 @@
+{
+	"grid": {
+		"width": 5,
+		"height": 8,
+		"grid": [
+			{
+				"x": 0,
+				"y": 0,
+				"type": "PlayerGriddle"
+			},
+			{
+				"x": 3,
+				"y": 1,
+				"type": "MetaActionCounter",
+				"display": "Choose a Boon",
+				"action": "chooseboon",
+			},
+			{
+				"x": 4,
+				"y": 1,
+				"type": "MetaActionCounter",
+				"display": "Choose a Curse",
+				"action": "choosecurse",
+			},
+			
+			{
+				"x": 3,
+				"y": 3,
+				"type": "MetaActionCounter",
+				"display": "Choose a Boon",
+				"action": "chooseboon",
+			},
+			{
+				"x": 4,
+				"y": 3,
+				"type": "MetaActionCounter",
+				"display": "Choose a Curse",
+				"action": "choosecurse",
+			},
+			
+			{
+				"x": 3,
+				"y": 5,
+				"type": "MetaActionCounter",
+				"display": "Choose a Boon",
+				"action": "chooseboon",
+			},
+			{
+				"x": 4,
+				"y": 5,
+				"type": "MetaActionCounter",
+				"display": "Choose a Curse",
+				"action": "choosecurse",
+			},
+			
+			{
+				"x": 0,
+				"y": 7,
+				"type": "MetaActionCounter",
+				"display": "Start Game",
+				"action": "startgame",						
+			},
+		],
+	},
+}

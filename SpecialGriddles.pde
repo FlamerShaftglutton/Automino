@@ -217,7 +217,7 @@ class MetaActionCounter extends Griddle
   void player_interact_end(Player player)
   {
     String message = parameters.size() == 0 ? "" : parameters.get(0);
-    globals.messages.post_message(action, message);
+    globals.messages.post_message(action, message, this);
   }
   
   void deserialize(JSONObject o) 

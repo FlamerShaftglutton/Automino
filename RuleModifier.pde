@@ -257,8 +257,11 @@ class RuleList
   int size() { return rules.size(); }
   
   RuleList add(Rule rule) { rules.add(rule); return this; }
+  RuleList add(String rulename) { add(globals.ruleFactory.get_rule(rulename)); return this; }
+  
   RuleList remove(Rule rule) { rules.remove(rule); return this; }
   RuleList remove(int i) { if (i >= 0 && i < rules.size()) rules.remove(i); return this; }
+  RuleList remove(String rulename) { for (int i = 0; i < rules.size(); ++i) { if (rules.get(i).name.equals(rulename)) rules.remove(i); } return this; }
   
   RuleList filter_by_all_tags(StringList tags)
   {
@@ -341,14 +344,15 @@ class RuleList
   
   RuleList filter_out_tag(String tag) { return filter_out_tags(tag); }
   
-  RuleList filter_just_curses() { RuleList retval = copy(); for (int i = rules.size(); i >= 0; --i) { if (rules.get(i).type == RuleType.BOON ) retval.remove(i); } return retval; }
-  RuleList filter_just_boons()  { RuleList retval = copy(); for (int i = rules.size(); i >= 0; --i) { if (rules.get(i).type == RuleType.CURSE) retval.remove(i); } return retval; }
+  RuleList filter_just_curses() { RuleList retval = copy(); for (int i = rules.size()-1; i >= 0; --i) { if (rules.get(i).type == RuleType.BOON ) retval.remove(i); } return retval; }
+  RuleList filter_just_boons()  { RuleList retval = copy(); for (int i = rules.size()-1; i >= 0; --i) { if (rules.get(i).type == RuleType.CURSE) retval.remove(i); } return retval; }
   
   RuleList remove_all(RuleList rhs) { rules.removeAll(rhs.rules); return this; }
   RuleList add_all(RuleList rhs) { rules.addAll(rhs.rules); return this; }
   
   RuleList remove_all(StringList rhs_names) {  for (int i = 0; i < rules.size(); ++i) { if (rhs_names.hasValue(rules.get(i).name)) { rules.remove(i); --i; } } return this; }
   RuleList add_all(StringList rhs_names) { for (String s : rhs_names) rules.add(globals.ruleFactory.get_rule(s)); return this; }
+  
 }
 
 class RuleFactory

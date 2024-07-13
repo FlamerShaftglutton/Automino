@@ -297,9 +297,12 @@ class GameSession extends GridGameFlowBase
     int w = (int)random(7, 16);
     int h = (int)random(7, 16);
     
-    Rule rule = globals.ruleFactory.get_all_curses().filter_by_all_tags("basic", "recipe").get_random();
-    rules = new RuleManager();
-    rules.put(rule);
+    if (rules == null || rules.get_rules().size() == 0)
+    {
+      Rule rule = globals.ruleFactory.get_all_curses().filter_by_all_tags("basic", "recipe").get_random();
+      rules = new RuleManager();
+      rules.put(rule);
+    }
     
     JSONObject ov = new JSONObject();
     
@@ -382,7 +385,7 @@ class GameSession extends GridGameFlowBase
       
       rg.reward_griddle_name = type_name;
       rg.time_used = 0f;
-      rg.time_needed = 48;
+      rg.time_needed = 32;
       
       rg.finished = false;
       rg.running = false;
@@ -449,7 +452,7 @@ class GameSession extends GridGameFlowBase
     if (rounds_completed % 10 == 0)
     {
       CardPickMenu cpm = new CardPickMenu();
-      RuleList options = rules.get_available_boons().top(3);
+      RuleList options = rules.get_available_boons().shuffle().top(3);
       color boon_color = #f6edba;
       for (int i = 0; i < options.size(); ++i)
         cpm.addCard(options.get(i).name, options.get(i).description, random_color(boon_color, 0.05));
@@ -461,7 +464,7 @@ class GameSession extends GridGameFlowBase
     else if (rounds_completed % 4 == 0)
     {
       CardPickMenu cpm = new CardPickMenu();
-      RuleList options = rules.get_available_curses().top(3);
+      RuleList options = rules.get_available_curses().shuffle().top(3);
       color curse_color = #babaf6;
       for (int i = 0; i < options.size(); ++i)
         cpm.addCard(options.get(i).name, options.get(i).description, random_color(curse_color, 0.05));

@@ -186,6 +186,8 @@ class CountingOutputResourcePool extends CountingResourcePool
   
   String get_display_string() { if (required < 0) return super.get_display_string(); return "" + get_count() + " / " + required; }
   
+  boolean can_accept_ng(NonGriddle n) { return ng_type.equals(n.name); }
+  
   JSONObject serialize() { JSONObject o = super.serialize(); o.setInt("required", required); return o;  }
   void deserialize(JSONObject o){ super.deserialize(o); required = o.getInt("required", -1); }
 }

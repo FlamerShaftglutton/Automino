@@ -97,6 +97,8 @@ class CountingResourcePool extends ResourcePool
   
   int get_count() { return count + ngs.size(); }
   
+  boolean set_count(int new_amount) { if (new_amount < 0) return false; count = new_amount; ngs.clear(); return true; }
+  
   String get_display_string() { return "" + get_count(); }
   
   void draw()
@@ -218,7 +220,7 @@ class MetaActionCounter extends Griddle
   
   void player_interact_end(Player player)
   {
-    String message = parameters.size() == 0 ? "" : parameters.get(0);
+    String message = parameters.size() == 0 ? "" : parameters.join(";");
     globals.messages.post_message(action, message, this);
   }
   

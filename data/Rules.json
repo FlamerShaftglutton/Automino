@@ -2,8 +2,7 @@
 	{
 		"name": "Iron Ingots",
 		"description": "Crush iron ore into iron powder, refine iron powder into refined iron, then smelt refined iron into iron ingots.",
-		"type": "curse",
-		"tags": ["recipe", "basic"],
+		"tags": ["curse", "recipe", "basic"],
 		"dependencies": [ ],
 		"mods": [
 			"add smelt to Required:Operations",
@@ -15,8 +14,7 @@
 	{
 		"name": "Cobalt Ingots",
 		"description": "Crush cobalt ore into cobalt powder, refine cobalt powder into refined cobalt, then smelt refined cobalt into cobalt ingots.",
-		"type": "curse",
-		"tags": ["recipe", "basic"],
+		"tags": ["curse", "recipe", "basic"],
 		"dependencies": [ ],
 		"mods": [
 			"add smelt to Required:Operations",
@@ -28,8 +26,7 @@
 	{
 		"name": "Permendur Ingots",
 		"description": "Smelt together refined iron and cobalt or ingots of iron and cobalt.",
-		"type": "curse",
-		"tags": ["recipe"],
+		"tags": ["curse","recipe"],
 		"dependencies": [ "Cobalt Ingots", "Iron Ingots" ],
 		"mods": [
 			"add 'Permendur Ingot' to Required:Outputs",
@@ -38,8 +35,7 @@
 	{
 		"name": "Needs Grease",
 		"description": "Conveyor belts are 20% slower.",
-		"type": "curse",
-		"tags": ["speed", "Conveyor"],
+		"tags": ["curse", "speed", "Conveyor"],
 		"dependencies": [ ],
 		"mods": [
 			"multiply 0.8 to Speed:ConveyorBelt",
@@ -48,8 +44,7 @@
 	{
 		"name": "Gold Fever",
 		"description": "You need to have some gold to complete the round (you get to keep it).",
-		"type": "curse",
-		"tags": [ ],
+		"tags": ["curse"],
 		"dependencies": [ ],
 		"mods": [
 			"add 2 to 'Required:Gold Ingot'",
@@ -59,8 +54,7 @@
 	{
 		"name": "Tough Ore",
 		"description": "Crushers are 50% slower.",
-		"type": "curse",
-		"tags": ["speed", "crush"],
+		"tags": ["curse","speed", "crush"],
 		"dependencies": [ ],
 		"mods": [
 			"multiply 0.5 to Speed:crush",
@@ -69,8 +63,7 @@
 	{
 		"name": "Extra Fine",
 		"description": "Refiners are 40% slower.",
-		"type": "curse",
-		"tags": ["speed", "extract"],
+		"tags": ["curse","speed", "extract"],
 		"dependencies": [ ],
 		"mods": [
 			"multiply 0.6 to Speed:extract",
@@ -79,8 +72,7 @@
 	{
 		"name": "Forge Majeure",
 		"description": "Smelters are 30% slower.",
-		"type": "curse",
-		"tags": ["speed", "smelt"],
+		"tags": ["curse","speed", "smelt"],
 		"dependencies": [ ],
 		"mods": [
 			"multiply 0.7 to Speed:smelt",
@@ -89,8 +81,7 @@
 	{
 		"name": "Dirty Ore",
 		"description": "Crushers now output tailings as well.",
-		"type": "curse",
-		"tags": ["output", "Crusher"],
+		"tags": ["curse","output", "Crusher"],
 		"dependencies": [ ],
 		"mods": [
 			"add Tailings to Outputs:crush",
@@ -99,8 +90,7 @@
 	{
 		"name": "Double the flavor",
 		"description": "You need to crush two Iron Ore to make Iron Powder.",
-		"type": "curse",
-		"tags": ["input", "Crusher", "iron"],
+		"tags": ["curse","input", "Crusher", "iron"],
 		"dependencies": [ "Iron Ingots" ],
 		"mods": [
 			"add 'Iron Ore' to 'Inputs:crush:Iron Ore'",
@@ -110,8 +100,7 @@
 	{
 		"name": "Oops! All Cobalt!",
 		"description": "The resource line now carries extra cobalt.",
-		"type": "curse",
-		"tags": [ "resource", "cobalt" ],
+		"tags": ["curse", "resource", "cobalt" ],
 		"dependencies": [ "Iron Ingots" ],
 		"mods": [
 			"add 'Cobalt Ore' to Resource:Random",
@@ -124,8 +113,7 @@
 	{
 		"name": "Ironic",
 		"description": "The resource line now carries extra iron.",
-		"type": "curse",
-		"tags": [ "resource", "iron" ],
+		"tags": ["curse", "resource", "iron" ],
 		"dependencies": [ "Cobalt Ingots" ],
 		"mods": [
 			"add 'Iron Ore' to Resource:Random",
@@ -138,8 +126,7 @@
 	{
 		"name": "Wasteful",
 		"description": "The resource line now carries tailings.",
-		"type": "curse",
-		"tags": [ "resource", "iron" ],
+		"tags": ["curse", "resource", "iron" ],
 		"dependencies": [ "Cobalt Ingots" ],
 		"mods": [
 			"add 'Tailings' to Resource:Random",
@@ -155,8 +142,7 @@
 	{
 		"name": "Good Value",
 		"description": "The last reward is always upgraded.",
-		"type": "boon",
-		"tags": ["reward", "upgrade"],
+		"tags": ["boon","reward", "upgrade"],
 		"dependencies": [ ],
 		"mods": [
 			"add 1 to Reward:upgrades",
@@ -165,8 +151,7 @@
 	{
 		"name": "Great Value",
 		"description": "The second-to-last reward is always upgraded.",
-		"type": "boon",
-		"tags": ["reward", "upgrade"],
+		"tags": ["boon","reward", "upgrade"],
 		"dependencies": [ "Good Value" ],
 		"mods": [
 			"add 1 to Reward:upgrades",
@@ -175,8 +160,7 @@
 	{
 		"name": "Best Value",
 		"description": "The last three rewards are always upgraded.",
-		"type": "boon",
-		"tags": ["reward", "upgrade"],
+		"tags": ["boon","reward", "upgrade"],
 		"dependencies": [ "Great Value" ],
 		"mods": [
 			"add 1 to Reward:upgrades",
@@ -185,8 +169,7 @@
 	{
 		"name": "Refined Tastes",
 		"description": "Refiners are 50% faster.",
-		"type": "boon",
-		"tags": ["speed", "Refiner"],
+		"tags": ["boon","speed", "Refiner"],
 		"dependencies": [ ],
 		"mods": [
 			"multiply 1.5 to Speed:extract",
@@ -195,24 +178,21 @@
 	{
 		"name": "Nice moves",
 		"description": "The last reward is always a conveyor belt.",
-		"type": "boon",
-		"tags": ["reward", "conveyor"],
+		"tags": ["boon","reward", "conveyor"],
 		"dependencies": [ ],
 		"mods": [ "add 1 to Reward:conveyor" ],
 	},
 	{
 		"name": "Gotta go fast",
 		"description": "Conveyor belts are twice as fast.",
-		"type": "boon",
-		"tags": [ "speed", "conveyor" ],
+		"tags": ["boon", "speed", "conveyor" ],
 		"dependencies": [ ],
 		"mods": [ "multiply 2 to Speed:ConveyorBelt" ],
 	},
 	{
 		"name": "All that glitters",
 		"description": "The resource line now carries extra gold specks.",
-		"type": "boon",
-		"tags": [ "resource", "gold" ],
+		"tags": ["boon", "resource", "gold" ],
 		"dependencies": [ ],
 		"mods": [
 			"add 'Gold Speck' to Resource:Random",
@@ -223,8 +203,7 @@
 	{
 		"name": "Crushing it",
 		"description": "Crushers are 50% faster.",
-		"type": "boon",
-		"tags": ["speed", "Crusher"],
+		"tags": ["boon","speed", "Crusher"],
 		"dependencies": [ ],
 		"mods": [
 			"multiply 1.5 to Speed:crush",
@@ -233,11 +212,28 @@
 	{
 		"name": "Fired Up",
 		"description": "Smelters are 50% faster.",
-		"type": "boon",
-		"tags": ["speed", "Smelter"],
+		"tags": ["boon","speed", "Smelter"],
 		"dependencies": [ ],
 		"mods": [
 			"multiply 1.5 to Speed:smelt",
+		],
+	},
+	{
+		"name": "Tear Down These Walls",
+		"description": "No more internal walls!",
+		"tags": ["boon","walls"],
+		"dependencies": [ ],
+		"mods": [
+			"set 0.0 to Walls:Internal",
+		],
+	},
+	{
+		"name": "Want some?",
+		"description": "Here's 10 gold. No charge.",
+		"tags": ["boon","gold"],
+		"dependencies": [ ],
+		"mods": [
+			"add 10 to Gold",
 		],
 	},
 ]

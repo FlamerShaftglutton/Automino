@@ -148,6 +148,8 @@ class Grid
   
   
   IntVec get_grid_pos_from_object(Griddle g) { int i = griddles.indexOf(g); if (i < 0) { println("That object doesn't exist!"); return null; } return new IntVec(i % w, i / w); }
+  
+  <T extends Griddle> ArrayList<T> get_all_of_type(Class<T> clazz) { ArrayList<T> retval = new ArrayList<T>(); for (int y = 0; y < h; ++y) { for (int x = 0; x < w; ++x) { Griddle gg = get(x,y); if (clazz.isInstance(gg)) retval.add((T)gg); } } return retval; }
 }
 
 class GridAlteration

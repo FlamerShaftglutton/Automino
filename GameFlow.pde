@@ -238,7 +238,7 @@ class PauseMenu extends CardPickMenu
         CardPickMenu cpm = new CardPickMenu();
         
         for (Rule r : parent.rules.rules.rules)
-          cpm.addCard(r.name,r.description, r.type == RuleType.CURSE ? random_color(#babaf6, 0.03) : random_color(#f6edba, 0.03));
+          cpm.addCard(r.name,r.description, r.tags.hasValue("curse") ? random_color(#babaf6, 0.03) : random_color(#f6edba, 0.03));
         
         globals.game.push(cpm, new Message("none", "Active Rules"));
         
@@ -428,7 +428,7 @@ class MainMenuGameFlow extends GridGameFlowBase
     switch (message.target)
     {
       case "newgame":
-        if ((new RuleList()).add_all(globals.profiles.current().discovered_rules).filter_just_boons().size() == 0)
+        if ((new RuleList(globals.profiles.current().discovered_rules)).filter_by_tag("boon").size() == 0)
         {
           GameSession newgame = new GameSession();
           newgame.save_path = dataPath(save_filename());
@@ -544,25 +544,29 @@ class NewGameFlow extends GridGameFlowBase
   
   void handle_message(Message message)
   {
-    switch (message.target)
+    if (message.target.equals("choose"))
     {
-      case "chooseboon":
-        selecting_mac = (MetaActionCounter)message.sender;
-        make_card_select_menu((new RuleList()).add_all(globals.profiles.current().discovered_rules).remove_all(get_selected_rules()).filter_just_boons());
-        break;
-      case "choosecurse":
-        selecting_mac = (MetaActionCounter)message.sender;
-        make_card_select_menu((new RuleList()).add_all(globals.profiles.current().discovered_rules).remove_all(get_selected_rules()).filter_just_curses());
-        break;
-      case "startgame":
-        if (ready_to_start())
-        {
-          globals.game.pop();
-          create_new_game();
-        }
-        else
-          toasts.add(new Toast("Must have an equal number of curses and boons selected, with at least one recipe curse.", 3.0));
-        break;
+      selecting_mac = (MetaActionCounter)message.sender;
+      RuleList rules = new RuleList(globals.profiles.current().discovered_rules).remove_all(get_selected_rules()).filter_by_all_tags(split(message.value,';'));
+      
+      CardPickMenu cpm = new CardPickMenu();
+    
+      for (Rule r : rules.rules)
+        cpm.addCard(r.name,r.description, r.tags.hasValue("curse") ? random_color(#babaf6, 0.03) : random_color(#f6edba, 0.03));
+        
+      cpm.addCard("None", "Remove this selection", #FF9595);
+      
+      globals.game.push(cpm, new Message("selectedrule", "Pick a rule"));
+    }
+    else if (message.target.equals("startgame"))
+    {
+      if (ready_to_start())
+      {
+        globals.game.pop();
+        create_new_game();
+      }
+      else
+        toasts.add(new Toast("Must have an equal number of curses and boons selected, with at least one recipe curse.", 3.0));
     }
   }
   
@@ -579,18 +583,6 @@ class NewGameFlow extends GridGameFlowBase
     return rules;
   }
   
-  void make_card_select_menu(RuleList rules)
-  {
-    CardPickMenu cpm = new CardPickMenu();
-    
-    for (Rule r : rules.rules)
-      cpm.addCard(r.name,r.description, r.type == RuleType.CURSE ? random_color(#babaf6, 0.03) : random_color(#f6edba, 0.03));
-      
-    cpm.addCard("None", "Remove this selection", #FF9595);
-    
-    globals.game.push(cpm, new Message("selectedrule", "Pick a rule"));
-  }
-  
   boolean ready_to_start()
   {
     int num_curses_selected = 0;
@@ -600,7 +592,7 @@ class NewGameFlow extends GridGameFlowBase
     
     for (Rule r : selected_rules.rules)
     {
-      if (r.type == RuleType.CURSE)
+      if (r.tags.hasValue("curse"))
         ++num_curses_selected;
       else
         ++num_boons_selected;
@@ -731,7 +723,7 @@ class ProfileGameFlow extends GridGameFlowBase
         for (String rulename : globals.profiles.current().discovered_rules)
         {
           Rule r = globals.ruleFactory.get_rule(rulename);
-          cpm3.addCard(r.name,r.description, r.type == RuleType.CURSE ? random_color(#babaf6, 0.03) : random_color(#f6edba, 0.03));
+          cpm3.addCard(r.name,r.description, r.tags.hasValue("curse") ? random_color(#babaf6, 0.03) : random_color(#f6edba, 0.03));
         }
         
         globals.game.push(cpm3, new Message("none", "Active Rules"));

@@ -82,22 +82,20 @@ class Rule
   String name;
   String description;
   
-  RuleType type;
   StringList dependencies;
   StringList tags;
   ArrayList<Modifier> mods;
   
-  Rule(String name, String description, RuleType type, StringList dependencies, StringList tags)
+  Rule(String name, String description, StringList dependencies, StringList tags)
   {
     this.description = description; 
-    this.name = name; 
-    this.type = type; 
+    this.name = name;
     this.dependencies = new StringList(dependencies);
     this.tags = new StringList(tags);
     mods = new ArrayList<Modifier>();
   }
 
-  Rule() { this("", "", RuleType.CURSE, new StringList(), new StringList()); }
+  Rule() { this("", "", new StringList(), new StringList()); }
   
   boolean is_locked(StringList rulenames) { for (String dep : dependencies) { if (!rulenames.hasValue(dep)) return true; } return false; }
   
@@ -105,7 +103,6 @@ class Rule
   {
     name = o.getString("name", "no name specified");
     description = o.getString("description", "no description specified");
-    type = o.getString("type","curse").equals("boon") ? RuleType.BOON : RuleType.CURSE;
     tags = getStringList("tags", o);
     dependencies = getStringList("dependencies", o);
     
@@ -196,7 +193,7 @@ class RuleManager
   
   RuleList get_available_curses()
   {
-    RuleList retval = globals.ruleFactory.get_all_curses();
+    RuleList retval = globals.ruleFactory.get_all().filter_by_tag("curse");
     
     retval.remove_all(rules);
     
@@ -214,7 +211,7 @@ class RuleManager
   
   RuleList get_available_boons()
   {
-    RuleList retval = globals.ruleFactory.get_all_boons();
+    RuleList retval = globals.ruleFactory.get_all().filter_by_tag("boon");
     
     retval.remove_all(rules);
     
@@ -240,6 +237,8 @@ class RuleList
   RuleList(ArrayList<Rule> rules) { this.rules = rules; }
   
   RuleList(RuleList rhs) { this(); add_all(rhs); }
+  
+  RuleList(StringList names) { this(); add_all(names); }
   
   StringList names() { StringList retval = new StringList(); for (int i = 0; i < rules.size(); ++i) retval.append(rules.get(i).name); return retval; }
   
@@ -344,28 +343,25 @@ class RuleList
   
   RuleList filter_out_tag(String tag) { return filter_out_tags(tag); }
   
-  RuleList filter_just_curses() { RuleList retval = copy(); for (int i = rules.size()-1; i >= 0; --i) { if (rules.get(i).type == RuleType.BOON ) retval.remove(i); } return retval; }
-  RuleList filter_just_boons()  { RuleList retval = copy(); for (int i = rules.size()-1; i >= 0; --i) { if (rules.get(i).type == RuleType.CURSE) retval.remove(i); } return retval; }
+  //RuleList filter_just_curses() { RuleList retval = copy(); for (int i = rules.size()-1; i >= 0; --i) { if (rules.get(i).type == RuleType.BOON ) retval.remove(i); } return retval; }
+  //RuleList filter_just_boons()  { RuleList retval = copy(); for (int i = rules.size()-1; i >= 0; --i) { if (rules.get(i).type == RuleType.CURSE) retval.remove(i); } return retval; }
   
   RuleList remove_all(RuleList rhs) { rules.removeAll(rhs.rules); return this; }
   RuleList add_all(RuleList rhs) { rules.addAll(rhs.rules); return this; }
   
   RuleList remove_all(StringList rhs_names) {  for (int i = 0; i < rules.size(); ++i) { if (rhs_names.hasValue(rules.get(i).name)) { rules.remove(i); --i; } } return this; }
   RuleList add_all(StringList rhs_names) { for (String s : rhs_names) rules.add(globals.ruleFactory.get_rule(s)); return this; }
-  
 }
 
 class RuleFactory
 {
   private HashMap<String, Rule> rules = new HashMap<String, Rule>();
-  private RuleList all_curses;
-  private RuleList all_boons;
+  private RuleList all_rules;
   
   void load(String filepath)
   {
     rules = new HashMap<String, Rule>();
-    all_curses = new RuleList();
-    all_boons = new RuleList();
+    all_rules = new RuleList();
     
     JSONArray list = loadJSONArray(filepath);
     
@@ -381,17 +377,13 @@ class RuleFactory
       rr.deserialize(lojo);
       rules.put(rr.name, rr);
       
-      if (rr.type == RuleType.CURSE)
-        all_curses.add(rr);
-      else
-        all_boons.add(rr);
+      all_rules.add(rr);
     }
   }
   
   Rule get_rule(String name) { return rules.get(name); }
   
-  RuleList get_all_curses() { return all_curses.copy(); }
-  RuleList get_all_boons()  { return all_boons.copy();  }
+  RuleList get_all() { return all_rules.copy(); }
   
   StringList get_tags(String name) { return new StringList(get_rule(name).tags); }
 }
@@ -405,10 +397,4 @@ enum ModifierOperation
   MULTIPLY,
   DIVIDE,
   NONE
-}
-
-enum RuleType
-{
-  CURSE,
-  BOON
 }

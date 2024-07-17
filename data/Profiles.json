@@ -40,7 +40,7 @@
     ]
   },
   {
-    "highest_round": 15,
+    "highest_round": 50,
     "default": true,
     "name": "Sharp",
     "sprite": "player pink",
@@ -50,7 +50,20 @@
       "Tough Ore",
       "Extra Fine",
       "Nice moves",
-      "Forge Majeure"
+      "Forge Majeure",
+      "Gotta go fast",
+      "Oops! All Cobalt!",
+      "Fired Up",
+      "Needs Grease",
+      "Refined Tastes",
+      "Ironic",
+      "Wasteful",
+      "All that glitters",
+      "Permendur Ingots",
+      "Dirty Ore",
+      "Good Value",
+      "Crushing it",
+	  "Tear Down These Walls",
     ]
   }
 ]

@@ -261,8 +261,9 @@ class ConveyorTransformer extends Transformer
       if (neighbor instanceof SmartGrabberBelt)
       {
         SmartGrabberBelt sgb = (SmartGrabberBelt)neighbor;
+        int qts = sgb.quarter_turns & 3;
         
-        if (sgb.keyed_ng_type != null && sgb.keyed_ng_type.length() > 0)
+        if (sgb.keyed_ng_type != null && sgb.keyed_ng_type.length() > 0 && ((qts == 0 && iv.x == 1) || (qts == 1 && iv.y == -1) || (qts == 2 && iv.x == -1) || (qts == 3 && iv.y == 1)))
           neighbor_smartgrabber_ng_keys.append(sgb.keyed_ng_type); //appendunique is more 'correct' but will only improve performance in an edge case that will basically never happen (two or more smart grabbers keyed to the same output pulling from the same ConveyorTransformer), while slightly worsening performance normally
       }
     }

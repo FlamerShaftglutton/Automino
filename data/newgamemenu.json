@@ -6,21 +6,23 @@
 			{
 				"x": 0,
 				"y": 0,
-				"type": "PlayerGriddle"
+				"type": "PlayerGriddle",
 			},
 			{
 				"x": 3,
 				"y": 1,
 				"type": "MetaActionCounter",
 				"display": "Choose a Boon",
-				"action": "chooseboon",
+				"action": "choose",
+				"parameters": ["boon"],
 			},
 			{
 				"x": 4,
 				"y": 1,
 				"type": "MetaActionCounter",
 				"display": "Choose a Curse",
-				"action": "choosecurse",
+				"action": "choose",
+				"parameters": ["curse", "recipe"],
 			},
 			
 			{
@@ -28,14 +30,16 @@
 				"y": 3,
 				"type": "MetaActionCounter",
 				"display": "Choose a Boon",
-				"action": "chooseboon",
+				"action": "choose",
+				"parameters": ["boon"],
 			},
 			{
 				"x": 4,
 				"y": 3,
 				"type": "MetaActionCounter",
 				"display": "Choose a Curse",
-				"action": "choosecurse",
+				"action": "choose",
+				"parameters": ["curse"],
 			},
 			
 			{
@@ -43,14 +47,16 @@
 				"y": 5,
 				"type": "MetaActionCounter",
 				"display": "Choose a Boon",
-				"action": "chooseboon",
+				"action": "choose",
+				"parameters": ["boon"],
 			},
 			{
 				"x": 4,
 				"y": 5,
 				"type": "MetaActionCounter",
 				"display": "Choose a Curse",
-				"action": "choosecurse",
+				"action": "choose",
+				"parameters": ["curse"],
 			},
 			
 			{

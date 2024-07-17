@@ -79,10 +79,67 @@ class GameSession extends GridGameFlowBase
     }
     else if (message.target.equals("rule"))
     {
+      float internal_walls_old = rules.get_float("Walls:Internal",0.125f);
+      int gold_offset_old = rules.get_int("Gold");
+      
       rules.put(globals.ruleFactory.get_rule(message.value));
+      
+      float internal_walls_new = rules.get_float("Walls:Internal",0.125f);
+      int gold_offset_new = rules.get_int("Gold");
+      
+      if (abs(internal_walls_old - internal_walls_new) > 0.01f)
+        update_internal_walls(internal_walls_old, internal_walls_new);
+      
+      if (gold_offset_new != gold_offset_old)
+        spend_gold(gold_offset_old - gold_offset_new);
       
       conform_to_rules();
     }
+  }
+  
+  void update_internal_walls(float old_value, float new_value)
+  {
+    grid.apply_alterations();
+    
+    //erase all walls if the value lowered. This should be more granular, but it won't be anytime soon.
+    if (old_value > new_value)
+    {
+      for (int y = 1; y < grid.h - 1; ++y)
+      {
+        for (int x = 1; x < grid.w - 1; ++x)
+        {
+          Griddle walley = grid.get(x,y);
+          
+          if (walley instanceof WallGriddle)
+          {
+            if (state == GameState.LEVELEDITOR)
+              grid.set(x,y,new LevelEditorGriddle(this));
+            else
+              grid.set(x,y,globals.gFactory.create_griddle("EmptyGriddle",this));
+          }
+        }
+      }
+    }
+    else if (old_value < new_value)
+    {
+      float extra_walls_percent = new_value - old_value;
+      
+      int num_extra_walls = (int)random(1, grid.w * grid.h * extra_walls_percent);
+      int r = 0;
+      while (r < num_extra_walls)
+      {
+        IntVec random_pos = new IntVec((int)random(2,grid.w - 2), (int)random(2,grid.h-2));
+        Griddle gg = grid.get(random_pos);
+        
+        if (gg instanceof EmptyGriddle || (gg instanceof LevelEditorGriddle && ((LevelEditorGriddle)gg).ngs.isEmpty()))
+        {
+          grid.set(random_pos, globals.gFactory.create_griddle("WallGriddle", this));
+          ++r;
+        }
+      }
+    }
+    
+    grid.apply_alterations();
   }
   
   void handle_message(Message message)
@@ -99,7 +156,7 @@ class GameSession extends GridGameFlowBase
         for (String s : upgrades)
           cpm.addCard(s, globals.gFactory.get_description(s), globals.sprites.get_sprite(globals.gFactory.get_spritename(s)));
         
-        cpm.addCard("Cancel", "Return without upgrading or spending your gold");
+        cpm.addCard("Cancel", "Return without upgrading or spending your gold"); //<>//
         
         globals.game.push(cpm, new Message("upgrade","Choose an upgrade"));
       }
@@ -108,63 +165,11 @@ class GameSession extends GridGameFlowBase
       toasts.add(new Toast(message.value, 5f));
   }
   
-  Message exit()
-  {
-    return new Message("save",save_path);
-  }
-  
-  JSONObject serialize()
-  {
-    JSONObject root = super.serialize();
-    
-    root.setInt("rounds_completed", rounds_completed);
-    
-    JSONArray jarules = new JSONArray();
-    for (String rule : rules.get_rules().names())
-      jarules.append(rule);
-    
-    root.setJSONArray("Rules", jarules);
-    
-    return root;
-  }
-  
-  void deserialize(JSONObject root)
-  {    
-    super.deserialize(root);
-    
-    rules = new RuleManager();
-    
-    rounds_completed = root.getInt("rounds_completed");
-    
-    JSONArray jarules = root.getJSONArray("Rules");
-    
-    for (int i = 0; i < jarules.size(); ++i)
-      rules.put(globals.ruleFactory.get_rule(jarules.getString(i)));
-    
-    win_conditions.clear();
-    
-    for (int x = 1; x < grid.w; ++x)
-    {
-      Griddle gr = grid.get(x, grid.h - 1);
-      
-      if (gr instanceof CountingOutputResourcePool)
-      {
-        CountingOutputResourcePool cgr = (CountingOutputResourcePool)gr;
-        
-        if (cgr.required > 0)
-        {
-          WinCondition wc = new WinCondition(cgr.ng_type, cgr.required, cgr);
-          win_conditions.add(wc);
-        }
-      }
-    }
-  }
-  
+  //note that this can be called during game creation or during level editing
   void conform_to_rules()
   {
-    grid.apply_alterations();
+    grid.apply_alterations(); //<>//
     
-    //TODO: Is this only going to be called in Level Editor mode? If so this can be simplified
     StringList required_operations = rules.get_strings("Required:Operations");
     StringList required_outputs    = rules.get_strings("Required:Outputs");
     
@@ -177,9 +182,13 @@ class GameSession extends GridGameFlowBase
         Griddle eg = grid.get(x,y);
         
         if (eg instanceof Transformer)
+        {
           found_operations.append(((Transformer)eg).operations);
+        }
         else if (eg instanceof CountingOutputResourcePool)
+        {
           found_outputs.append(((CountingOutputResourcePool)eg).ng_type);
+        }
         else if (eg instanceof LevelEditorGriddle)
         {
           LevelEditorGriddle leg = (LevelEditorGriddle)eg;
@@ -194,7 +203,7 @@ class GameSession extends GridGameFlowBase
       }
     }
     
-    StringList basic_griddles = globals.gFactory.get_names_by_tag("basic"); //<>//
+    StringList basic_griddles = globals.gFactory.get_names_by_tag("basic");
     for (String operation : required_operations)
     {
       if (!found_operations.hasValue(operation))
@@ -290,60 +299,55 @@ class GameSession extends GridGameFlowBase
         }
       }
     }
-  }
+  } //<>//
   
   void create_new()
   {
-    int w = (int)random(7, 16);
-    int h = (int)random(7, 16);
+    int w = (int)random(7, 28);
+    int h = (int)random(7, 28);
     
     if (rules == null || rules.get_rules().size() == 0)
     {
-      Rule rule = globals.ruleFactory.get_all_curses().filter_by_all_tags("basic", "recipe").get_random();
+      Rule rule = globals.ruleFactory.get_all().filter_by_all_tags("curse","basic", "recipe").get_random();
       rules = new RuleManager();
       rules.put(rule);
     }
     
     JSONObject ov = new JSONObject();
     
-    Grid gg = new Grid(new PVector(20,20), new PVector(width -40f, height - 40),w,h, this);
+    grid = new Grid(new PVector(20,20), new PVector(width -40f, height - 40),w,h, this);
     
     for (int y = 1; y < h; ++y)
     {
-      gg.set(0,  y,globals.gFactory.create_griddle("WallGriddle", this));
-      gg.set(w-1,y,globals.gFactory.create_griddle("WallGriddle", this));
+      grid.set(0,  y,globals.gFactory.create_griddle("WallGriddle", this));
+      grid.set(w-1,y,globals.gFactory.create_griddle("WallGriddle", this));
     }
     
     for (int x = 1; x < w - 1; ++x)
-      gg.set(x, h-1, globals.gFactory.create_griddle("WallGriddle", this));
+      grid.set(x, h-1, globals.gFactory.create_griddle("WallGriddle", this));
     
-    gg.set((int)random(2,w-3),h-1, globals.gFactory.create_griddle("GoldIngotOutput", this));
+    grid.set((int)random(2,w-3),h-1, globals.gFactory.create_griddle("GoldIngotOutput", this));
     
     ov = JSONObject.parse("{ 'resources': { 'Iron Ore': 5, 'Cobalt Ore': 5, 'Gold Speck': 1 } }");
-    gg.set(0,0,globals.gFactory.create_griddle("RandomResourcePool", ov, this));
+    grid.set(0,0,globals.gFactory.create_griddle("RandomResourcePool", ov, this));
     
     for (int x = 1; x < w - 1; ++x)
-      gg.set(x,0, globals.gFactory.create_griddle("GrabberBelt", this));
+      grid.set(x,0, globals.gFactory.create_griddle("GrabberBelt", this));
     
     ov = JSONObject.parse("{ 'automatic': true, 'speed': 0.005 }");
-    gg.set(w - 1, 0, globals.gFactory.create_griddle("TrashCompactor",ov, this));
+    grid.set(w - 1, 0, globals.gFactory.create_griddle("TrashCompactor",ov, this));
     
     for (int y = 1; y < h - 6; ++y)
-      gg.set(w - 1, y, globals.gFactory.create_griddle("WallGriddle", this));
+      grid.set(w - 1, y, globals.gFactory.create_griddle("WallGriddle", this));
       
-    //add a random number of walls as well
-    int num_extra_walls = (int)random(1, w * h / 8);
-    for (int r = 0; r < num_extra_walls; ++r)
-      gg.set((int)random(2,w - 2), (int)random(2,h-2), globals.gFactory.create_griddle("WallGriddle", this));
+    update_internal_walls(0f, rules.get_float("Walls:Internal",0.125f));
     
     player = new Player(this);
             
     player.spritename = globals.profiles.current().sprite;
     player.sprite = globals.sprites.get_sprite(player.spritename);
-    player.pos = gg.absolute_pos_from_grid_pos(new IntVec(w / 2,h / 2));
-    player.dim = gg.get_square_dim();
-    
-    grid = gg;
+    player.pos = grid.absolute_pos_from_grid_pos(new IntVec(w / 2,h / 2));
+    player.dim = grid.get_square_dim();
     
     grid.apply_alterations();
     conform_to_rules();
@@ -578,6 +582,66 @@ class GameSession extends GridGameFlowBase
     }
     
     return le_grid;
+  }
+  
+  boolean spend_gold(int amount)
+  {
+    ArrayList<CountingOutputResourcePool> corps = grid.get_all_of_type(CountingOutputResourcePool.class);
+    
+    for (CountingOutputResourcePool corp : corps)
+    {
+      if (corp.ng_type == "Gold Ingot")
+        return corp.set_count(corp.get_count() - amount);
+    }
+    
+    return false;
+  }
+  
+    JSONObject serialize()
+  {
+    JSONObject root = super.serialize();
+    
+    root.setInt("rounds_completed", rounds_completed);
+    
+    JSONArray jarules = new JSONArray();
+    for (String rule : rules.get_rules().names())
+      jarules.append(rule);
+    
+    root.setJSONArray("Rules", jarules);
+    
+    return root;
+  }
+  
+  void deserialize(JSONObject root)
+  {    
+    super.deserialize(root);
+    
+    rules = new RuleManager();
+    
+    rounds_completed = root.getInt("rounds_completed");
+    
+    JSONArray jarules = root.getJSONArray("Rules");
+    
+    for (int i = 0; i < jarules.size(); ++i)
+      rules.put(globals.ruleFactory.get_rule(jarules.getString(i)));
+    
+    win_conditions.clear();
+    
+    for (int x = 1; x < grid.w; ++x)
+    {
+      Griddle gr = grid.get(x, grid.h - 1);
+      
+      if (gr instanceof CountingOutputResourcePool)
+      {
+        CountingOutputResourcePool cgr = (CountingOutputResourcePool)gr;
+        
+        if (cgr.required > 0)
+        {
+          WinCondition wc = new WinCondition(cgr.ng_type, cgr.required, cgr);
+          win_conditions.add(wc);
+        }
+      }
+    }
   }
 }
 

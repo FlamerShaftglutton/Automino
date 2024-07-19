@@ -119,7 +119,7 @@ class CountingResourcePool extends ResourcePool
     fill(#000000);
     text(get_display_string(), text_spot.x, text_spot.y);
     
-    if (ng_sprite != null && get_count() == 0)
+    if (ng_sprite != null && (get_count() == 0 || ngs.isEmpty()))
       shape(ng_sprite, sprite_spot.x, sprite_spot.y, sprite_dim.x, sprite_dim.y);
     
     popMatrix();
@@ -259,10 +259,35 @@ class LevelEditorGriddle extends EmptyGriddle
 {
   boolean locked = false;
   color background_color = color(255,255,255,0);
+  Griddle subgriddle = null;
   
   LevelEditorGriddle(GridGameFlowBase game) { super(game); type = "LevelEditorGriddle"; }
   
-  void update() { traversable = true; }// ngs.isEmpty(); }
+  void update()
+  {
+    if (subgriddle == null) 
+    { 
+      if (!ngs.isEmpty())
+      {
+        LevelEditorNonGriddle leng = (LevelEditorNonGriddle)ng();
+        subgriddle = globals.gFactory.create_griddle(leng.as_json,game);
+        subgriddle.pos = pos.copy();
+        subgriddle.dim = dim.copy();
+        subgriddle.quarter_turns = quarter_turns;
+      }
+    }
+    else
+    {
+      if (ngs.isEmpty())
+        subgriddle = null;
+      else
+      {
+        subgriddle.pos = pos.copy();
+        subgriddle.dim = dim.copy();
+        subgriddle.quarter_turns = quarter_turns;
+      }
+    }
+  }
   
   void player_interact_end(Player player)
   {
@@ -283,17 +308,18 @@ class LevelEditorGriddle extends EmptyGriddle
     if (!super.receive_ng(ng) || !(ng instanceof LevelEditorNonGriddle))
       return false;
       
-    
     LevelEditorNonGriddle leng = (LevelEditorNonGriddle)ng;
     
-    sprite = leng.shape;
-    spritename = leng.as_json.getString("sprite");
-    
-    if (sprite == null && !spritename.isEmpty())
-      sprite = globals.sprites.get_sprite(spritename);
+    subgriddle = globals.gFactory.create_griddle(leng.as_json,game);
+    subgriddle.pos = pos.copy();
+    subgriddle.dim = dim.copy();
+    subgriddle.quarter_turns = quarter_turns;
     
     return true;
   }
+  
+  void    remove_ng(NonGriddle ng) { super.remove_ng(ng); subgriddle = null; }
+  void    remove_ng() { super.remove_ng(); subgriddle = null; }
   
   boolean can_accept_ng(NonGriddle n) { return n.name.equals("Gold Ingot") || (!locked && n instanceof LevelEditorNonGriddle && ngs.isEmpty() && super.can_accept_ng(n)); }
   boolean can_give_ng() { return !locked; }
@@ -305,13 +331,10 @@ class LevelEditorGriddle extends EmptyGriddle
     strokeWeight(1);
     rect(pos.x, pos.y, dim.x, dim.y);
     
-    if (ngs.isEmpty())
-    {
-      sprite = null;
-      spritename = "";
-    }
-    
-    super.draw(sprite);
+    if (subgriddle == null)
+      super.draw();
+    else
+      subgriddle.draw();
   }
   
   JSONObject serialize()

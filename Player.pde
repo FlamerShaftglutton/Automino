@@ -85,7 +85,7 @@ class Player
     {
       Griddle fg = get_faced_griddle(parent.grid);
         
-      //try put down
+      //try to put down
       if (ng != null)
       {
         if (fg.receive_ng(ng))

@@ -120,21 +120,44 @@ class GameSession extends GridGameFlowBase
         }
       }
     }
+    //add new walls
     else if (old_value < new_value)
     {
+      //this could be very easy, just grab the list of EmptyGriddles from the grid, shuffle it, and plop a WallGriddle in the top X spots.
+      //But this could lead to inaccessible points, especially points containing vital griddles. So we're going to do some pathfinding to ensure each addition does not lock the player out of anything
       float extra_walls_percent = new_value - old_value;
       
       int num_extra_walls = (int)random(1, grid.w * grid.h * extra_walls_percent);
       int r = 0;
+      
+      //set up a bitmap of the existing walls to A: make sure we don't overlap and B: do some basic pathfinding to make sure nothing is locked behind walls.
+      BitGrid walls = grid.get_map_of_type(WallGriddle.class);
       while (r < num_extra_walls)
       {
         IntVec random_pos = new IntVec((int)random(2,grid.w - 2), (int)random(2,grid.h-2));
+        
         Griddle gg = grid.get(random_pos);
         
-        if (gg instanceof EmptyGriddle || (gg instanceof LevelEditorGriddle && ((LevelEditorGriddle)gg).ngs.isEmpty()))
+        if (!walls.get_bit(random_pos.x, random_pos.y) && gg instanceof EmptyGriddle || (gg instanceof LevelEditorGriddle && ((LevelEditorGriddle)gg).ngs.isEmpty()))
         {
-          grid.set(random_pos, globals.gFactory.create_griddle("WallGriddle", this));
-          ++r;
+          //pathfind from each of the four surrounding spots to 0,0 to make sure this doesn't trap anything
+          boolean traps_spaces = false;
+          for (IntVec offset : orthogonal_offsets())
+          {
+            IntVec off = offset.copy().add(random_pos);
+            if (!walls.get_bit(off.x, off.y) && shortest_path(off, new IntVec(0,0), walls).size() == 0)
+            {
+              traps_spaces = true;
+              break;
+            }
+          }
+          
+          if (!traps_spaces)
+          {
+            grid.set(random_pos, globals.gFactory.create_griddle("WallGriddle", this));
+            walls.set_bit(random_pos.x, random_pos.y);
+            ++r;
+          }
         }
       }
     }
@@ -303,7 +326,7 @@ class GameSession extends GridGameFlowBase
   
   void create_new()
   {
-    int w = (int)random(7, 28);
+    int w = (int)random(7, 40);
     int h = (int)random(7, 28);
     
     if (rules == null || rules.get_rules().size() == 0)
@@ -561,6 +584,7 @@ class GameSession extends GridGameFlowBase
         RewardGriddle rg = (RewardGriddle)tgg;
         
         LevelEditorGriddle leg = new LevelEditorGriddle(this);
+        leg.background_color = #E09E9E;
         
         if (!rg.finished)
         {

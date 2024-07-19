@@ -258,6 +258,7 @@ class MetaActionCounter extends Griddle
 class LevelEditorGriddle extends EmptyGriddle
 {
   boolean locked = false;
+  color background_color = color(255,255,255,0);
   
   LevelEditorGriddle(GridGameFlowBase game) { super(game); type = "LevelEditorGriddle"; }
   
@@ -299,7 +300,7 @@ class LevelEditorGriddle extends EmptyGriddle
   
   void draw() 
   {
-    noFill();
+    fill(background_color);
     stroke(0,0,0);
     strokeWeight(1);
     rect(pos.x, pos.y, dim.x, dim.y);

@@ -1,4 +1,5 @@
 import java.util.regex.Pattern;
+import java.util.Collections;
 
 void translate(PVector p) { translate(p.x,p.y); }
 
@@ -115,6 +116,8 @@ class IntVec
   
   PVector toPVec() { return new PVector(x,y); }
   
+  boolean equals(IntVec rhs) { return rhs.x == x && rhs.y == y; }
+  
   String print() { return "{ x: " + x + ", y: " + y + " }"; }
 }
 
@@ -207,4 +210,123 @@ StringList wrap_string(String s, float w)
   retval.append(s.substring(start_index));
   
   return retval;
+}
+
+
+//utility class that lets you store and manipulate 2d maps of bit/booleans
+class BitGrid
+{
+  int[] values;
+  int w;
+  int h;
+  
+  BitGrid(int w, int h)
+  {
+    values = new int[1 + (w*h)/32];//integer division rounds down, so you gotta add one. You should do a check to see if it's exact, but I really don't care about one extra int
+    this.w = w;
+    this.h = h;
+  }
+  
+  void set_bit  (int x, int y) { int superindex = x + y * w; int index = superindex / 32; int subindex = superindex - index * 32; int mask =   1 << subindex;  values[index] |= mask; }
+  void unset_bit(int x, int y) { int superindex = x + y * w; int index = superindex / 32; int subindex = superindex - index * 32; int mask = ~(1 << subindex); values[index] &= mask; }
+  void flip_bit (int x, int y) { int superindex = x + y * w; int index = superindex / 32; int subindex = superindex - index * 32; int mask =   1 << subindex;  values[index] ^= mask; }
+  
+  void put_bit(int x, int y, boolean value) { if (value) set_bit(x,y); else unset_bit(x,y); }
+  
+  boolean get_bit(int x, int y) { int superindex = x + y * w; int index = superindex / 32; int subindex = superindex - index * 32; return ((values[index] >>> subindex) & 1) == 1; }
+}
+
+
+
+
+//Barebones A* utility function for finding the shortest path on a grid between two points. Depends on IntVec and BitGrid.
+ArrayList<IntVec> shortest_path(IntVec start, IntVec end, BitGrid obstacles)
+{
+  ArrayList<IntVec> stack = new ArrayList<IntVec>();
+  
+  int w = obstacles.w;
+  int h = obstacles.h;
+  
+  IntVec[][] parent = new IntVec[w][h];
+  int[][] distance_to_start = new int[w][h];
+  int[][] distance_to_end = new int[w][h];
+  
+  for (int x = 0; x < w; ++x)
+  {
+    for (int y = 0; y < h; ++y)
+    {
+      parent[x][y] = null;
+      distance_to_start[x][y] = Integer.MAX_VALUE;
+      distance_to_end[x][y] = abs(x - end.x) + abs(y - end.y);//minkowski distance
+    }
+  }
+  
+  distance_to_start[start.x][start.y] = 0;
+  stack.add(start);
+  
+  while (!stack.isEmpty())
+  {
+    //first up find the best candidate
+    int best_index = -1;
+    int best_dis = Integer.MAX_VALUE;
+    
+    for (int i = 0; i < stack.size(); ++i)
+    {
+      IntVec iv = stack.get(i);
+      int total_estimated_distance = distance_to_start[iv.x][iv.y] + distance_to_end[iv.x][iv.y];
+      if (total_estimated_distance < best_dis)
+      {
+        best_index = i;
+        best_dis = total_estimated_distance;
+      }
+    }
+    
+    IntVec best_index_vec = stack.get(best_index);
+    stack.remove(best_index);
+    
+    //check all four surrounding cells
+    for (IntVec offset : new IntVec[]{ new IntVec(-1,0), new IntVec(0,-1), new IntVec(1,0), new IntVec(0,1) })
+    {
+      IntVec cpos = best_index_vec.copy().add(offset);
+      
+      if (cpos.x < 0 || cpos.y < 0 || cpos.x >= obstacles.w || cpos.y >= obstacles.h || obstacles.get_bit(cpos.x, cpos.y))
+        continue;
+      
+      if (cpos.equals(end))
+      {
+        ArrayList<IntVec> retval = new ArrayList<IntVec>();
+        
+        retval.add(end);
+        for (IntVec rpos = best_index_vec.copy(); rpos != null && !rpos.equals(start); rpos = parent[rpos.x][rpos.y])
+          retval.add(rpos);
+        retval.add(start);
+        Collections.reverse(retval);
+
+        return retval;
+      }
+      
+      int dts = distance_to_start[best_index_vec.x][best_index_vec.y] + 1;
+      
+      boolean was_null = parent[cpos.x][cpos.y] == null && !cpos.equals(start);
+      
+      if (was_null || distance_to_start[cpos.x][cpos.y] > dts)
+      {
+        parent[cpos.x][cpos.y] = best_index_vec.copy();
+        distance_to_start[cpos.x][cpos.y] = dts;
+        
+        if (!was_null)
+        {
+          for (int i = stack.size() - 1; i >= 0; --i)
+          {
+            if (stack.get(i).equals(cpos))
+              stack.remove(i);
+          }
+        }
+        
+        stack.add(cpos);
+      }
+    }
+  }
+  
+  return new ArrayList<IntVec>();
 }

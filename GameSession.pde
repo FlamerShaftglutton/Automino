@@ -21,7 +21,7 @@ class GameSession extends GridGameFlowBase
       case LEVELEDITOR: level_editor(); break;
       case WON_PLAYLEVEL: win_level(); break;
       case LOST_PLAYLEVEL: lose_level(); break;
-      case MENU: grid = get_LevelEditor_from_level(grid); state = GameState.LEVELEDITOR; break;
+      case MENU: start_level_editor(); break;
     }
   }
   
@@ -501,6 +501,11 @@ class GameSession extends GridGameFlowBase
     
     globals.game.push(new MessageScreenGameFlow(), new Message("win","You won!")); 
     
+    start_level_editor();
+  }
+  
+  void start_level_editor()
+  {
     player.ng = null; 
     nongriddles.clear(); 
     nongriddles_to_delete.clear();

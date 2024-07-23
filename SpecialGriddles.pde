@@ -402,4 +402,20 @@ class RewardGriddle extends Griddle
       rect(pos.x, pos.y, dim.x, dim.y * time_used / time_needed );
     }
   }
+  
+  void deserialize(JSONObject o) 
+  { 
+    super.deserialize(o); 
+    reward_griddle_name = o.getString("reward_griddle_name","");
+    finished = o.getBoolean("finished", false);
+  }
+  
+  JSONObject serialize() 
+  {
+    JSONObject o = super.serialize();
+    o.setString("reward_griddle_name", reward_griddle_name);
+    o.setBoolean("finished", finished);
+ 
+    return o;
+  }
 }

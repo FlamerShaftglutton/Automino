@@ -27,7 +27,7 @@ class Grid
     this.w = w;
     this.h = h;
     
-    edge_width = Math.min(dim.x / w, dim.y / h);
+    edge_width = floor(Math.min(dim.x / w, dim.y / h));
     pos = original_pos.copy().add(dim.copy().sub((new PVector(w,h)).mult(edge_width)).mult(0.5f));
     
     griddles = new ArrayList<Griddle>(); 

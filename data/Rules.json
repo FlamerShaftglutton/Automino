@@ -136,6 +136,15 @@
 			"add 'Tailings' to Resource:Random",
 		],
 	},
+	{
+		"name": "Wall Things End",
+		"description": "Add more internal walls!",
+		"tags": ["curse","walls"],
+		"dependencies": [ ],
+		"mods": [
+			"add 0.15 to Walls:Internal",
+		],
+	},
 	
 	
 	

@@ -142,7 +142,7 @@
 		"tags": ["curse","walls"],
 		"dependencies": [ ],
 		"mods": [
-			"add 0.85 to Walls:Internal",
+			"add 0.15 to Walls:Internal",
 		],
 	},
 	

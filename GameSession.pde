@@ -128,29 +128,37 @@ class GameSession extends GridGameFlowBase
       float extra_walls_percent = new_value - old_value;
       
       int num_extra_walls = (int)random(1, grid.w * grid.h * extra_walls_percent);
-      int r = 0;
+      //int r = 0;
       
-      //set up a bitmap of the existing walls to A: make sure we don't overlap and B: do some basic pathfinding to make sure nothing is locked behind walls.
+	  //set up a bitmap of the existing walls to A: make sure we don't overlap and B: do some basic pathfinding to make sure nothing is locked behind walls.
       BitGrid walls = grid.get_map_of_type(WallGriddle.class);
-      while (r < num_extra_walls)
+      IntVec player_pos = grid.grid_pos_from_absolute_pos(player.pos);
+      for (int attempts = 0, r = 0; attempts < 10000 && r < num_extra_walls; ++attempts)
       {
         IntVec random_pos = new IntVec((int)random(2,grid.w - 2), (int)random(2,grid.h-2));
         
         Griddle gg = grid.get(random_pos);
         
-        if (!walls.get_bit(random_pos.x, random_pos.y) && gg instanceof EmptyGriddle || (gg instanceof LevelEditorGriddle && ((LevelEditorGriddle)gg).ngs.isEmpty()))
+        if (!walls.get_bit(random_pos.x, random_pos.y) && !random_pos.equals(player_pos) && (gg.type.equals("EmptyGriddle") || (gg.type.equals("LevelEditorGriddle") && gg.ngs.isEmpty())))
         {
           //pathfind from each of the four surrounding spots to 0,0 to make sure this doesn't trap anything
           boolean traps_spaces = false;
+          walls.set_bit(random_pos.x, random_pos.y);
           for (IntVec offset : orthogonal_offsets())
           {
             IntVec off = offset.copy().add(random_pos);
-            if (!walls.get_bit(off.x, off.y) && shortest_path(off, new IntVec(0,0), walls).size() == 0)
+            if (!walls.get_bit(off.x, off.y))
             {
-              traps_spaces = true;
-              break;
+              ArrayList<IntVec> path = shortest_path(off, new IntVec(0,0), walls);
+
+              if (path.isEmpty())
+              {
+                traps_spaces = true;
+                break;
+              }
             }
           }
+          walls.unset_bit(random_pos.x, random_pos.y);
           
           if (!traps_spaces)
           {
@@ -179,7 +187,7 @@ class GameSession extends GridGameFlowBase
         for (String s : upgrades)
           cpm.addCard(s, globals.gFactory.get_description(s), globals.sprites.get_sprite(globals.gFactory.get_spritename(s)));
         
-        cpm.addCard("Cancel", "Return without upgrading or spending your gold"); //<>//
+        cpm.addCard("Cancel", "Return without upgrading or spending your gold");
         
         globals.game.push(cpm, new Message("upgrade","Choose an upgrade"));
       }
@@ -495,7 +503,7 @@ class GameSession extends GridGameFlowBase
       color curse_color = #babaf6;
       for (int i = 0; i < options.size(); ++i)
         cpm.addCard(options.get(i).name, options.get(i).description, random_color(curse_color, 0.05));
-      
+
       globals.game.push(cpm, new Message("rule", "Congrats! Choose a curse."));
     }
     

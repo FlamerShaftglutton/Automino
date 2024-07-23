@@ -370,15 +370,15 @@ class GameSession extends GridGameFlowBase
     
     for (int y = 1; y < h - 6; ++y)
       grid.set(w - 1, y, globals.gFactory.create_griddle("WallGriddle", this));
-      
-    update_internal_walls(0f, rules.get_float("Walls:Internal",0.125f));
     
     player = new Player(this);
-            
+    
     player.spritename = globals.profiles.current().sprite;
     player.sprite = globals.sprites.get_sprite(player.spritename);
     player.pos = grid.absolute_pos_from_grid_pos(new IntVec(w / 2,h / 2));
     player.dim = grid.get_square_dim();
+    
+    update_internal_walls(0f, rules.get_float("Walls:Internal",0.125f));
     
     grid.apply_alterations();
     conform_to_rules();
@@ -592,23 +592,30 @@ class GameSession extends GridGameFlowBase
     {
       Griddle tgg = tg.get(tg.w - 1, y);
       
-      if (tgg instanceof RewardGriddle)
+      if (!(tgg instanceof WallGriddle))
       {
-        RewardGriddle rg = (RewardGriddle)tgg;
-        
         LevelEditorGriddle leg = new LevelEditorGriddle(this);
         leg.background_color = #E09E9E;
         
-        if (!rg.finished)
+        JSONObject tggo = null;
+        
+        if (tgg instanceof RewardGriddle)
         {
-          JSONObject tggo = globals.gFactory.create_griddle(rg.reward_griddle_name, this).serialize();
-          
-          LevelEditorNonGriddle leng = globals.ngFactory.create_le_ng(tggo.getString("type"));
-          leng.as_json = tggo;
-          leng.shape = globals.sprites.get_sprite(tggo.getString("sprite"));
-          leng.visible = false;
-          register_ng(leng);
-          leg.receive_ng(leng);
+          RewardGriddle rg = (RewardGriddle)tgg;
+          if (!rg.finished)
+            tggo = globals.gFactory.create_griddle(rg.reward_griddle_name, this).serialize();
+        }
+        else if (!(tgg instanceof EmptyGriddle))
+          tggo = tgg.serialize();
+        
+        if (tggo != null)
+        {
+            LevelEditorNonGriddle leng = globals.ngFactory.create_le_ng(tggo.getString("_template"));
+            leng.as_json = tggo;
+            leng.shape = globals.sprites.get_sprite(tggo.getString("sprite"));
+            leng.visible = false;
+            register_ng(leng);
+            leg.receive_ng(leng);
         }
         
         leg.locked = false;

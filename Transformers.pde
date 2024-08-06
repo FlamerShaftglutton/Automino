@@ -281,6 +281,7 @@ class ConveyorTransformer extends Transformer
         
         PVector start = center_center();
         PVector end = start.copy().add(iv_offset.toPVec().mult(dim.x));
+		ng.pos = center_center();
         
         comp.start_conveying(gg, start, end, ng);
         

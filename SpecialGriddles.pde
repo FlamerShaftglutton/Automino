@@ -13,11 +13,9 @@ class ResourcePool extends Griddle
   {
     if (ngs.isEmpty())
       produce_resource();
-    
-    super.update();
   }
   
-  NonGriddle produce_resource() { NonGriddle retval = game.create_and_register_ng(ng_type); ngs.add(retval); return retval; }
+  NonGriddle produce_resource() { NonGriddle retval = game.create_and_register_ng(ng_type); ngs.add(retval); ng().pos = center_center(); return retval; }
   
   JSONObject serialize() { JSONObject o = super.serialize(); o.setString("ng_type", ng_type); return o;  }
   void deserialize(JSONObject o) { super.deserialize(o); ng_type = o.getString("ng_type", ""); }
@@ -163,7 +161,7 @@ class ConveyorCountingResourcePool extends CountingResourcePool
       
       if (count > 0)
         ng = produce_resource();
-      
+
       comp.start_conveying(gg, start, end, ng);
     }
     
@@ -173,7 +171,7 @@ class ConveyorCountingResourcePool extends CountingResourcePool
   void remove_ng(NonGriddle ng) 
   {
     super.remove_ng(ng); 
-  
+    
     if (ng == comp.ng)
       comp.ng = null;
   }

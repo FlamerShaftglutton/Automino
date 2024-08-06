@@ -75,7 +75,7 @@ class GrabberBelt extends ConveyorBelt
             Griddle gg_to = game.grid.get(get_grid_pos().add(iv_offset));
             
             comp.start_conveying(gg_to, start, end, gg_ng);
-            comp.movement_progress = (start.dist(end) - end.dist(gg_ng.pos)) / start.dist(end);
+            //comp.movement_progress = (start.dist(end) - end.dist(gg_ng.pos)) / start.dist(end);
 
             break;
           }
@@ -260,7 +260,7 @@ class ConveyorComponent
     this.end   = end.copy();
     ng = target;
     
-    movement_progress = 0f;
+    movement_progress = (start.dist(end) - end.dist(target.pos)) / start.dist(end);
   }
   
   void update()
@@ -310,6 +310,8 @@ class ConveyorBelt extends Griddle
   {
     if (!super.receive_ng(ng))
       return false;
+      
+    
     
     IntVec iv_offset = offset_from_quarter_turns(quarter_turns);
     IntVec xy = get_grid_pos().add(iv_offset);
@@ -317,8 +319,8 @@ class ConveyorBelt extends Griddle
     
     PVector start = center_center();
     PVector end = start.copy().add(iv_offset.toPVec().mult(dim.x));
-    
-    comp.start_conveying(gg, start, end, ng);
+
+    comp.start_conveying(gg, start, end, ng); //<>//
     
     return true;
   }

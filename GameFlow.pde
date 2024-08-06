@@ -657,7 +657,7 @@ class NewGameFlow extends GridGameFlowBase
     load();
     
     if (message.value.equals("None"))
-      selecting_mac.display_string = selecting_mac.action.equals("choosecurse") ? "Choose a Curse" : "Choose a Boon";
+      selecting_mac.display_string = selecting_mac.parameters.hasValue("curse") ? "Choose a Curse" : "Choose a Boon";
     else if (message.target.equals("selectedrule"))
       selecting_mac.display_string = message.value;
       

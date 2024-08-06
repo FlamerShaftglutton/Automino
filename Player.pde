@@ -102,7 +102,11 @@ class Player
         NonGriddle gng = fg.ngs.get(0);
         
         if (gng instanceof LevelEditorNonGriddle)
-          ((LevelEditorNonGriddle)gng).visible = true;
+        {
+          LevelEditorNonGriddle leng = ((LevelEditorNonGriddle)gng);
+          leng.visible = true;
+          leng.dim = dim.copy().mult(0.6f);
+        }
         
         fg.remove_ng(gng);
         ng = gng;

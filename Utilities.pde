@@ -34,15 +34,6 @@ StringList getStringList(String field, JSONObject o)
   else if (of instanceof JSONArray)
     retval = ((JSONArray)of).toStringList();
   
-  /*
-  {
-    JSONArray a = (JSONArray)of;
-    
-    for (int i = 0; i < a.size(); ++i)
-      retval.append(a.getString(i));
-  }
-  */
-  
   return retval;
 }
 
@@ -144,6 +135,7 @@ IntVec offset_from_angle(float angle)
 {
   return offset_from_quarter_turns(int(0.01f + (TWO_PI - angle) / HALF_PI));
 }
+
 
 //returns a color with full brightness, about 3/5 saturation, and a random hue. This should turn out slightly muted/pastel instead of the harshness of a truly random color.
 color random_color()

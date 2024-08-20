@@ -191,7 +191,7 @@ class Transformer extends Griddle
     if (game instanceof GameSession) 
     {
       GameSession gs = (GameSession)game;
-      modified_speed = base_speed;
+      modified_speed = gs.rules.get_float("Speed:"+template, base_speed);
       for (String operation : operations)
       {
         modified_speed = gs.rules.get_float("Speed:"+operation, modified_speed);
@@ -223,7 +223,7 @@ class TrashCompactor extends Transformer
   Interaction first_matching_interaction(StringList ng_names)
   {
     if (ng_names.size() == 2)
-      return new Interaction("", ng_names, new StringList(), 3f);//TODO: replace the time (3f) with a data point instead of hard coding
+      return new Interaction("", ng_names, new StringList(), 3f);
       
     return null;
   }
@@ -281,7 +281,7 @@ class ConveyorTransformer extends Transformer
         
         PVector start = center_center();
         PVector end = start.copy().add(iv_offset.toPVec().mult(dim.x));
-		ng.pos = center_center();
+		    ng.pos = center_center();
         
         comp.start_conveying(gg, start, end, ng);
         

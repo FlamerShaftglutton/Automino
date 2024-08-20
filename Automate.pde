@@ -2,7 +2,7 @@ Globals globals = new Globals();
 
 void setup()
 {
-  size(900,800);
+  size(1400,1000);
   
   initglobals();
 }
@@ -17,10 +17,9 @@ void draw()
   //globals.mouseReleased = false;
   globals.keyboard.update();
   
-  fill(#000000);
-  textSize(14);
-  
   //DEBUG
+  //fill(#000000);
+  //textSize(14);
   //text("" + mouseX + ", " + mouseY, width - 60f, 25f);
 }
 
@@ -52,4 +51,21 @@ void keyPressed()
 void keyReleased()
 {
   globals.keyboard.handle_keyReleased();
+}
+
+
+String save_filename()
+{
+  String retval = "save_";
+  
+  retval += right("0000" + year(),4);
+  retval += right("00" + month(),2);
+  retval += right("00" + day(),2);
+  retval += right("00" + hour(),2);
+  retval += right("00" + minute(),2);
+  retval += right("00" + second(),2);
+  
+  retval += ".json";
+  
+  return retval;
 }

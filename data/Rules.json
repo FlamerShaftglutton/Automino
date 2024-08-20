@@ -42,6 +42,27 @@
 		],
 	},
 	{
+		"name": "Coarse Grains",
+		"description": "Sieves are 50% slower.",
+		"tags": ["curse", "speed", "sieve"],
+		"dependencies": [ ],
+		"mods": [
+			"multiply 0.5 to Speed:sieve",
+		],
+	},
+	{
+		"name": "Stink Stank Stunk",
+		"description": "Trash Compactors are 50% slower.",
+		"tags": ["curse", "speed", "trash"],
+		"dependencies": [ ],
+		"mods": [
+			"multiply 0.5 to Speed:TrashCompactor",
+			"multiply 0.5 to Speed:AutoTrashCompactor",
+			"multiply 0.5 to Speed:FastTrashCompactor",
+			"multiply 0.5 to Speed:AutoFastTrashCompactor",
+		],
+	},
+	{
 		"name": "Gold Fever",
 		"description": "You need to have some gold to complete the round (you get to keep it).",
 		"tags": ["curse"],
@@ -126,8 +147,21 @@
 	{
 		"name": "Wasteful",
 		"description": "The resource line now carries tailings.",
-		"tags": ["curse", "resource", "iron" ],
+		"tags": ["curse", "resource" ],
 		"dependencies": [ "Cobalt Ingots" ],
+		"mods": [
+			"add 'Tailings' to Resource:Random",
+			"add 'Tailings' to Resource:Random",
+			"add 'Tailings' to Resource:Random",
+			"add 'Tailings' to Resource:Random",
+			"add 'Tailings' to Resource:Random",
+		],
+	},
+	{
+		"name": "Tail Spin",
+		"description": "The resource line now carries tailings.",
+		"tags": ["curse", "resource" ],
+		"dependencies": [ "Wasteful" ],
 		"mods": [
 			"add 'Tailings' to Resource:Random",
 			"add 'Tailings' to Resource:Random",
@@ -145,8 +179,96 @@
 			"add 0.15 to Walls:Internal",
 		],
 	},
-	
-	
+	{
+		"name": "I'm Wall In",
+		"description": "Add even more internal walls!",
+		"tags": ["curse","walls"],
+		"dependencies": [ "Wall Things End" ],
+		"mods": [
+			"add 0.15 to Walls:Internal",
+		],
+	},
+	{
+		"name": "Fine (10)",
+		"description": "Just give up 10 gold.",
+		"tags": ["curse","gold"],
+		"dependencies": [ "HasGold:10" ],
+		"mods": [
+			"subtract 10 from Gold",
+		],
+	},
+	{
+		"name": "Fine (100)",
+		"description": "Just give up 100 gold.",
+		"tags": ["curse","gold"],
+		"dependencies": [ "HasGold:100", "Fine (10)" ],
+		"mods": [
+			"subtract 100 from Gold",
+		],
+	},
+	{
+		"name": "Fine (1000)",
+		"description": "Just give up 1000 gold.",
+		"tags": ["curse","gold"],
+		"dependencies": [ "HasGold:1000", "Fine (100)" ],
+		"mods": [
+			"subtract 1000 from Gold",
+		],
+	},
+	{
+		"name": "Fine (10000)",
+		"description": "Just give up 10000 gold.",
+		"tags": ["curse","gold"],
+		"dependencies": [ "HasGold:10000", "Fine (1000)" ],
+		"mods": [
+			"subtract 10000 from Gold",
+		],
+	},
+	{
+		"name": "Fine (100000)",
+		"description": "Just give up 100000 gold.",
+		"tags": ["curse","gold"],
+		"dependencies": [ "HasGold:100000", "Fine (10000)" ],
+		"mods": [
+			"subtract 100000 from Gold",
+		],
+	},
+	{
+		"name": "Fine (1000000)",
+		"description": "Just give up 1000000 gold.",
+		"tags": ["curse","gold"],
+		"dependencies": [ "HasGold:1000000", "Fine (100000)" ],
+		"mods": [
+			"subtract 1000000 from Gold",
+		],
+	},
+	{
+		"name": "Fine (10000000)",
+		"description": "Just give up 10000000 gold.",
+		"tags": ["curse","gold"],
+		"dependencies": [ "HasGold:10000000", "Fine (1000000)" ],
+		"mods": [
+			"subtract 10000000 from Gold",
+		],
+	},
+	{
+		"name": "Fine (100000000)",
+		"description": "Just give up 100000000 gold.",
+		"tags": ["curse","gold"],
+		"dependencies": [ "HasGold:100000000", "Fine (10000000)" ],
+		"mods": [
+			"subtract 100000000 from Gold",
+		],
+	},
+		{
+		"name": "Fine (1000000000)",
+		"description": "Just give up 1000000000 gold.",
+		"tags": ["curse","gold"],
+		"dependencies": [ "HasGold:1000000000", "Fine (100000000)" ],
+		"mods": [
+			"subtract 1000000000 from Gold",
+		],
+	},
 	
 	{
 		"name": "Good Value",

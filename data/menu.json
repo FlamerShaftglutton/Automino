@@ -10,12 +10,12 @@
 				"display": "New Game",
 				"action": "newgame",
 			},
-			{
+						{
 				"x": 0,
 				"y": 0,
 				"type": "MetaActionCounter",
-				"display": "debug",
-				"action": "debug",
+				"display": "Tutorial",
+				"action": "tutorial",
 			},
 			{
 				"sprite": "player green",

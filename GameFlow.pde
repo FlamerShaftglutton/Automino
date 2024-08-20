@@ -292,6 +292,11 @@ class GridGameFlowBase implements GameFlow
       handle_message(m);
     }
     
+    update_toasts();
+  }
+  
+  void update_toasts()
+  {
     for (int i = 0; i < toasts.size(); ++i)
     {
       Toast t = toasts.get(i);
@@ -313,15 +318,47 @@ class GridGameFlowBase implements GameFlow
     
     for (NonGriddle ng : nongriddles)
       ng.draw();
-      
+    
+    draw_toasts();
+  }
+  
+  PVector get_toast_window_pos() { return new PVector(0,0); }
+  PVector get_toast_window_dim() { return new PVector(width,height); }
+  
+  void draw_toasts()
+  {
+    PVector toast_window_pos = get_toast_window_pos();
+    PVector toast_window_dim = get_toast_window_dim();
+    
+    float toast_y = toast_window_pos.y + toast_window_dim.y;
     for (int i = 0; i < toasts.size(); ++i)
     {
       Toast t = toasts.get(i);
       
-      textSize(14);
+      if (t.time_used >= t.time_to_display || t.time_used < 0)
+        continue;
+        
+      noStroke();
+      fill(color(255,255,255, 255 * ((t.time_to_display - t.time_used) / t.time_to_display)));
+      float text_size = (int)(toast_window_dim.x / 20f);
+      textSize(text_size);
+      
+      StringList chunks = wrap_string(t.text_to_display, toast_window_dim.x * 0.9f);
+      
+      float toast_width = 0f;
+      for (int ii = 0; ii < chunks.size(); ++ii)
+        toast_width = max(toast_width, textWidth(chunks.get(ii)) + text_size);
+      
+      float toast_height = text_size * 0.5f + text_size * 1.5f * chunks.size();
+      
+      toast_y -= toast_height + text_size;
+      
+      rect(toast_window_pos.x + (toast_window_dim.x - toast_width) * 0.5f, toast_y, toast_width, toast_height, 5f);
+      
       fill(color(0,0,0, 255 * ((t.time_to_display - t.time_used) / t.time_to_display)));
       textAlign(CENTER,CENTER);
-      text(t.text_to_display, width * 0.8f, height - 16f * (i + 1));
+      for (int ii = 0; ii < chunks.size(); ++ii)
+        text(chunks.get(ii), toast_window_pos.x + toast_window_dim.x * 0.5f, toast_y + text_size + ii * text_size * 1.5f);
     }
   }
   
@@ -443,6 +480,12 @@ class MainMenuGameFlow extends GridGameFlowBase
         }
         
         break;
+      case "tutorial":
+        Tutorial tut = new Tutorial();
+        tut.save_path = dataPath("tutorial.json");
+        tut.load();
+        globals.game.push(tut);
+        break;
       case "load":
         GameSession loadgame = new GameSession();
         loadgame.save_path = message.value;
@@ -504,22 +547,6 @@ class MainMenuGameFlow extends GridGameFlowBase
         }
       }
     }
-  }
-  
-  String save_filename()
-  {
-    String retval = "save_";
-    
-    retval += right("0000" + year(),4);
-    retval += right("00" + month(),2);
-    retval += right("00" + day(),2);
-    retval += right("00" + hour(),2);
-    retval += right("00" + minute(),2);
-    retval += right("00" + second(),2);
-    
-    retval += ".json";
-    
-    return retval;
   }
   
   void onFocus(Message message)
@@ -608,22 +635,6 @@ class NewGameFlow extends GridGameFlowBase
     newgame.rules.put(get_selected_rules());
     newgame.create_new();
     globals.game.push(newgame);
-  }
-  
-  String save_filename()
-  {
-    String retval = "save_";
-    
-    retval += right("0000" + year(),4);
-    retval += right("00" + month(),2);
-    retval += right("00" + day(),2);
-    retval += right("00" + hour(),2);
-    retval += right("00" + minute(),2);
-    retval += right("00" + second(),2);
-    
-    retval += ".json";
-    
-    return retval;
   }
   
   void load()

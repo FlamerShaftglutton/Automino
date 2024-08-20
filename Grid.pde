@@ -145,6 +145,8 @@ class Grid
   }
   
   PVector get_square_dim() { return new PVector(edge_width, edge_width); }
+  PVector get_dim() { return (new PVector(w,h)).mult(edge_width); }
+  PVector get_pos() { return pos.copy(); }
   
   
   IntVec get_grid_pos_from_object(Griddle g) { int i = griddles.indexOf(g); if (i < 0) { println("That object doesn't exist!"); return null; } return new IntVec(i % w, i / w); }

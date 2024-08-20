@@ -442,7 +442,7 @@
 		"type": "RandomResourcePool",
 		"description": "Life's like a box of rocks. You never know what you're gonna get.",
 		"sprite": "freezer",
-		"resources": [ "Iron Ore", "Cobalt Ore" ],
+		"resources": { "Iron Ore": 5, "Cobalt Ore": 5, "Gold Speck": 1 },
 	},
 	{
 		"type": "TrashCompactor",
@@ -473,6 +473,7 @@
 		"description": "Turn two of anything into nothing! Now hands-free and faster!",
 		"type": "TrashCompactor",
 		"sprite": "trashcan motor fast",
+		"speed": 0.03,
 		"automatic": true,
 	},
 ]

@@ -1,0 +1,958 @@
+{
+  "rounds_completed": 1,
+  "grid": {
+    "grid": [
+      {
+        "ng_type": "Iron Ore",
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "RandomResourcePool",
+        "sprite": "freezer",
+        "x": 0,
+        "resources": [
+          "Gold Speck",
+          "Gold Speck",
+          "Gold Speck",
+          "Cobalt Ore",
+          "Iron Ore",
+          "Iron Ore",
+          "Iron Ore",
+          "Iron Ore",
+          "Gold Speck"
+        ],
+        "y": 0,
+        "type": "RandomResourcePool"
+      },
+      {
+        "component": {"base_speed": 0.029999999329447746},
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 1,
+        "y": 0,
+        "type": "GrabberBelt"
+      },
+      {
+        "component": {"base_speed": 0.029999999329447746},
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 2,
+        "y": 0,
+        "type": "GrabberBelt"
+      },
+      {
+        "component": {"base_speed": 0.029999999329447746},
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 3,
+        "y": 0,
+        "type": "GrabberBelt"
+      },
+      {
+        "component": {"base_speed": 0.029999999329447746},
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 4,
+        "y": 0,
+        "type": "GrabberBelt"
+      },
+      {
+        "component": {"base_speed": 0.029999999329447746},
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 5,
+        "y": 0,
+        "type": "GrabberBelt"
+      },
+      {
+        "component": {"base_speed": 0.029999999329447746},
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 6,
+        "y": 0,
+        "type": "GrabberBelt"
+      },
+      {
+        "component": {"base_speed": 0.029999999329447746},
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "GrabberBelt",
+        "sprite": "two arrow conveyor yellow",
+        "x": 7,
+        "y": 0,
+        "type": "GrabberBelt"
+      },
+      {
+        "traversable": false,
+        "operations": [],
+        "quarter_turns": 0,
+        "_template": "TrashCompactor",
+        "sprite": "trashcan",
+        "x": 8,
+        "automatic": true,
+        "y": 0,
+        "type": "TrashCompactor",
+        "speed": 5.000000237487257E-4
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "WallGriddle",
+        "sprite": "square black",
+        "x": 0,
+        "y": 1,
+        "type": "WallGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 1,
+        "y": 1,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 2,
+        "y": 1,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 3,
+        "y": 1,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 4,
+        "y": 1,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 5,
+        "y": 1,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 6,
+        "y": 1,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 7,
+        "y": 1,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "WallGriddle",
+        "sprite": "square black",
+        "x": 8,
+        "y": 1,
+        "type": "WallGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "WallGriddle",
+        "sprite": "square black",
+        "x": 0,
+        "y": 2,
+        "type": "WallGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 1,
+        "y": 2,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "WallGriddle",
+        "sprite": "square black",
+        "x": 2,
+        "y": 2,
+        "type": "WallGriddle"
+      },
+      {
+        "traversable": false,
+        "operations": ["crush"],
+        "quarter_turns": 0,
+        "_template": "Crusher",
+        "sprite": "crusher",
+        "x": 3,
+        "automatic": false,
+        "y": 2,
+        "type": "Transformer",
+        "speed": 0.009999999776482582
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 4,
+        "y": 2,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 5,
+        "y": 2,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 6,
+        "y": 2,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 7,
+        "y": 2,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "WallGriddle",
+        "sprite": "square black",
+        "x": 8,
+        "y": 2,
+        "type": "WallGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "WallGriddle",
+        "sprite": "square black",
+        "x": 0,
+        "y": 3,
+        "type": "WallGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 1,
+        "y": 3,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 2,
+        "y": 3,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 3,
+        "y": 3,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 4,
+        "y": 3,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 5,
+        "y": 3,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 6,
+        "y": 3,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 7,
+        "y": 3,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "WallGriddle",
+        "sprite": "square black",
+        "x": 8,
+        "y": 3,
+        "type": "WallGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "WallGriddle",
+        "sprite": "square black",
+        "x": 0,
+        "y": 4,
+        "type": "WallGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 1,
+        "y": 4,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 2,
+        "y": 4,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "operations": ["extract"],
+        "quarter_turns": 0,
+        "_template": "Refiner",
+        "sprite": "centrifuge",
+        "x": 3,
+        "automatic": false,
+        "y": 4,
+        "type": "Transformer",
+        "speed": 0.009999999776482582
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 4,
+        "y": 4,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 5,
+        "y": 4,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "player pink",
+        "x": 6,
+        "y": 4,
+        "type": "PlayerGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 7,
+        "y": 4,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "WallGriddle",
+        "sprite": "square black",
+        "x": 8,
+        "y": 4,
+        "type": "WallGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "WallGriddle",
+        "sprite": "square black",
+        "x": 0,
+        "y": 5,
+        "type": "WallGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 1,
+        "y": 5,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 2,
+        "y": 5,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "WallGriddle",
+        "sprite": "square black",
+        "x": 3,
+        "y": 5,
+        "type": "WallGriddle"
+      },
+      {
+        "traversable": false,
+        "operations": ["smelt"],
+        "quarter_turns": 0,
+        "_template": "Smelter",
+        "sprite": "furnace",
+        "x": 4,
+        "automatic": false,
+        "y": 5,
+        "type": "Transformer",
+        "speed": 0.009999999776482582
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 5,
+        "y": 5,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "WallGriddle",
+        "sprite": "square black",
+        "x": 6,
+        "y": 5,
+        "type": "WallGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 7,
+        "y": 5,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "WallGriddle",
+        "sprite": "square black",
+        "x": 8,
+        "y": 5,
+        "type": "WallGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "WallGriddle",
+        "sprite": "square black",
+        "x": 0,
+        "y": 6,
+        "type": "WallGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 1,
+        "y": 6,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 2,
+        "y": 6,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 3,
+        "y": 6,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 4,
+        "y": 6,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 5,
+        "y": 6,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 6,
+        "y": 6,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 7,
+        "y": 6,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "WallGriddle",
+        "sprite": "square black",
+        "x": 8,
+        "y": 6,
+        "type": "WallGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "WallGriddle",
+        "sprite": "square black",
+        "x": 0,
+        "y": 7,
+        "type": "WallGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 1,
+        "y": 7,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 2,
+        "y": 7,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 3,
+        "y": 7,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 4,
+        "y": 7,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 5,
+        "y": 7,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 6,
+        "y": 7,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": true,
+        "quarter_turns": 0,
+        "_template": "",
+        "sprite": "",
+        "x": 7,
+        "y": 7,
+        "type": "EmptyGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "WallGriddle",
+        "sprite": "square black",
+        "x": 8,
+        "y": 7,
+        "type": "WallGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "WallGriddle",
+        "sprite": "square black",
+        "x": 0,
+        "y": 8,
+        "type": "WallGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "WallGriddle",
+        "sprite": "square black",
+        "x": 1,
+        "y": 8,
+        "type": "WallGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "WallGriddle",
+        "sprite": "square black",
+        "x": 2,
+        "y": 8,
+        "type": "WallGriddle"
+      },
+      {
+        "ng_type": "Gold Ingot",
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "GoldIngotOutput",
+        "sprite": "freezer",
+        "count": 0,
+        "x": 3,
+        "y": 8,
+        "type": "CountingOutputResourcePool",
+        "required": -1
+      },
+      {
+        "ng_type": "Iron Ingot",
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "IronOutput",
+        "sprite": "freezer",
+        "count": 0,
+        "x": 4,
+        "y": 8,
+        "type": "CountingOutputResourcePool",
+        "required": 2
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "WallGriddle",
+        "sprite": "square black",
+        "x": 5,
+        "y": 8,
+        "type": "WallGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "WallGriddle",
+        "sprite": "square black",
+        "x": 6,
+        "y": 8,
+        "type": "WallGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "WallGriddle",
+        "sprite": "square black",
+        "x": 7,
+        "y": 8,
+        "type": "WallGriddle"
+      },
+      {
+        "traversable": false,
+        "quarter_turns": 0,
+        "_template": "WallGriddle",
+        "sprite": "square black",
+        "x": 8,
+        "y": 8,
+        "type": "WallGriddle"
+      }
+    ],
+    "width": 9,
+    "height": 9
+  },
+  "Rules": ["Iron Ingots"],
+  "steps": [
+	{
+		"description": "Welcome to your first day at MQM, Maximum Quality Mining. Normally MQM interns start by cleaving ores from the rocks below our feet, but due to nepotism you will be refining ore instead. Move around with the arrow keys, then run to the top of the screen and pick up a rock from the conveyor belts by pressing the SPACEBAR button.",
+		"expression": "Held:player:any",
+		"highlight": { "pos": { "x": 1, "y": 0}, "dim": { "x": 7, "y": 1} },
+	},
+	{
+		"description": "Well done. We don't need that, so just drop it on the floor somewhere with SPACEBAR again.",
+		"expression": "Held:player:none",
+	},
+	{
+		"description": "Now pick up an Iron Ore (one of the red rocks) and put it on the Crusher machine.",
+		"expression": "'Held:3,2:Iron Ore' > 0",
+		"highlight": { "x": 3, "y": 2},
+	},
+	{
+		"description": "Face the Crusher and hold the X key to operate the machine.",
+		"expression": "'Resource:Iron Powder' > 0",
+		"highlight": { "x": 3, "y": 2},
+	},
+	{
+		"description": "You have now pulverized the ore into Iron Powder. Pick that up with SPACEBAR then drop it on the Centrifuge, also with SPACEBAR.",
+		"expression": "'Held:3,4:Iron Powder' > 0",
+		"highlight": { "x": 3, "y": 4},
+	},
+	{
+		"description": "Same as with the Crusher, face the Centrifuge and hold X to run the machine.",
+		"expression": "'Resource:Tailings' > 0",
+		"highlight": { "x": 3, "y": 4},
+	},
+	{
+		"description": "This process has two outputs. Much like you, the gray Tailings are worthless trash. Pick them up with SPACEBAR and drop them on the floor somewhere.",
+		"expression": "'Held:player:Tailings' > 0",
+		"highlight": { "x": 3, "y": 4},
+	},
+	{
+		"description": "Just drop it anywhere. We're definitely on this step.",
+		"expression": "'Held:player:none'",
+		"highlight": { "x": 3, "y": 4},
+	},
+	{
+		"description": "The valuable part is the Refined Iron you have made. Not easy to transport, though, so you'll do one more step. Pick up the Refined Iron and drop it in the Furnace.",
+		"expression": "'Held:4,5:Refined Iron' > 0",
+		"highlight": { "x": 4, "y": 5},
+	},
+	{
+		"description": "Once again hold X to run the machine.",
+		"expression": "'Resource:Iron Ingot' > 0",
+		"highlight": { "x": 4, "y": 5},
+	},
+	{
+		"description": "The fruit of your labor: an Iron Ingot. Deliver it to the receptacle at the bottom of the screen and drop it in with SPACEBAR.",
+		"expression": "'Held:4,8:Iron Ingot' > 0",
+		"highlight": { "x": 4, "y": 8},
+	},
+	{
+		"description": "Nicely done. You have a quota that will increase each day. As a reward for finishing your work early we place some junk machines on the right. They don't stick around forever, though, and when the last one is gone you're out of time. Miss your quota when the time runs out and you're fired. Press the Y button to acknowledge this Rule.",
+		"expression": "KeyPressed:y",
+	},
+	{
+		"description": "Excellent. I will show you one more thing to hopefully increase your productivity. Your machinery can be upgraded each morning with Gold Ingots. The recipe is a bit different. You'll need to put two Gold Specks on the Crusher. Grab them from the conveyor belt at the top.",
+		"expression": "'Held:3,2:Gold Speck' > 0",
+		"highlight": { "x": 3, "y": 2},
+	},
+	{
+		"description": "Now grab another Gold Speck and put it on the Crusher.",
+		"expression": "'Held:3,2:Gold Speck' > 1",
+		"highlight": { "x": 3, "y": 2},
+	},
+	{
+		"description": "Hold X as usual to run the Crusher.",
+		"expression": "'Resource:Gold Powder' > 0",
+		"highlight": { "x": 3, "y": 2},
+	},
+	{
+		"description": "Take the Gold Powder and put it on the Furnace. You won't need the Centrifuge for this.",
+		"expression": "'Held:4,5:Gold Powder' > 0",
+		"highlight": { "x": 4, "y": 5},
+	},
+	{
+		"description": "Here's the tricky part: you'll need two Gold Powders to start the Furnace. Go grab two more Gold Specks and put them on the Crusher again.",
+		"expression": "'Held:3,2:Gold Speck' > 0",
+		"highlight": { "x": 3, "y": 2},
+	},
+	{
+		"description": "One more.",
+		"expression": "'Held:3,2:Gold Speck' > 1",
+		"highlight": { "x": 3, "y": 2},
+	},
+	{
+		"description": "Hold X again.",
+		"expression": "'Resource:Gold Powder' > 1",
+		"highlight": { "x": 3, "y": 2},
+	},
+	{
+		"description": "Take the Gold Powder and put it on the Furnace again.",
+		"expression": "'Held:4,5:Gold Powder' > 1",
+		"highlight": { "x": 4, "y": 5},
+	},
+	{
+		"description": "Finally run the Furnace by holding X",
+		"expression": "'Resource:Gold Ingot' > 0",
+		"highlight": { "x": 4, "y": 5},
+	},
+	{
+		"description": "As a courtesy we've given you a lockbox at the bottom to store your Gold Ingots in overnight. Just put them in before turning in your last Iron Ingot of the day. Put this one in now.",
+		"expression": "'Held:3,8:Gold Ingot' > 0",
+		"highlight": { "x": 3, "y": 8},
+	},
+	{
+		"description": "Great job. But your quota is two Iron Ingots. Don't worry, I won't let you time out. Start by grabbing an iron ore from the conveyor belt.",
+		"expression": "'Held:3,2:Iron Ore' > 0",
+		"highlight": { "x": 3, "y": 2},
+	},
+	{
+		"description": "Hold X to crush it.",
+		"expression": "'Held:3,2:Iron Powder' > 0",
+		"highlight": { "x": 3, "y": 2},
+	},
+	{
+		"description": "Bring it to the Centrifuge.",
+		"expression": "'Held:3,4:Iron Powder' > 0",
+		"highlight": { "x": 3, "y": 4},
+	},
+	{
+		"description": "X again.",
+		"expression": "'Held:3,4:Tailings' > 0",
+		"highlight": { "x": 3, "y": 4},
+	},
+	{
+		"description": "Dump the gray Tailings anywhere.",
+		"expression": "'Held:3,4:Tailings' = 0",
+		"highlight": { "x": 3, "y": 4},
+	},
+	{
+		"description": "Bring the Refined Iron to the Furnace.",
+		"expression": "'Held:4,5:Refined Iron' > 0",
+		"highlight": { "x": 4, "y": 5},
+	},
+	{
+		"description": "Last time, hold X.",
+		"expression": "'Held:4,5:Iron Ingot' > 0",
+		"highlight": { "x": 4, "y": 5},
+	},
+	{
+		"description": "End the day by turning in the last Iron Ingot.",
+		"expression": "Won",
+		"highlight": { "x": 4, "y": 8},
+	},
+	{
+		"description": "Before starting the next day you have a bit of time to rearrange your office. Try picking up the Crusher with SPACEBAR, as if it were a hunk of ore.",
+		"expression": "Held:3,2:none",
+		"highlight": { "x": 3, "y": 2},
+	},
+	{
+		"description": "Now plop it down with SPACEBAR somewhere else.",
+		"expression": "Held:player:none",
+	},
+	{
+		"description": "I mentioned before that you can upgrade your machines. Each upgrade takes one Gold Ingot. Grab your Gold Ingot out of the receptacle.",
+		"expression": "'Held:player:Gold Ingot'",
+		"highlight": { "x": 3, "y": 8},
+	},
+	{
+		"description": "Try upgrading your Furnace. Drop the Gold Ingot onto it with SPACEBAR to pull up a menu with possible upgrades. Some will make the machine run faster, or kick the outputs onto the floor when it's done, or even run all by itself. Pick whichever you'd like.",
+		"expression": "'Held:player:none'",
+		"highlight": { "x": 4, "y": 5},
+	},
+	{
+		"description": "Last thing. I mentioned your rewards on the right. The sooner you finish the more you get. These are machines that may make your job easier. Go grab one and put it down somewhere.",
+		"expression": "'Held:8,7:none'",
+		"highlight": { "x": 8, "y": 7},
+	},
+	{
+		"description": "Toss it anywhere. Be aware that anything left in the red Reward zone on the right will be given to the interns downstairs.",
+		"expression": "'Held:player:none'",
+	},
+	{
+		"description": "That's everything. Your quota will go up each day, but your time won't. Spend time making Gold Ingots each day if possible to upgrade your machines, and try to finish early when you need one of the rewards. But don't run out of time or you're fired! Press Y to get started.",
+		"expression": "KeyPressed:y",
+	},
+  ],
+}

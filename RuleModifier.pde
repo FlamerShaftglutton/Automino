@@ -334,8 +334,6 @@ class RuleList
     return this;
   }
   
-  RuleList clear() { rules.clear(); return this; }
-  
   RuleList filter_out_tags(String... tags)
   {
     return filter_out_tags(new StringList(tags));
@@ -343,8 +341,7 @@ class RuleList
   
   RuleList filter_out_tag(String tag) { return filter_out_tags(tag); }
   
-  //RuleList filter_just_curses() { RuleList retval = copy(); for (int i = rules.size()-1; i >= 0; --i) { if (rules.get(i).type == RuleType.BOON ) retval.remove(i); } return retval; }
-  //RuleList filter_just_boons()  { RuleList retval = copy(); for (int i = rules.size()-1; i >= 0; --i) { if (rules.get(i).type == RuleType.CURSE) retval.remove(i); } return retval; }
+  RuleList clear() { rules.clear(); return this; }
   
   RuleList remove_all(RuleList rhs) { rules.removeAll(rhs.rules); return this; }
   RuleList add_all(RuleList rhs) { rules.addAll(rhs.rules); return this; }

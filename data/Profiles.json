@@ -41,7 +41,6 @@
   },
   {
     "highest_round": 50,
-    "default": true,
     "name": "Sharp",
     "sprite": "player pink",
     "discovered_rules": [
@@ -63,7 +62,22 @@
       "Dirty Ore",
       "Good Value",
       "Crushing it",
-	  "Tear Down These Walls",
+      "Tear Down These Walls",
+      "Wall Things End",
+      "I'm Wall In",
+      "Stink Stank Stunk",
+      "Coarse Grains",
+      "Fine (10)"
+    ]
+  },
+  {
+    "highest_round": 0,
+    "default": true,
+    "name": "Stamper",
+    "sprite": "player yellow",
+    "discovered_rules": [
+      "Iron Ingots",
+      "Cobalt Ingots"
     ]
   }
 ]

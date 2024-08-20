@@ -7,6 +7,19 @@ class GameSession extends GridGameFlowBase
   Griddle to_upgrade = null;
   RuleManager rules = new RuleManager();
   
+  void draw()
+  {
+    super.draw();
+    
+    if (state == GameState.LEVELEDITOR)
+    {
+      textSize(36);
+      fill(0);
+      textAlign(LEFT,TOP);
+      text("Editor", 10f, 10f);
+    }
+  }
+  
   void update()
   {
     super.update();
@@ -81,7 +94,8 @@ class GameSession extends GridGameFlowBase
     {
       float internal_walls_old = rules.get_float("Walls:Internal",0.125f);
       int gold_offset_old = rules.get_int("Gold");
-      
+
+      grid.apply_alterations();
       rules.put(globals.ruleFactory.get_rule(message.value));
       
       float internal_walls_new = rules.get_float("Walls:Internal",0.125f);
@@ -130,7 +144,7 @@ class GameSession extends GridGameFlowBase
       int num_extra_walls = (int)random(1, grid.w * grid.h * extra_walls_percent);
       //int r = 0;
       
-	  //set up a bitmap of the existing walls to A: make sure we don't overlap and B: do some basic pathfinding to make sure nothing is locked behind walls.
+	    //set up a bitmap of the existing walls to A: make sure we don't overlap and B: do some basic pathfinding to make sure nothing is locked behind walls.
       BitGrid walls = grid.get_map_of_type(WallGriddle.class);
       IntVec player_pos = grid.grid_pos_from_absolute_pos(player.pos);
       for (int attempts = 0, r = 0; attempts < 10000 && r < num_extra_walls; ++attempts)
@@ -359,8 +373,8 @@ class GameSession extends GridGameFlowBase
     
     grid.set((int)random(2,w-3),h-1, globals.gFactory.create_griddle("GoldIngotOutput", this));
     
-    ov = JSONObject.parse("{ 'resources': { 'Iron Ore': 5, 'Cobalt Ore': 5, 'Gold Speck': 1 } }");
-    grid.set(0,0,globals.gFactory.create_griddle("RandomResourcePool", ov, this));
+    //ov = JSONObject.parse("{ 'resources': { 'Iron Ore': 5, 'Cobalt Ore': 5, 'Gold Speck': 1 } }");
+    grid.set(0,0,globals.gFactory.create_griddle("RandomResourcePool", this));
     
     for (int x = 1; x < w - 1; ++x)
       grid.set(x,0, globals.gFactory.create_griddle("GrabberBelt", this));
@@ -498,12 +512,22 @@ class GameSession extends GridGameFlowBase
     //get a curse every 4 rounds (ignored during boon rounds, such as round 20 and 40)
     else if (rounds_completed % 4 == 0)
     {
+      //add some virtual rules before getting our list to allow for resource dependencies
+      int current_gold = get_gold();
+      for (int gold = 10; gold <= current_gold; gold *= 10)
+        rules.put(new Rule("HasGold:"+gold, "" + gold, new StringList(), new StringList("gold","virtual")));
+      
+      //now get the list of available rules and make a card picker menu out of it
       CardPickMenu cpm = new CardPickMenu();
       RuleList options = rules.get_available_curses().shuffle().top(3);
       color curse_color = #babaf6;
       for (int i = 0; i < options.size(); ++i)
         cpm.addCard(options.get(i).name, options.get(i).description, random_color(curse_color, 0.05));
 
+      //delete the virtual rules
+      rules.rules.filter_out_tag("virtual");
+
+      //start the menu
       globals.game.push(cpm, new Message("rule", "Congrats! Choose a curse."));
     }
     
@@ -634,14 +658,27 @@ class GameSession extends GridGameFlowBase
     
     for (CountingOutputResourcePool corp : corps)
     {
-      if (corp.ng_type == "Gold Ingot")
+      if (corp.ng_type.equals("Gold Ingot"))
         return corp.set_count(corp.get_count() - amount);
     }
     
     return false;
   }
   
-    JSONObject serialize()
+  int get_gold()
+  {
+    ArrayList<CountingOutputResourcePool> corps = grid.get_all_of_type(CountingOutputResourcePool.class);
+    
+    for (CountingOutputResourcePool corp : corps)
+    {
+      if (corp.ng_type.equals("Gold Ingot"))
+        return corp.get_count();
+    }
+    
+    return 0;
+  }
+  
+  JSONObject serialize()
   {
     JSONObject root = super.serialize();
     

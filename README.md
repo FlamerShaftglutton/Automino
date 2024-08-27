@@ -9,7 +9,7 @@ Horrible programmer art and no sound, but gameplay that I enjoy.
 
 ![image](https://github.com/user-attachments/assets/29d5c487-9d2a-432b-b1d0-fa2908d9903f)
 
-Extensible rougelite game that can be easily rethemed. Difficulty keeps ramping until you lose. Every 4 levels you get a Curse, which changes the rules in some negative way. Every 10 levels you get a Boon, which changes the rules favorably.
+Extensible roguelite game that can be easily rethemed. Difficulty keeps ramping until you lose. Every 4 levels you get a Curse, which changes the rules in some negative way. Every 10 levels you get a Boon, which changes the rules favorably.
 
 You need to balance finishing early to get more machinery versus pushing your luck to upgrade your existing machines versus finishing on time to stay in the game.
 

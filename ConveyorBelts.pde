@@ -112,7 +112,7 @@ class SwitchGrabberBelt extends GrabberBelt
     super.deserialize(o); 
     enabled = o.getBoolean("enabled"); 
     disabled_spritename = o.getString("disabled_sprite","null");
-    disabled_sprite = globals.sprites.get_sprite(disabled_spritename); 
+    disabled_sprite = globals.sprites.get(disabled_spritename); 
   }
 }
 
@@ -320,7 +320,7 @@ class ConveyorBelt extends Griddle
     PVector start = center_center();
     PVector end = start.copy().add(iv_offset.toPVec().mult(dim.x));
 
-    comp.start_conveying(gg, start, end, ng); //<>//
+    comp.start_conveying(gg, start, end, ng);
     
     return true;
   }

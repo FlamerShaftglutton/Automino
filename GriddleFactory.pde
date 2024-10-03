@@ -80,7 +80,7 @@ class GriddleFactory
   
   StringList get_strings(String griddle_name, String field_name) { return getStringList(field_name, templates.get(griddle_name)); }
   
-  String get_spritename(String name) { return get_template(name).getString("sprite",""); }
+  StringList get_spritenames(String name) { return getStringList("sprites",get_template(name)); }
   
   String get_description(String name) { return get_template(name).getString("description",""); }
   

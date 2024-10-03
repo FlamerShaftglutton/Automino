@@ -24,7 +24,9 @@ class Player
     
     translate(dim.copy().mult(-0.5f));
     
-    shape(sprite,0,0,dim.x, dim.y);
+    scale(dim.x, dim.y);
+    
+    shape(sprite);
     
     popMatrix();
   }
@@ -36,6 +38,7 @@ class Player
     boolean pressed_down  = globals.keyboard.is_coded_key_pressed(DOWN);
     boolean pressed_up    = globals.keyboard.is_coded_key_pressed(UP);
     boolean held_ctrl     = globals.keyboard.is_coded_key_held(CONTROL);
+    boolean held_shift    = globals.keyboard.is_coded_key_held(SHIFT);
     boolean held_x        = globals.keyboard.is_key_held('x');
     boolean released_x    = globals.keyboard.is_key_released('x');
     boolean pressed_space = globals.keyboard.is_key_pressed(' ');
@@ -68,13 +71,18 @@ class Player
       
       if (!held_ctrl)
       {
-        Griddle fg = get_faced_griddle(parent.grid);
-            
-        if (fg.traversable)// || PVector.dist(pos, fg.center_center()) > dim.x)
+        do
         {
-          //TODO: make this not gridlocked. 
-          pos.add(PVector.fromAngle(rot).mult(dim.x));
-        }
+          Griddle fg = get_faced_griddle(parent.grid);
+              
+          if (fg.traversable)
+          {
+            //TODO: make this not gridlocked. 
+            pos.add(PVector.fromAngle(rot).mult(dim.x));
+          }
+          else
+            break;
+        } while (held_shift);
       }
     }
     else if (released_x)
@@ -144,7 +152,7 @@ class Player
     PVector p = PVector.fromAngle(rot).mult(dim.x).add(pos);
     
     //now get the grid coordinates from the grid
-    return grid.grid_pos_from_absolute_pos(p); //<>//
+    return grid.grid_pos_from_absolute_pos(p); //<>// //<>//
   }
   
   Griddle get_faced_griddle(Grid grid)

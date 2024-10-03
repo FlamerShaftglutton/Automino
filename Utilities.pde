@@ -2,6 +2,7 @@ import java.util.regex.Pattern;
 import java.util.Collections;
 
 void translate(PVector p) { translate(p.x,p.y); }
+void scale(PVector p) { scale(p.x, p.y); }
 
 String right(String in, int characters) { if (in.length() < characters) return in; return in.substring(in.length() - characters); } 
 
@@ -171,7 +172,7 @@ float text_size_to_fit(String t, float w)
   
   float tw = textWidth(t);
   
-  return 100 / (tw / w);
+  return max(100 / (tw / w), 8);
 }
 
 //using the current textSize, word-wrap a string so it doesn't overflow the width given. Note that it does not handle width-exceeding single words gracefully (it actually loses the bulk of the letters). So don't do that.
@@ -321,4 +322,45 @@ ArrayList<IntVec> shortest_path(IntVec start, IntVec end, BitGrid obstacles)
   }
   
   return new ArrayList<IntVec>();
+}
+
+//returns a random int on the normal distribution, meaning those close the to center are much more likely to be returned than values closer to lower or upper
+int random_normal(int lower, int upper)
+{
+  int num_steps = upper - lower;
+  float total = num_steps * 0.3341583f;
+  float r = random(total);
+  float cumulative = 0f;
+  
+  for (int i = 0; i < num_steps; ++i)
+  {
+    float c = float(i) / float(num_steps);
+    float chunk = 3f * c - 1.5f;
+    cumulative += exp((-chunk * chunk) / 0.32f);
+    
+    if (r < cumulative)
+      return lower + i;
+  }
+  
+  return upper;
+}
+
+//returns a random int on a very pointy normal distribution. Much faster than the function above, but end values are a bit more likely. Values close to the middle are still much more likely. Favor the normal function unless speed is critical.
+int random_pseudonormal(int lower, int upper)
+{
+  int num_steps = upper - lower;
+  float total = 0.5f * num_steps;
+  float r = random(total);
+  float cumulative = 0f;
+  
+  for (int i = 0; i < num_steps; ++i)
+  {
+    float c = float(i) / float(num_steps);
+    cumulative += 1f - abs(2*c - 1f);
+    
+    if (r < cumulative)
+      return lower + i;
+  }
+  
+  return upper;
 }

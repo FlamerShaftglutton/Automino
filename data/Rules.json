@@ -9,6 +9,11 @@
 			"add crush to Required:Operations",
 			"add extract to Required:Operations",
 			"add 'Iron Ingot' to Required:Outputs",
+			"add 'Iron Ore' to Resource:Random",
+			"add 'Iron Ore' to Resource:Random",
+			"add 'Iron Ore' to Resource:Random",
+			"add 'Iron Ore' to Resource:Random",
+			"add 'Iron Ore' to Resource:Random",
 		],
 	},
 	{
@@ -21,6 +26,29 @@
 			"add crush to Required:Operations",
 			"add extract to Required:Operations",
 			"add 'Cobalt Ingot' to Required:Outputs",
+			"add 'Cobalt Ore' to Resource:Random",
+			"add 'Cobalt Ore' to Resource:Random",
+			"add 'Cobalt Ore' to Resource:Random",
+			"add 'Cobalt Ore' to Resource:Random",
+			"add 'Cobalt Ore' to Resource:Random",
+		],
+	},
+	{
+		"name": "Copper Ingots",
+		"description": "Crush copper ore into copper powder, wash copper powder into copper slurry, refine copper slurry into refined copper, then smelt refined copper into copper ingots.",
+		"tags": ["curse", "recipe", "basic"],
+		"dependencies": [ ],
+		"mods": [
+			"add smelt to Required:Operations",
+			"add wash to Required:Operations",
+			"add crush to Required:Operations",
+			"add extract to Required:Operations",
+			"add 'Copper Ingot' to Required:Outputs",
+			"add 'Copper Ore' to Resource:Random",
+			"add 'Copper Ore' to Resource:Random",
+			"add 'Copper Ore' to Resource:Random",
+			"add 'Copper Ore' to Resource:Random",
+			"add 'Copper Ore' to Resource:Random",
 		],
 	},
 	{
@@ -29,6 +57,9 @@
 		"tags": ["curse","recipe"],
 		"dependencies": [ "Cobalt Ingots", "Iron Ingots" ],
 		"mods": [
+			"add smelt to Required:Operations",
+			"add crush to Required:Operations",
+			"add extract to Required:Operations",
 			"add 'Permendur Ingot' to Required:Outputs",
 		],
 	},
@@ -79,6 +110,15 @@
 		"dependencies": [ ],
 		"mods": [
 			"multiply 0.5 to Speed:crush",
+		],
+	},
+	{
+		"name": "Cheap Detergent",
+		"description": "Washers are 70% slower.",
+		"tags": ["curse","speed", "wash"],
+		"dependencies": [ ],
+		"mods": [
+			"multiply 0.3 to Speed:wash",
 		],
 	},
 	{
@@ -145,6 +185,19 @@
 		],
 	},
 	{
+		"name": "Pennies from Heaven",
+		"description": "The resource line now carries extra copper.",
+		"tags": ["curse", "resource", "copper" ],
+		"dependencies": [ ],
+		"mods": [
+			"add 'Copper Ore' to Resource:Random",
+			"add 'Copper Ore' to Resource:Random",
+			"add 'Copper Ore' to Resource:Random",
+			"add 'Copper Ore' to Resource:Random",
+			"add 'Copper Ore' to Resource:Random",
+		],
+	},
+	{
 		"name": "Wasteful",
 		"description": "The resource line now carries tailings.",
 		"tags": ["curse", "resource" ],
@@ -159,7 +212,7 @@
 	},
 	{
 		"name": "Tail Spin",
-		"description": "The resource line now carries tailings.",
+		"description": "The resource line now even more carries tailings.",
 		"tags": ["curse", "resource" ],
 		"dependencies": [ "Wasteful" ],
 		"mods": [
@@ -270,6 +323,7 @@
 		],
 	},
 	
+	
 	{
 		"name": "Good Value",
 		"description": "The last reward is always upgraded.",
@@ -350,6 +404,15 @@
 		],
 	},
 	{
+		"name": "Fired Up",
+		"description": "Smelters are 50% faster.",
+		"tags": ["boon","speed", "Smelter"],
+		"dependencies": [ ],
+		"mods": [
+			"multiply 1.5 to Speed:smelt",
+		],
+	},
+	{
 		"name": "Tear Down These Walls",
 		"description": "No more internal walls!",
 		"tags": ["boon","walls"],
@@ -365,6 +428,15 @@
 		"dependencies": [ ],
 		"mods": [
 			"add 10 to Gold",
+		],
+	},
+	{
+		"name": "Extra support",
+		"description": "Adds a second line of resource conveyors. Wow!",
+		"tags": ["boon"],
+		"dependencies": [ ],
+		"mods": [
+			"add 2 to ResourceLines",
 		],
 	},
 ]

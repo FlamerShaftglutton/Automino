@@ -10,7 +10,7 @@
 				"display": "New Game",
 				"action": "newgame",
 			},
-						{
+			{
 				"x": 0,
 				"y": 0,
 				"type": "MetaActionCounter",
@@ -18,7 +18,7 @@
 				"action": "tutorial",
 			},
 			{
-				"sprite": "player green",
+				"sprites": "player green",
 				"x": 2,
 				"y": 2,
 				"type": "PlayerGriddle"

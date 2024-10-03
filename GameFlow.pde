@@ -183,7 +183,11 @@ class CardPickMenu implements GameFlow
       {
         text_y_pos -= dim.y * 0.4f;
         
-        shape(sprite, pos.x - dim.x * 0.4f, pos.y - dim.y * 0.3f, dim.x * 0.8f, dim.x * 0.8f);
+        pushMatrix();
+        translate(pos.x - dim.x * 0.4f, pos.y - dim.y * 0.3f);
+        scale(dim.x * 0.8f, dim.x * 0.8f);
+        shape(sprite);
+        popMatrix();
       }
       
       textSize(text_size_to_fit(title, dim.x * 0.9f));
@@ -389,7 +393,7 @@ class GridGameFlowBase implements GameFlow
     JSONObject root = new JSONObject();
     
     PlayerGriddle griddy = new PlayerGriddle(this);
-    griddy.spritename = player.spritename;
+    //griddy.spritenames.set(0,player.spritename);
     IntVec pgp = grid.grid_pos_from_absolute_pos(player.pos);
     grid.set(pgp.x, pgp.y, griddy);
     
@@ -419,7 +423,7 @@ class GridGameFlowBase implements GameFlow
         {
           player = new Player(this);
           player.spritename = globals.profiles.current().sprite;
-          player.sprite = globals.sprites.get_sprite(player.spritename);
+          player.sprite = globals.sprites.get(player.spritename);
           player.pos = gg.absolute_pos_from_grid_pos(new IntVec(x,y));
           player.dim = gg.get_square_dim();
           
@@ -708,7 +712,7 @@ class ProfileGameFlow extends GridGameFlowBase
         CardPickMenu cpm = new CardPickMenu();
         
         for (Profile profile : globals.profiles.profiles)
-          cpm.addCard(profile.name, "Most rounds completed: " + profile.highest_round, random_color(color(150,150,200), 0.05), globals.sprites.get_sprite(profile.sprite));
+          cpm.addCard(profile.name, "Most rounds completed: " + profile.highest_round, random_color(color(150,150,200), 0.05), globals.sprites.get(profile.sprite));
         
         globals.game.push(cpm, new Message("selectedprofile", "Pick your profile"));
         break;
@@ -724,7 +728,7 @@ class ProfileGameFlow extends GridGameFlowBase
         }
         
         for (String spritename : player_spritenames)
-          cpm2.addCard(spritename, "", random_color(color(150,150,200), 0.05), globals.sprites.get_sprite(spritename));
+          cpm2.addCard(spritename, "", random_color(color(150,150,200), 0.05), globals.sprites.get(spritename));
         
         globals.game.push(cpm2, new Message("selectedsprite", "Pick your skin"));
         break;

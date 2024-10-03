@@ -77,7 +77,7 @@ class GameSession extends GridGameFlowBase
         JSONObject tggo = griddy.serialize();
         LevelEditorNonGriddle leng = globals.ngFactory.create_le_ng(tggo.getString("_template"));
         leng.as_json = tggo;
-        leng.shape = globals.sprites.get_sprite(tggo.getString("sprite"));
+        leng.shape = globals.sprites.get(griddy.get_spritenames());
         leng.visible = false;
         register_ng(leng);
         
@@ -109,6 +109,23 @@ class GameSession extends GridGameFlowBase
       
       conform_to_rules();
     }
+  }
+  
+  void add_resource_line()
+  {
+    grid.apply_alterations();
+    
+    for (int y = 1; y < grid.h - 1; ++y)
+    {
+      Griddle conv_griddle = globals.gFactory.create_griddle("GrabberBelt", this);
+      conv_griddle.quarter_turns = 3;
+      grid.set(0,y, conv_griddle);
+    }
+    
+    JSONObject ov = JSONObject.parse("{ 'automatic': true, 'speed': 0.005 }");
+    grid.set(0, grid.h - 1, globals.gFactory.create_griddle("TrashCompactor",ov, this));
+    
+    grid.apply_alterations();
   }
   
   void update_internal_walls(float old_value, float new_value)
@@ -199,7 +216,7 @@ class GameSession extends GridGameFlowBase
       {
         CardPickMenu cpm = new CardPickMenu();
         for (String s : upgrades)
-          cpm.addCard(s, globals.gFactory.get_description(s), globals.sprites.get_sprite(globals.gFactory.get_spritename(s)));
+          cpm.addCard(s, globals.gFactory.get_description(s), globals.sprites.get(globals.gFactory.get_spritenames(s)));
         
         cpm.addCard("Cancel", "Return without upgrading or spending your gold");
         
@@ -213,7 +230,7 @@ class GameSession extends GridGameFlowBase
   //note that this can be called during game creation or during level editing
   void conform_to_rules()
   {
-    grid.apply_alterations(); //<>//
+    grid.apply_alterations();
     
     StringList required_operations = rules.get_strings("Required:Operations");
     StringList required_outputs    = rules.get_strings("Required:Outputs");
@@ -279,7 +296,7 @@ class GameSession extends GridGameFlowBase
           
           Griddle gxxyy = grid.get(xx,yy);
 
-          if (gxxyy instanceof LevelEditorGriddle) //<>//
+          if (gxxyy instanceof LevelEditorGriddle)
           {
             LevelEditorGriddle legxxyy = (LevelEditorGriddle)gxxyy;
             
@@ -344,12 +361,15 @@ class GameSession extends GridGameFlowBase
         }
       }
     }
-  } //<>//
+    
+    if (rules.get_int("ResourceLines",0) > 0 && grid.get(0,1).type.equals("WallGriddle"))
+      add_resource_line();
+  }
   
   void create_new()
   {
-    int w = (int)random(7, 40);
-    int h = (int)random(7, 28);
+    int w = random_normal(7, 40);
+    int h = random_normal(7, 28);
     
     if (rules == null || rules.get_rules().size() == 0)
     {
@@ -388,7 +408,7 @@ class GameSession extends GridGameFlowBase
     player = new Player(this);
     
     player.spritename = globals.profiles.current().sprite;
-    player.sprite = globals.sprites.get_sprite(player.spritename);
+    player.sprite = globals.sprites.get(player.spritename);
     player.pos = grid.absolute_pos_from_grid_pos(new IntVec(w / 2,h / 2));
     player.dim = grid.get_square_dim();
     
@@ -596,7 +616,7 @@ class GameSession extends GridGameFlowBase
             LevelEditorNonGriddle leng = globals.ngFactory.create_le_ng(tggo.getString("_template",tggo.getString("type")));
             leng.as_json = tggo;
             
-            leng.shape = globals.sprites.get_sprite(tggo.getString("sprite"));
+            leng.shape = globals.sprites.get(tgg.get_spritenames());
             leng.visible = false;
             register_ng(leng);
             leg.receive_ng(leng);
@@ -636,7 +656,7 @@ class GameSession extends GridGameFlowBase
         {
             LevelEditorNonGriddle leng = globals.ngFactory.create_le_ng(tggo.getString("_template"));
             leng.as_json = tggo;
-            leng.shape = globals.sprites.get_sprite(tggo.getString("sprite"));
+            leng.shape = globals.sprites.get(tgg.get_spritenames());
             leng.visible = false;
             register_ng(leng);
             leg.receive_ng(leng);

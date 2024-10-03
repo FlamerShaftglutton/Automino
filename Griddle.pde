@@ -8,7 +8,6 @@ class Griddle
   
   ArrayList<NonGriddle> ngs;
   
-  String spritename;
   PShape sprite;
   
   String template = "";
@@ -16,7 +15,7 @@ class Griddle
   
   GridGameFlowBase game;
   
-  Griddle(GridGameFlowBase game) { this.game = game; pos = new PVector(); dim = new PVector(); quarter_turns = 0; traversable = false; ngs = new ArrayList<NonGriddle>(); spritename = ""; sprite = null; template = ""; type = "Griddle"; }
+  Griddle(GridGameFlowBase game) { this.game = game; pos = new PVector(); dim = new PVector(); quarter_turns = 0; traversable = false; ngs = new ArrayList<NonGriddle>(); sprite = null; template = ""; type = "Griddle"; }
 
   void draw()
   {
@@ -35,10 +34,17 @@ class Griddle
       
       translate(dim.copy().mult(-0.5f));
       
-      shape(s,0,0,dim.x, dim.y);
+      scale(dim.x, dim.y);
+      
+      shape(s);
       
       popMatrix();
     }
+  }
+  
+  void level_editor_draw()
+  {
+    draw();
   }
   
   void update()
@@ -50,7 +56,7 @@ class Griddle
   {
     JSONObject o = new JSONObject();
     o.setString("type", type);
-    o.setString("sprite", spritename);
+    o.setJSONArray("sprites", new JSONArray(get_spritenames()));
     o.setBoolean("traversable", traversable);
     o.setInt("quarter_turns", quarter_turns);
     o.setString("_template", template);
@@ -58,8 +64,8 @@ class Griddle
     return o;
   }
   
-  void deserialize(JSONObject o) { spritename = o.getString("sprite","null"); if (spritename.length() > 0)  sprite = globals.sprites.get_sprite(spritename); quarter_turns = o.getInt("quarter_turns", 0); template = o.getString("_template",o.getString("type",type)); }
-  
+  void deserialize(JSONObject o) { StringList spritenames = getStringList("sprites",o); sprite = globals.sprites.get(spritenames); quarter_turns = o.getInt("quarter_turns", 0); template = o.getString("_template",o.getString("type",type)); }
+
   NonGriddle ng() { if (ngs.isEmpty()) return null; return ngs.get(ngs.size()-1); }
   boolean can_accept_ng(NonGriddle n) { return ngs.size() <= 1; }
   boolean can_give_ng() { return true; }
@@ -82,6 +88,7 @@ class Griddle
       ngs.get(i).pos = center_center().add(xstart + xstep * i,0f); 
   }
   
+  StringList get_spritenames() { StringList retval = new StringList(); if (sprite != null) { if (sprite.getName().equals("_GROUP")) { for (PShape psc : sprite.getChildren()) retval.append(psc.getName()); } else retval.append(sprite.getName()); } return retval; }
   
   void    player_interact(Player player) { }
   void    player_interact_end(Player player) { }

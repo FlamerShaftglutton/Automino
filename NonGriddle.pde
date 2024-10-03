@@ -31,8 +31,9 @@ class NonGriddle
     pushMatrix();
     
     translate(pos.x - dim.x * 0.5f, pos.y - dim.y * 0.5f);
+    scale(dim.x, dim.y);
     
-    shape(shape, 0, 0, dim.x, dim.y);
+    shape(shape);
     
     popMatrix();
   }
@@ -111,11 +112,11 @@ class NonGriddleFactory
     PShape shape;
     if (!globals.sprites.has_sprite(spritename))
     {
-      shape = globals.sprites.get_sprite("null");
+      shape = globals.sprites.get("null");
       println("NonGriddle '" + name + "' tried to load sprite '" + spritename + "' which doesn't exist. Defaulting to null sprite.");
     }
     else
-      shape = globals.sprites.get_sprite(spritename);
+      shape = globals.sprites.get(spritename);
     
     ng.shape = shape;
     
@@ -148,7 +149,7 @@ class NonGriddleFactory
     retval.dim = new PVector(40,40); 
     retval.as_json = o; 
     retval.name = o.getString("_template", o.getString("type")); 
-    retval.shape = globals.sprites.get_sprite(o.getString("sprite"));
+    retval.shape = globals.sprites.get( getStringList("sprites",o));
     return retval; 
   }
 }

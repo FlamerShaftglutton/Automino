@@ -19,19 +19,32 @@ class SpriteFactory
       
       PShape p = loadShape(f.getAbsolutePath());
       
+      p.scale(1f/p.getWidth(), 1f/p.getHeight());
+      p.setName(name);
       sprites.put(name, p);
     }
   }
   
-  PShape get_sprite(String name) 
+  PShape get(String name) 
   { 
     if (!sprites.containsKey(name)) 
     { 
-      println("No sprite found with name '" + name + "'. Using null sprite.");
+      println("No sprite found with name '" + name + "'. Using null sprite."); //<>//
       return sprites.get("null"); 
     }
     
     return sprites.get(name); 
+  }
+  
+  PShape get(StringList names) 
+  {
+    PShape retval = createShape(GROUP);
+    retval.setName("_GROUP");
+    
+    for (String name : names)
+      retval.addChild(get(name)); //<>//
+    
+    return retval;
   }
 
   boolean has_sprite(String name) { return sprites.containsKey(name); }

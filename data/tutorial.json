@@ -7,7 +7,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "RandomResourcePool",
-        "sprite": "freezer",
+        "sprites": "freezer",
         "x": 0,
         "resources": [
           "Gold Speck",
@@ -28,7 +28,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "GrabberBelt",
-        "sprite": "two arrow conveyor yellow",
+        "sprites": "two arrow conveyor yellow",
         "x": 1,
         "y": 0,
         "type": "GrabberBelt"
@@ -38,7 +38,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "GrabberBelt",
-        "sprite": "two arrow conveyor yellow",
+        "sprites": "two arrow conveyor yellow",
         "x": 2,
         "y": 0,
         "type": "GrabberBelt"
@@ -48,7 +48,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "GrabberBelt",
-        "sprite": "two arrow conveyor yellow",
+        "sprites": "two arrow conveyor yellow",
         "x": 3,
         "y": 0,
         "type": "GrabberBelt"
@@ -58,7 +58,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "GrabberBelt",
-        "sprite": "two arrow conveyor yellow",
+        "sprites": "two arrow conveyor yellow",
         "x": 4,
         "y": 0,
         "type": "GrabberBelt"
@@ -68,7 +68,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "GrabberBelt",
-        "sprite": "two arrow conveyor yellow",
+        "sprites": "two arrow conveyor yellow",
         "x": 5,
         "y": 0,
         "type": "GrabberBelt"
@@ -78,7 +78,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "GrabberBelt",
-        "sprite": "two arrow conveyor yellow",
+        "sprites": "two arrow conveyor yellow",
         "x": 6,
         "y": 0,
         "type": "GrabberBelt"
@@ -88,7 +88,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "GrabberBelt",
-        "sprite": "two arrow conveyor yellow",
+        "sprites": "two arrow conveyor yellow",
         "x": 7,
         "y": 0,
         "type": "GrabberBelt"
@@ -98,7 +98,7 @@
         "operations": [],
         "quarter_turns": 0,
         "_template": "TrashCompactor",
-        "sprite": "trashcan",
+        "sprites": "trashcan",
         "x": 8,
         "automatic": true,
         "y": 0,
@@ -109,7 +109,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "WallGriddle",
-        "sprite": "square black",
+        "sprites": "square black",
         "x": 0,
         "y": 1,
         "type": "WallGriddle"
@@ -118,7 +118,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 1,
         "y": 1,
         "type": "EmptyGriddle"
@@ -127,7 +127,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 2,
         "y": 1,
         "type": "EmptyGriddle"
@@ -136,7 +136,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 3,
         "y": 1,
         "type": "EmptyGriddle"
@@ -145,7 +145,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 4,
         "y": 1,
         "type": "EmptyGriddle"
@@ -154,7 +154,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 5,
         "y": 1,
         "type": "EmptyGriddle"
@@ -163,7 +163,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 6,
         "y": 1,
         "type": "EmptyGriddle"
@@ -172,7 +172,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 7,
         "y": 1,
         "type": "EmptyGriddle"
@@ -181,7 +181,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "WallGriddle",
-        "sprite": "square black",
+        "sprites": "square black",
         "x": 8,
         "y": 1,
         "type": "WallGriddle"
@@ -190,7 +190,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "WallGriddle",
-        "sprite": "square black",
+        "sprites": "square black",
         "x": 0,
         "y": 2,
         "type": "WallGriddle"
@@ -199,7 +199,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 1,
         "y": 2,
         "type": "EmptyGriddle"
@@ -208,7 +208,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "WallGriddle",
-        "sprite": "square black",
+        "sprites": "square black",
         "x": 2,
         "y": 2,
         "type": "WallGriddle"
@@ -218,7 +218,7 @@
         "operations": ["crush"],
         "quarter_turns": 0,
         "_template": "Crusher",
-        "sprite": "crusher",
+        "sprites": "crusher",
         "x": 3,
         "automatic": false,
         "y": 2,
@@ -229,7 +229,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 4,
         "y": 2,
         "type": "EmptyGriddle"
@@ -238,7 +238,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 5,
         "y": 2,
         "type": "EmptyGriddle"
@@ -247,7 +247,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 6,
         "y": 2,
         "type": "EmptyGriddle"
@@ -256,7 +256,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 7,
         "y": 2,
         "type": "EmptyGriddle"
@@ -265,7 +265,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "WallGriddle",
-        "sprite": "square black",
+        "sprites": "square black",
         "x": 8,
         "y": 2,
         "type": "WallGriddle"
@@ -274,7 +274,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "WallGriddle",
-        "sprite": "square black",
+        "sprites": "square black",
         "x": 0,
         "y": 3,
         "type": "WallGriddle"
@@ -283,7 +283,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 1,
         "y": 3,
         "type": "EmptyGriddle"
@@ -292,7 +292,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 2,
         "y": 3,
         "type": "EmptyGriddle"
@@ -301,7 +301,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 3,
         "y": 3,
         "type": "EmptyGriddle"
@@ -310,7 +310,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 4,
         "y": 3,
         "type": "EmptyGriddle"
@@ -319,7 +319,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 5,
         "y": 3,
         "type": "EmptyGriddle"
@@ -328,7 +328,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 6,
         "y": 3,
         "type": "EmptyGriddle"
@@ -337,7 +337,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 7,
         "y": 3,
         "type": "EmptyGriddle"
@@ -346,7 +346,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "WallGriddle",
-        "sprite": "square black",
+        "sprites": "square black",
         "x": 8,
         "y": 3,
         "type": "WallGriddle"
@@ -355,7 +355,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "WallGriddle",
-        "sprite": "square black",
+        "sprites": "square black",
         "x": 0,
         "y": 4,
         "type": "WallGriddle"
@@ -364,7 +364,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 1,
         "y": 4,
         "type": "EmptyGriddle"
@@ -373,7 +373,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 2,
         "y": 4,
         "type": "EmptyGriddle"
@@ -383,7 +383,7 @@
         "operations": ["extract"],
         "quarter_turns": 0,
         "_template": "Refiner",
-        "sprite": "centrifuge",
+        "sprites": "centrifuge",
         "x": 3,
         "automatic": false,
         "y": 4,
@@ -394,7 +394,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 4,
         "y": 4,
         "type": "EmptyGriddle"
@@ -403,7 +403,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 5,
         "y": 4,
         "type": "EmptyGriddle"
@@ -412,7 +412,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "player pink",
+        "sprites": "player pink",
         "x": 6,
         "y": 4,
         "type": "PlayerGriddle"
@@ -421,7 +421,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 7,
         "y": 4,
         "type": "EmptyGriddle"
@@ -430,7 +430,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "WallGriddle",
-        "sprite": "square black",
+        "sprites": "square black",
         "x": 8,
         "y": 4,
         "type": "WallGriddle"
@@ -439,7 +439,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "WallGriddle",
-        "sprite": "square black",
+        "sprites": "square black",
         "x": 0,
         "y": 5,
         "type": "WallGriddle"
@@ -448,7 +448,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 1,
         "y": 5,
         "type": "EmptyGriddle"
@@ -457,7 +457,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 2,
         "y": 5,
         "type": "EmptyGriddle"
@@ -466,7 +466,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "WallGriddle",
-        "sprite": "square black",
+        "sprites": "square black",
         "x": 3,
         "y": 5,
         "type": "WallGriddle"
@@ -476,7 +476,7 @@
         "operations": ["smelt"],
         "quarter_turns": 0,
         "_template": "Smelter",
-        "sprite": "furnace",
+        "sprites": "furnace",
         "x": 4,
         "automatic": false,
         "y": 5,
@@ -487,7 +487,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 5,
         "y": 5,
         "type": "EmptyGriddle"
@@ -496,7 +496,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "WallGriddle",
-        "sprite": "square black",
+        "sprites": "square black",
         "x": 6,
         "y": 5,
         "type": "WallGriddle"
@@ -505,7 +505,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 7,
         "y": 5,
         "type": "EmptyGriddle"
@@ -514,7 +514,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "WallGriddle",
-        "sprite": "square black",
+        "sprites": "square black",
         "x": 8,
         "y": 5,
         "type": "WallGriddle"
@@ -523,7 +523,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "WallGriddle",
-        "sprite": "square black",
+        "sprites": "square black",
         "x": 0,
         "y": 6,
         "type": "WallGriddle"
@@ -532,7 +532,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 1,
         "y": 6,
         "type": "EmptyGriddle"
@@ -541,7 +541,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 2,
         "y": 6,
         "type": "EmptyGriddle"
@@ -550,7 +550,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 3,
         "y": 6,
         "type": "EmptyGriddle"
@@ -559,7 +559,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 4,
         "y": 6,
         "type": "EmptyGriddle"
@@ -568,7 +568,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 5,
         "y": 6,
         "type": "EmptyGriddle"
@@ -577,7 +577,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 6,
         "y": 6,
         "type": "EmptyGriddle"
@@ -586,7 +586,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 7,
         "y": 6,
         "type": "EmptyGriddle"
@@ -595,7 +595,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "WallGriddle",
-        "sprite": "square black",
+        "sprites": "square black",
         "x": 8,
         "y": 6,
         "type": "WallGriddle"
@@ -604,7 +604,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "WallGriddle",
-        "sprite": "square black",
+        "sprites": "square black",
         "x": 0,
         "y": 7,
         "type": "WallGriddle"
@@ -613,7 +613,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 1,
         "y": 7,
         "type": "EmptyGriddle"
@@ -622,7 +622,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 2,
         "y": 7,
         "type": "EmptyGriddle"
@@ -631,7 +631,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 3,
         "y": 7,
         "type": "EmptyGriddle"
@@ -640,7 +640,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 4,
         "y": 7,
         "type": "EmptyGriddle"
@@ -649,7 +649,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 5,
         "y": 7,
         "type": "EmptyGriddle"
@@ -658,7 +658,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 6,
         "y": 7,
         "type": "EmptyGriddle"
@@ -667,7 +667,7 @@
         "traversable": true,
         "quarter_turns": 0,
         "_template": "",
-        "sprite": "",
+        "sprites": "",
         "x": 7,
         "y": 7,
         "type": "EmptyGriddle"
@@ -676,7 +676,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "WallGriddle",
-        "sprite": "square black",
+        "sprites": "square black",
         "x": 8,
         "y": 7,
         "type": "WallGriddle"
@@ -685,7 +685,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "WallGriddle",
-        "sprite": "square black",
+        "sprites": "square black",
         "x": 0,
         "y": 8,
         "type": "WallGriddle"
@@ -694,7 +694,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "WallGriddle",
-        "sprite": "square black",
+        "sprites": "square black",
         "x": 1,
         "y": 8,
         "type": "WallGriddle"
@@ -703,7 +703,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "WallGriddle",
-        "sprite": "square black",
+        "sprites": "square black",
         "x": 2,
         "y": 8,
         "type": "WallGriddle"
@@ -713,7 +713,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "GoldIngotOutput",
-        "sprite": "freezer",
+        "sprites": "freezer",
         "count": 0,
         "x": 3,
         "y": 8,
@@ -725,7 +725,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "IronOutput",
-        "sprite": "freezer",
+        "sprites": "freezer",
         "count": 0,
         "x": 4,
         "y": 8,
@@ -736,7 +736,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "WallGriddle",
-        "sprite": "square black",
+        "sprites": "square black",
         "x": 5,
         "y": 8,
         "type": "WallGriddle"
@@ -745,7 +745,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "WallGriddle",
-        "sprite": "square black",
+        "sprites": "square black",
         "x": 6,
         "y": 8,
         "type": "WallGriddle"
@@ -754,7 +754,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "WallGriddle",
-        "sprite": "square black",
+        "sprites": "square black",
         "x": 7,
         "y": 8,
         "type": "WallGriddle"
@@ -763,7 +763,7 @@
         "traversable": false,
         "quarter_turns": 0,
         "_template": "WallGriddle",
-        "sprite": "square black",
+        "sprites": "square black",
         "x": 8,
         "y": 8,
         "type": "WallGriddle"

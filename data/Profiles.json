@@ -71,13 +71,37 @@
     ]
   },
   {
-    "highest_round": 0,
+    "highest_round": 76,
     "default": true,
     "name": "Stamper",
     "sprite": "player yellow",
     "discovered_rules": [
       "Iron Ingots",
-      "Cobalt Ingots"
+      "Cobalt Ingots",
+      "Extra Fine",
+      "Wall Things End",
+      "Tear Down These Walls",
+      "Stink Stank Stunk",
+      "Coarse Grains",
+      "Nice moves",
+      "I'm Wall In",
+      "Tough Ore",
+      "Oops! All Cobalt!",
+      "Fired Up",
+      "Forge Majeure",
+      "All that glitters",
+      "Gotta go fast",
+      "Fine (10)",
+      "Refined Tastes",
+      "Fine (100)",
+      "Needs Grease",
+      "Crushing it",
+      "Ironic",
+      "Wasteful",
+      "Good Value",
+      "Tail Spin",
+      "Permendur Ingots",
+      "Extra support"
     ]
   }
 ]

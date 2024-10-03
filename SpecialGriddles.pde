@@ -101,6 +101,16 @@ class CountingResourcePool extends ResourcePool
   
   void draw()
   {
+    internal_draw(ng_sprite != null && (get_count() == 0));
+  }
+  
+  void level_editor_draw()
+  {
+    internal_draw(ng_sprite != null);
+  }
+  
+  void internal_draw(boolean show_type)
+  {
     super.draw();
     
     pushMatrix();
@@ -113,12 +123,17 @@ class CountingResourcePool extends ResourcePool
     
     textAlign(CENTER,CENTER);
     
-    textSize(18);
+    textSize(text_size_to_fit("999/1000", dim.x));
+    
     fill(#000000);
     text(get_display_string(), text_spot.x, text_spot.y);
     
-    if (ng_sprite != null && (get_count() == 0 || ngs.isEmpty()))
-      shape(ng_sprite, sprite_spot.x, sprite_spot.y, sprite_dim.x, sprite_dim.y);
+    if (show_type)
+    {
+      translate(sprite_spot);
+      scale(sprite_dim);
+      shape(ng_sprite);
+    }
     
     popMatrix();
   }
@@ -332,7 +347,7 @@ class LevelEditorGriddle extends EmptyGriddle
     if (subgriddle == null)
       super.draw();
     else
-      subgriddle.draw();
+      subgriddle.level_editor_draw();
   }
   
   JSONObject serialize()

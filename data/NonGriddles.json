@@ -33,7 +33,7 @@
 	},
 	{
 		"name" : "Permendur Ingot",
-		"sprite" : "ingot green",
+		"sprite" : "ingot silver",
 	},
 	{
 		"name" : "Tailings",
@@ -52,7 +52,23 @@
 		"sprite" : "ingot gold",
 	},
 	{
-		"name" : "Gold Ingot",
-		"sprite" : "ingot gold",
+		"name" : "Copper Ore",
+		"sprite" : "rock green",
+	},
+	{
+		"name" : "Copper Powder",
+		"sprite" : "triangle green",
+	},
+	{
+		"name" : "Copper Slurry",
+		"sprite" : "beaker green",
+	},
+	{
+		"name" : "Refined Copper",
+		"sprite" : "rounded triangle green",
+	},
+	{
+		"name" : "Copper Ingot",
+		"sprite" : "ingot green",
 	},
 ]

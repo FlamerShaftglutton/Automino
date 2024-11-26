@@ -2,7 +2,7 @@ Globals globals = new Globals();
 
 void setup()
 {
-  size(800,600);
+  size(2100,1300);
   
   initglobals();
 }

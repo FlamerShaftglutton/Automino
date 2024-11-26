@@ -65,6 +65,7 @@ class GriddleFactory
       case "ConveyorTransformer":          g = new ConveyorTransformer(game);          break;
       case "CrossConveyorBelt":            g = new CrossConveyorBelt(game);            break;
       case "WallGriddle":                  g = new WallGriddle(game);                  break;
+      case "BombGriddle":                  g = new BombGriddle(game);                  break;
       default:                             g = new NullGriddle(game);                  break;
     }
     

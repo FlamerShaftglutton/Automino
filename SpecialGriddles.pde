@@ -432,3 +432,28 @@ class RewardGriddle extends Griddle
     return o;
   }
 }
+
+class BombGriddle extends Griddle
+{
+  BombGriddle(GridGameFlowBase game) { super(game); type = "BombGriddle"; }
+  
+  void update()
+  {
+    super.update();
+    
+    IntVec my_pos = get_grid_pos();
+    
+    for (IntVec i : adjacent_offsets())
+    {
+      IntVec iv = i.add(my_pos);
+      
+      if (game.grid.get(iv.x,iv.y) instanceof WallGriddle)
+        game.grid.set(iv.x,iv.y,globals.gFactory.create_griddle("EmptyGriddle",game));
+    }
+    
+    game.grid.set(my_pos.x,my_pos.y,globals.gFactory.create_griddle("EmptyGriddle",game));
+  }
+  
+  //void deserialize(JSONObject o) { super.deserialize(o); comp.deserialize(o.getJSONObject("component"));  }
+  //JSONObject serialize() { JSONObject retval = super.serialize(); retval.setJSONObject("component", comp.serialize()); return retval; }
+}

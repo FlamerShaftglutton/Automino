@@ -411,6 +411,7 @@
 		"mods": [
 			"multiply 1.5 to Speed:smelt",
 		],
+		"disabled": true
 	},
 	{
 		"name": "Tear Down These Walls",

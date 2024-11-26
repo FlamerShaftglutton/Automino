@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+
+<svg
+   width="100"
+   height="100"
+   viewBox="0 0 100 100"
+   id="Layer_1"
+   version="1.1"
+   xml:space="preserve"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+   id="defs12" />
+
+<g
+   id="g12"
+   transform="matrix(2.0600135,0,0,2.0600135,-15.920431,-15.930732)">
+
+<path
+   class="st2"
+   d="m 38.5,8.08 c -4.79,0 -8.68,3.89 -8.68,8.68 v 1.21 h 2 v -1.21 c 0,-3.68 3,-6.68 6.68,-6.68 3.68,0 6.68,3 6.68,6.68 h 2 c 0,-4.79 -3.9,-8.68 -8.68,-8.68 z"
+   id="path1" /><rect
+   class="st4"
+   height="3.49"
+   width="0.81"
+   x="45.77"
+   y="18.540001"
+   id="rect6" /><rect
+   class="st4"
+   height="0.81"
+   width="3.49"
+   x="48.049999"
+   y="16.27"
+   id="rect2" /><rect
+   class="st4"
+   height="0.81"
+   width="3.49"
+   x="40.82"
+   y="16.27"
+   id="rect3" /><rect
+   class="st4"
+   height="3.49"
+   transform="matrix(0.70709998,-0.70709998,0.70709998,0.70709998,0.67729993,40.0916)"
+   width="0.81"
+   x="48.330002"
+   y="17.48"
+   id="rect4" />
+
+<rect
+   class="st4"
+   height="0.81"
+   transform="matrix(0.70709998,-0.70709998,0.70709998,0.70709998,-0.81999997,36.4769)"
+   width="3.49"
+   x="41.880001"
+   y="18.82"
+   id="rect8" /><ellipse
+   class="st0"
+   cx="46.18"
+   cy="16.77"
+   rx="1"
+   ry="0.44"
+   id="ellipse1" />
+
+<path
+   class="st6"
+   d="M 34.94,19.69 V 15.74 H 26.7 v 3.95 c -8.15,1.87 -14.24,9.16 -14.24,17.88 0,10.14 8.22,18.36 18.36,18.36 10.14,0 18.36,-8.22 18.36,-18.36 0,-8.72 -6.09,-16.01 -14.24,-17.88 z"
+   id="path2"
+   style="fill:#970e0e;fill-opacity:1" />
+
+
+
+</g>
+
+</svg>

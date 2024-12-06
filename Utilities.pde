@@ -28,12 +28,15 @@ StringList getStringList(String field, JSONObject o)
 {
   StringList retval = new StringList();
   
-  Object of = o.get(field);
-  
-  if (of instanceof String)
-    retval.append((String)of);
-  else if (of instanceof JSONArray)
-    retval = ((JSONArray)of).toStringList();
+  if (o.hasKey(field))
+  {
+    Object of = o.get(field);
+    
+    if (of instanceof String)
+      retval.append((String)of);
+    else if (of instanceof JSONArray)
+      retval = ((JSONArray)of).toStringList();
+  }
   
   return retval;
 }

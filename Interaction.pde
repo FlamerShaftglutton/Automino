@@ -24,11 +24,13 @@ class InteractionFactory
         continue;
       }
       
+      /*
       if (!oo.hasKey("output"))
       {
         println("Interaction defined without outputs. Full line is '" + oo.toString() + "'. Skipping interaction.");
         continue;
       }
+      */
       
       if (!oo.hasKey("time"))
       {
@@ -38,7 +40,9 @@ class InteractionFactory
       
       String operation = oo.getString("operation");
       float time = oo.getFloat("time");
-      
+      StringList inputs = getStringList("input", oo);
+      StringList outputs = getStringList("output", oo);
+      /*
       Object input_o = oo.get("input");
       StringList inputs = new StringList();
       
@@ -63,7 +67,7 @@ class InteractionFactory
       }
       else
         outputs.append((String)output_o);
-        
+      */
       
       Interaction interaction = new Interaction();
       interaction.operation = operation;

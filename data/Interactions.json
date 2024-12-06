@@ -16,6 +16,7 @@
 	{ "operation": "sieve", "input": [ "Tailings", "Tailings" ], "output": "Gold Speck", "time": 2.0 },
 	{ "operation": "crush", "input": [ "Gold Speck", "Gold Speck" ], "output": "Gold Powder", "time": 2.0 },
 	{ "operation": "smelt", "input": [ "Gold Powder", "Gold Powder" ], "output": "Gold Ingot", "time": 2.5 },
+	{ "operation": "consume", "input": "Permendur Ingot", "time": 8.0 },
 	
 	{ "operation": "converttocopper", "input": "Cobalt Ingot"    , "output": "Copper Ore", "time": 4.0 },  
     { "operation": "converttocopper", "input": "Cobalt Ore"      , "output": "Copper Ore", "time": 4.0 },

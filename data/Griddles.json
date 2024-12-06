@@ -78,35 +78,6 @@
 		"operations": [ ],
 		"sprites": "crusher",
 	},
-
-	
-	{
-		"_template": "CopperConverter",
-		"type": "Transformer",
-		"description": "Turns anything into copper ore! Basically magic.",
-		"operations": [ "converttocopper" ],
-		"sprites": [ "converter green" ],
-		"upgrades": [ "AutoCopperConverter", ],
-		"tags": [ "reward" ],
-	},
-	{
-		"_template": "AutoCopperConverter",
-		"type": "Transformer",
-		"description": "Turns anything into copper ore! Basically magic.",
-		"operations": [ "converttocopper" ],
-		"sprites": [ "converter green", "motor" ],
-		"upgrades": [ ],
-		"automatic": true,
-	},
-	{
-		"_template": "FastCopperConverter",
-		"description": "Turns anything into copper ore, but faster!",
-		"type": "Transformer",
-		"operations": ["converttocopper"],
-		"sprites": [ "converter green", "fast" ],
-		"speed": 0.03,
-		"upgrades": ["AutoFastCopperConverter", "FastConveyorCopperConverter"]
-	},
 	
 	
 	
@@ -696,6 +667,50 @@
 		"sprites": ["trashcan gold", "motor", "fast", "output"],
 		"automatic": true,
 		"speed": 0.03,
+	},
+	
+	
+	{
+		"_template": "Enhancer",
+		"description": "Turns Permendur Ingots into pure speed! Enhances neighboring machines while running.",
+		"type": "StatusBroadcaster",
+		"operations": ["consume"],
+		"sprites": [ "teslacoil" ],
+		"upgrades": ["AutoEnhancer", "FastEnhancer"],
+		"tags": [ "reward" ],
+		"status" : "speed",
+		"multiplier" : 1.5,
+	},
+	{
+		"_template": "AutoEnhancer",
+		"description": "Turns Permendur Ingots into pure speed, but hands-free! Enhances neighboring machines while running.",
+		"type": "StatusBroadcaster",
+		"operations": ["consume"],
+		"sprites": [ "teslacoil", "motor" ],
+		"automatic": true,
+		"upgrades": ["AutoFastEnhancer"],
+		"status" : "speed",
+		"multiplier" : 1.5,
+	},
+	{
+		"_template": "FastEnhancer",
+		"description": "Turns Permendur Ingots into even faster speed! Enhances neighboring machines while running.",
+		"type": "StatusBroadcaster",
+		"operations": ["consume"],
+		"sprites": [ "teslacoil", "fast" ],
+		"upgrades": ["AutoFastEnhancer"],
+		"status" : "speed",
+		"multiplier" : 2.0,
+	},
+	{
+		"_template": "AutoFastEnhancer",
+		"description": "Turns Permendur Ingots into even faster speed, but hands-free! Enhances neighboring machines while running.",
+		"type": "StatusBroadcaster",
+		"operations": ["consume"],
+		"sprites": [ "teslacoil", "motor", "fast" ],
+		"automatic": true,
+		"status" : "speed",
+		"multiplier" : 2.0,
 	},
 	
 	

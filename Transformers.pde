@@ -5,12 +5,14 @@ class Transformer extends Griddle
   float time_used = 0f;
   Interaction current_interaction;
   boolean automatic = false;
-  float base_speed = 0.01f;
-  float modified_speed;
+  //float base_speed = 0.01f;
+  //float modified_speed;
   StringList extra_inputs = new StringList();
   StringList extra_outputs = new StringList();
   
-  Transformer(GridGameFlowBase game) { super(game); type = "Transformer"; }
+  FloatAttribute speed;
+  
+  Transformer(GridGameFlowBase game) { super(game); type = "Transformer"; speed = new NullFloatAttribute(); }
   
   void update()
   {
@@ -33,7 +35,7 @@ class Transformer extends Griddle
     super.update();
   }
   
-  float get_speed() { return modified_speed; }
+  float get_speed() { return speed.get(); }
   
   void remove_ng(NonGriddle ng)
   { 
@@ -180,9 +182,9 @@ class Transformer extends Griddle
   
   void deserialize(JSONObject o)
   {
-    super.deserialize(o); 
-    base_speed = o.getFloat("speed", 0.01f);
-    modified_speed = base_speed;
+    super.deserialize(o);
+    //base_speed = o.getFloat("speed", 0.01f);
+    //modified_speed = base_speed;
     automatic = o.getBoolean("automatic", false); 
     operations = getStringList("operations", o);
     extra_inputs  = new StringList();
@@ -191,27 +193,103 @@ class Transformer extends Griddle
     if (game instanceof GameSession) 
     {
       GameSession gs = (GameSession)game;
-      modified_speed = gs.rules.get_float("Speed:"+template, base_speed);
+      //modified_speed = gs.rules.get_float("Speed:"+template, base_speed);
       for (String operation : operations)
       {
-        modified_speed = gs.rules.get_float("Speed:"+operation, modified_speed);
+        //modified_speed = gs.rules.get_float("Speed:"+operation, modified_speed);
         extra_inputs.append (gs.rules.get_strings("Inputs:"+operation));
         extra_outputs.append(gs.rules.get_strings("Outputs:"+operation));
       }
     }
+    
+    StringList speed_variables = new StringList();
+    speed_variables.append("speed");
+    speed_variables.append("Speed:"+type);
+    for (String operation : operations)
+      speed_variables.append("Speed:"+operation);
+    
+    speed = new FloatAttribute(o.getFloat("speed", 0.01f), speed_variables, this);
+    
+    //if (operations.size() == 1)
+    //  speed = new FloatAttribute(o.getFloat("speed", 0.01f), "Speed:"+operations.get(0), this);
+    //else
+    //  speed = new SpeedComponent(o.getFloat("speed", 0.01f), "Speed:"+type, this);
   }
   
   JSONObject serialize() 
   {
     JSONObject o = super.serialize(); 
-    o.setFloat("speed", base_speed);
+    o.setFloat("speed", speed.base);
     o.setBoolean("automatic", automatic);
+    o.setJSONArray("operations", new JSONArray(operations));
     
-    JSONArray a = new JSONArray();
-    for (String op : operations)
-      a.append(op);
+    return o;
+  }
+}
+
+class StatusBroadcaster extends Transformer
+{
+  
+  StringList statuses = new StringList();
+  float current_multiplier;
+  float current_addend;
+  float max_multiplier;
+  float max_addend;
+  
+  StatusBroadcaster(GridGameFlowBase game) { super(game); type = "StatusBroadcaster"; }
+  
+  void update()
+  {
+    super.update();
     
-    o.setJSONArray("operations", a);
+    if (running)
+      current_multiplier = max_multiplier;
+    else
+      current_multiplier = 1f;
+  }
+  
+  void draw()
+  {
+    super.draw();
+    
+    pushMatrix();
+    
+    translate(pos);
+    
+    if (running)
+    {
+      fill(0,255,0,50);
+      noStroke();
+      
+      for (IntVec offset : adjacent_offsets())
+        rect(dim.x * offset.x, dim.y * offset.y, dim.x, dim.y);
+      //rect(dim.x * 0.1, dim.y * 0.1, dim.x * 0.8, dim.y * 0.1);
+      
+      //fill(#66FF66);
+      
+      //rect(dim.x * 0.1, dim.y * 0.1, dim.x * 0.8 * time_used / current_interaction.time , dim.y * 0.1);
+    }
+    
+    popMatrix();
+    
+  }
+  
+  void deserialize(JSONObject o)
+  {
+    super.deserialize(o);
+    
+    statuses = getStringList("status", o);
+    max_multiplier = o.getFloat("multiplier",1f);
+    max_addend = o.getFloat("addend",0f);
+    current_multiplier = 1f;
+  }
+  
+  JSONObject serialize() 
+  {
+    JSONObject o = super.serialize(); 
+    o.setJSONArray("status", new JSONArray(statuses));
+    o.setFloat("multiplier", max_multiplier);
+    o.setFloat("addend", max_addend);
     
     return o;
   }

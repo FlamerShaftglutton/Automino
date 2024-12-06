@@ -1,0 +1,31 @@
+<svg width="100mm" height="100mm" viewBox="0 0 100 100" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<linearGradient id="b">
+			<stop style="stop-color:#efe2f4;stop-opacity:1" offset=".833"/>
+			<stop style="stop-color:#cca3dc;stop-opacity:1" offset="1"/>
+		</linearGradient>
+		<linearGradient id="a">
+			<stop style="stop-color:#003678;stop-opacity:1" offset="0"/>
+			<stop style="stop-color:#8ed2ff;stop-opacity:1" offset=".553"/>
+		</linearGradient>
+		<linearGradient xlink:href="#b" id="c" x1=".4" y1="50" x2="99.6" y2="50" gradientUnits="userSpaceOnUse" spreadMethod="pad" gradientTransform="translate(0 -100)"/>
+		<radialGradient xlink:href="#a" id="d" cx="50" cy="50" fx="50" fy="50" r="31.1" gradientUnits="userSpaceOnUse"/>
+	</defs>
+	<rect style="fill:url(#c);fill-opacity:1;stroke:#606060;stroke-width:2.2;stroke-opacity:1" width="97" height="97" x="1.5" y="-98.5" rx="5" ry="5" transform="rotate(90)"/>
+	<path style="fill:none;stroke:#606060;stroke-width:2.27842" d="M96.656 85.584H3.344z"/>
+	<circle style="fill:url(#d);fill-opacity:1;stroke:#606060;stroke-width:2.2;stroke-opacity:1" cx="50" cy="50" r="30"/>
+	<g transform="translate(30.27 30.27)">
+		<circle style="fill:#fff;fill-opacity:1;stroke:#606060;stroke-width:1;stroke-dasharray:none;stroke-opacity:1" cx="38.779" cy="19.729" r="6"/>
+		<circle style="fill:#fff;fill-opacity:1;stroke:#606060;stroke-width:1;stroke-dasharray:none;stroke-opacity:1" cx="33.2" cy="33.2" r="6"/>
+		<circle style="fill:#fff;fill-opacity:1;stroke:#606060;stroke-width:1;stroke-dasharray:none;stroke-opacity:1" cx="19.729" cy="38.779" r="6"/>
+		<circle style="fill:#fff;fill-opacity:1;stroke:#606060;stroke-width:1;stroke-dasharray:none;stroke-opacity:1" cx="6.259" cy="33.2" r="6"/>
+		<circle style="fill:#fff;fill-opacity:1;stroke:#606060;stroke-width:1;stroke-dasharray:none;stroke-opacity:1" cx=".679" cy="19.729" r="6"/>
+		<circle style="fill:#fff;fill-opacity:1;stroke:#606060;stroke-width:1;stroke-dasharray:none;stroke-opacity:1" cx="6.259" cy="6.259" r="6"/>
+		<circle style="fill:#fff;fill-opacity:1;stroke:#606060;stroke-width:1;stroke-dasharray:none;stroke-opacity:1" cx="19.729" cy=".679" r="6"/>
+		<circle style="fill:#fff;fill-opacity:1;stroke:#606060;stroke-width:1;stroke-dasharray:none;stroke-opacity:1" cx="33.2" cy="6.259" r="6"/>
+	</g>
+	<g transform="translate(.97 42.124)">
+		<ellipse style="fill:#ac69c6;fill-opacity:1;stroke:#606060;stroke-width:1;stroke-dasharray:none;stroke-opacity:1" cx="84.403" cy="50" rx="6.98" ry="4.067"/>
+		<ellipse style="fill:#ac69c6;fill-opacity:1;stroke:#606060;stroke-width:1;stroke-dasharray:none;stroke-opacity:1" cx="13.657" cy="50" rx="6.98" ry="4.067"/>
+	</g>
+</svg>

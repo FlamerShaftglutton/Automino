@@ -236,60 +236,6 @@ class CrossConveyorBelt extends ConveyorBelt
   }
 }
 
-class ConveyorComponent
-{
-  float base_speed = 0.03f;
-  float modified_speed;
-  float movement_progress;
-  GridGameFlowBase game;
-  Griddle parent_griddle;
-  NonGriddle ng = null;
-  PVector start;
-  PVector end;
-  Griddle destination_griddle;
-  
-  ConveyorComponent(GridGameFlowBase game, Griddle parent_griddle) { this.game = game; this.parent_griddle = parent_griddle; }
-  
-  void deserialize(JSONObject o) { if (o != null) { base_speed = o.getFloat("base_speed", 0.03f); } if (game instanceof GameSession) { modified_speed = ((GameSession)game).rules.get_float("Speed:ConveyorBelt", base_speed);  } else modified_speed = base_speed; }
-  JSONObject serialize() { JSONObject retval = new JSONObject(); retval.setFloat("base_speed", base_speed); return retval; }
-  
-  void start_conveying(Griddle destination, PVector start, PVector end, NonGriddle target)
-  {
-    destination_griddle = destination;
-    this.start = start.copy();
-    this.end   = end.copy();
-    ng = target;
-    
-    movement_progress = (start.dist(end) - end.dist(target.pos)) / start.dist(end);
-  }
-  
-  void update()
-  {
-    if (ng != null)
-    {
-      movement_progress += modified_speed;
-      
-      if (movement_progress < 1f)
-        ng.pos = PVector.lerp(start,end,movement_progress);
-      
-      if (movement_progress > 0f && movement_progress < 1f)
-      {
-        if (!destination_griddle.can_accept_ng(ng))//(!(gg instanceof ConveyorBelt) && !gg.can_accept_ng(ng))
-          movement_progress = 0.0f;
-      }
-      else if (movement_progress >= 1f)
-      {
-        if (destination_griddle.receive_ng(ng))
-          parent_griddle.remove_ng(ng);
-        else
-          movement_progress = 1f;
-      }
-    }
-  }
-  
-  boolean is_empty() { return ng == null; }
-}
-
 class ConveyorBelt extends Griddle
 {
   ConveyorComponent comp;
